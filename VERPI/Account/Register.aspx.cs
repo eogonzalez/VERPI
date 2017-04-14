@@ -16,6 +16,7 @@ namespace VERPI.Account
     {
         CNLogin objCNLogin = new CNLogin();
         CEUsuario objCEUsuario = new CEUsuario();
+        CNUsuario objCNUsuario = new CNUsuario();
 
         protected void CreateUser_Click(object sender, EventArgs e)
         {
@@ -40,7 +41,7 @@ namespace VERPI.Account
                 else
                 {
 
-                    if (objCNLogin.RegistrarUsuario(objCEUsuario))
+                    if (objCNUsuario.RegistrarUsuario(objCEUsuario))
                     {
                         //Enviar correo
                         //Muestra a usuario pantalla que ha sido registrado y que revise su correo

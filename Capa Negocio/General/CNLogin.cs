@@ -23,11 +23,6 @@ namespace Capa_Negocio.General
             return objCDLogin.AutenticarRegistro(correo);
         }
 
-        public Boolean RegistrarUsuario(CEUsuario objCEUsuario)
-        {
-            return objCDLogin.RegistrarUsuario(objCEUsuario);
-        }
-
         public Boolean AutorizaLogin(string correo)
         {
             return objCDLogin.AutorizaLogin(correo);
@@ -48,11 +43,6 @@ namespace Capa_Negocio.General
             return objCDLogin.UpdateRechazoPermisoUsuario(id_usuarioAutoriza, id_usuario);
         }
 
-        public DataTable SelectDatosUsuario(int idUsuario)
-        {
-            return objCDLogin.SelectDatosUsuario(idUsuario);
-        }
-
         public Boolean InsertCodigoRecuperacion(string correo, string codigo)
         {
             return objCDLogin.InsertCodigoRecuperacion(correo, codigo);
@@ -63,9 +53,5 @@ namespace Capa_Negocio.General
             return objCDLogin.ValidoCodigoRecuperacion(correo, codigo);
         }
 
-        public Boolean UpdateContraseña(CEUsuario objCEUsuario)
-        {
-            return objCDLogin.UpdateContraseña(objCEUsuario);
-        }
     }
 }

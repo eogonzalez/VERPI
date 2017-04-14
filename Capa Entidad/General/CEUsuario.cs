@@ -8,6 +8,8 @@ namespace Capa_Entidad.General
 {
     public class CEUsuario
     {
+        public int ID_Usuario { get; set; }
+
         public string CE_Nombres { get; set; }
 
         public string CE_Apellidos { get; set; }

@@ -37,6 +37,36 @@ namespace Capa_Negocio.General
         {
             return objCDUsuario.SelectUsuario(id_usuario);
         }
+
+        public bool UpdateUsuario(CEUsuario objCEUsuario)
+        {
+            return objCDUsuario.UpdateUsuario(objCEUsuario);
+        }
+
+        public Boolean RegistrarUsuario(CEUsuario objCEUsuario)
+        {
+            return objCDUsuario.RegistrarUsuario(objCEUsuario);
+        }
+
+        public DataTable SelectDatosUsuario(int idUsuario)
+        {
+            return objCDUsuario.SelectDatosUsuario(idUsuario);
+        }
+
+        public Boolean UpdateContraseña(string correo, string contraseña)
+        {
+            return objCDUsuario.UpdateContraseña(correo, contraseña);
+        }
+
+        public Boolean UpdateContraseña(int id_usuario, string correo, string contraseña)
+        {
+            return objCDUsuario.UpdateContraseña(id_usuario, correo, contraseña);
+        }
+
+        public bool DeleteUsuario(CEUsuario objCEUsuario)
+        {
+            return objCDUsuario.DeleteUsuario(objCEUsuario);
+        }
     }
 
 

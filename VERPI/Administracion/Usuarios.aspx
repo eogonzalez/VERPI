@@ -13,6 +13,7 @@
             <div class="btn">
                 <asp:LinkButton runat="server" ID="lkBtn_nuevo" CssClass="btn btn-primary"><i aria-hidden="true" class="glyphicon glyphicon-pencil"></i> Nuevo </asp:LinkButton>
                 <asp:LinkButton runat="server" ID="lkBtn_viewPanel"></asp:LinkButton>
+                <asp:LinkButton runat="server" ID="lkBtn_ModificarContraseña" />
 
                 <cc1:ModalPopupExtender ID="lkBtn_nuevo_ModalPopupExtender" runat="server" BackgroundCssClass="modalBackgroupd"
                     BehaviorID="lkBtn_nuevo_ModalPopupExtender" PopupControlID="pnl_nuevo" TargetControlID="lkBtn_nuevo" CancelControlID="btnHide">
@@ -22,6 +23,9 @@
                     BehaviorID="lkBtn_viewPanel_ModalPopupExtender" PopupControlID="pnl_nuevo" TargetControlID="lkBtn_viewPanel">
                 </cc1:ModalPopupExtender>
 
+                <cc1:ModalPopupExtender ID="lkBtn_ModificarContraseña_ModalPopupExtender" runat="server" BackgroundCssClass="modalBackground"
+                    BehaviorID="lkBtn_ModificarContraseña_ModalPopupExtender" PopupControlID="pnl_modificarContraseña" TargetControlID="lkBtn_ModificarContraseña">
+                </cc1:ModalPopupExtender>
             </div>
             <br />
             <div>
@@ -33,7 +37,7 @@
                     AutoGenerateColumns="false">
 
                     <Columns>
-                        <asp:BoundField DataField="id_usuario" SortExpression="id_usuario" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol"/>
+                        <asp:BoundField DataField="id_usuario" SortExpression="id_usuario" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" />
                         <asp:BoundField DataField="nombres" HeaderText="Nombre" />
                         <asp:BoundField DataField="apellidos" HeaderText="Apellido" />
                         <asp:BoundField DataField="cui" HeaderText="CUI" />
@@ -42,7 +46,7 @@
                         <asp:BoundField DataField="permiso" HeaderText="Tipo Permiso" />
 
                         <asp:ButtonField ButtonType="Button" Text="Modificar" HeaderText="Modificar" CommandName="modificar" ControlStyle-CssClass="btn btn-success" />
-                        <asp:ButtonField ButtonType="Button" Text="Generar Contraseña" HeaderText="Generar Contraseña" CommandName="generarpassword" ControlStyle-CssClass="btn btn-warning" />
+                        <asp:ButtonField ButtonType="Button" Text="Cambiar Contraseña" HeaderText="Cambiar Contraseña" CommandName="generarpassword" ControlStyle-CssClass="btn btn-info" />
                         <asp:TemplateField HeaderText="Eliminar">
                             <ItemTemplate>
                                 <asp:Button Text="Eliminar" runat="server" ID="btnEliminar" CausesValidation="false" CommandName="eliminar" CommandArgument="<%# Container.DataItemIndex %>" CssClass="btn btn-danger" OnClientClick="return confirm(&quot;¿Esta seguro de borrar opcion seleccionada?&quot;)" />
@@ -127,8 +131,8 @@
                     </div>
                 </div>
 
-                <div class="form-group input-sm">
-                    <asp:Label runat="server" AssociatedControlID="Password" CssClass="control-label col-md-2">Contraseña</asp:Label>
+                <div class="form-group input-sm" runat="server" id="divPassword">
+                    <asp:Label runat="server" ID="lblPassword" AssociatedControlID="Password" CssClass="control-label col-md-2">Contraseña</asp:Label>
                     <div class="col-md-10">
                         <asp:TextBox runat="server" ID="Password" TextMode="Password" CssClass="form-control input-sm" />
                         <asp:RequiredFieldValidator runat="server" ControlToValidate="Password"
@@ -136,8 +140,8 @@
                     </div>
                 </div>
 
-                <div class="form-group input-sm">
-                    <asp:Label runat="server" AssociatedControlID="ConfirmPassword" CssClass="col-md-2 control-label">Confirmar contraseña</asp:Label>
+                <div class="form-group input-sm" runat="server" id="divConfirmPassword">
+                    <asp:Label runat="server" ID="lblConfirmPassword" AssociatedControlID="ConfirmPassword" CssClass="col-md-2 control-label">Confirmar contraseña</asp:Label>
                     <div class="col-md-10">
                         <asp:TextBox runat="server" ID="ConfirmPassword" TextMode="Password" CssClass="form-control input-sm" />
                         <asp:RequiredFieldValidator runat="server" ControlToValidate="ConfirmPassword"
@@ -158,12 +162,42 @@
                     <asp:Literal runat="server" ID="ErrorMessageForm" />
                 </p>
             </div>
-
             <div class="panel-footer">
                 <asp:Button runat="server" ID="btnGuardar" CssClass="btn btn-success" CommandName="Guardar" Text="Guardar" OnClick="btnGuardar_Click" />
                 <asp:Button runat="server" ID="btnSalir" CssClass="btn btn-danger" Text="Salir" CausesValidation="false" OnClick="btnSalir_Click" />
             </div>
         </asp:Panel>
 
+        <asp:Panel runat="server" ID="pnl_modificarContraseña" CssClass="panel panel-primary" BorderColor="Black" BackColor="White"
+            BorderStyle="Inset" BorderWidth="1px" Style="display: none; overflow: auto; max-height: 445px; width: 35%;">
+            <div class="panel-heading">Modificar Contraseña</div>
+            <div class="panel-body form-horizontal">
+                <div class="form-group">
+                    <asp:Label runat="server" AssociatedControlID="txtContraseña" CssClass="col-md-2 control-label">Contraseña</asp:Label>
+                    <div class="col-md-10">
+                        <asp:TextBox runat="server" ID="txtContraseña" TextMode="Password" CssClass="form-control" />
+                        <asp:RequiredFieldValidator runat="server" ControlToValidate="txtContraseña"
+                            CssClass="text-danger" ErrorMessage="El campo de contraseña es obligatorio." ValidationGroup="genera" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <asp:Label runat="server" AssociatedControlID="txtConfirmarContraseña" CssClass="col-md-2 control-label">Confirmar contraseña</asp:Label>
+                    <div class="col-md-10">
+                        <asp:TextBox runat="server" ID="txtConfirmarContraseña" TextMode="Password" CssClass="form-control" />
+                        <asp:RequiredFieldValidator runat="server" ControlToValidate="txtConfirmarContraseña"
+                            CssClass="text-danger" Display="Dynamic" ErrorMessage="El campo de confirmación de contraseña es obligatorio." ValidationGroup="genera"/>
+                        <asp:CompareValidator runat="server" ControlToCompare="txtContraseña" ControlToValidate="txtConfirmarContraseña"
+                            CssClass="text-danger" Display="Dynamic" ErrorMessage="La contraseña y la contraseña de confirmación no coinciden." ValidationGroup="genera" />
+                    </div>
+                </div>
+            </div>
+            <p class="text-danger">
+                <asp:Literal runat="server" ID="ErrorPanelContraseña" />
+            </p>
+            <div class="panel-footer">
+                <asp:Button runat="server" ID="btnModificarContraseña" CssClass="btn btn-success" CommandName="Modificar" Text="Modificar" ValidationGroup="genera" OnClick="btnModificarContraseña_Click" />
+                <asp:Button runat="server" ID="btnSalirContraseña" CssClass="btn btn-danger" Text="Salir" CausesValidation="false" />
+            </div>
+        </asp:Panel>
     </div>
 </asp:Content>

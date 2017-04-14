@@ -34,7 +34,9 @@ namespace VERPI.Administracion
 
             GridViewRow row = gvUsuarios.Rows[index];
             int id_usuarioManager = Convert.ToInt32(row.Cells[0].Text);
+            string correoUsuarioManager = row.Cells[4].Text;
             Session.Add("IDUsuarioManager", id_usuarioManager);
+            Session.Add("CorreoUsuarioManager", correoUsuarioManager);
 
             switch (e.CommandName)
             {
@@ -45,6 +47,9 @@ namespace VERPI.Administracion
                 case "eliminar":
                     EliminarUsuario(id_usuarioManager);
                     Llenar_gvUsuarios();
+                    break;
+                case "generarpassword":
+                    lkBtn_ModificarContraseña_ModalPopupExtender.Show();
                     break;
                 default:
                     break;
@@ -80,6 +85,22 @@ namespace VERPI.Administracion
 
                     break;
                 case "Editar":
+                    if (ActualizarUsuario((int)Session["IDUsuarioManager"]))
+                    {
+                        Llenar_gvUsuarios();
+                        LimpiarPanel();
+                        btnGuardar.Text = "Guardar";
+                        btnGuardar.CommandName = "Guardar";
+
+                        divPassword.Visible = true;
+                        divConfirmPassword.Visible = true;
+                        Email.Enabled = true;
+
+                    }
+                    else
+                    {
+                        ErrorMessagePanel.Text = "Ha ocurrido un error al actualizar datos.";
+                    }
                     break;
                 default:
                     break;
@@ -91,6 +112,9 @@ namespace VERPI.Administracion
             LimpiarPanel();
             btnGuardar.Text = "Guardar";
             btnGuardar.CommandName = "Guardar";
+
+            divPassword.Visible = true;
+            divConfirmPassword.Visible = true;
         }
 
         protected void cb_generarContrasenia_CheckedChanged(object sender, EventArgs e)
@@ -104,6 +128,28 @@ namespace VERPI.Administracion
             {
                 Password.Enabled = false;
                 ConfirmPassword.Enabled = false;
+            }
+        }
+
+        protected void btnModificarContraseña_Click(object sender, EventArgs e)
+        {
+            if (txtContraseña.Text == txtConfirmarContraseña.Text)
+            {
+                int id_usuarioManager = (int)Session["IDUsuarioManager"];
+                string correoUsuarioManager = Session["CorreoUsuarioManager"].ToString();
+
+                if (objCNUsuario.UpdateContraseña(id_usuarioManager, correoUsuarioManager, txtContraseña.Text))
+                {
+                    ErrorMessage.Text = "Se actualizo contraseña correctamente";
+                }
+                else
+                {
+                    ErrorPanelContraseña.Text = "Ha ocurrido un error al actualizar contraseña.";
+                }
+            }
+            else
+            {
+                ErrorPanelContraseña.Text = "Contraseña no coincide, verifique.";
             }
         }
 
@@ -172,11 +218,10 @@ namespace VERPI.Administracion
             btnGuardar.Text = "Editar";
             btnGuardar.CommandName = "Editar";
 
-            cb_generarContrasenia.Visible = true;
-            Password.Enabled = false;
-            ConfirmPassword.Enabled = false;
-
-
+            divPassword.Visible = false;
+            divConfirmPassword.Visible = false;
+            Email.Enabled = false;
+            
             var tbl = new DataTable();
             tbl = objCNUsuario.SelectUsuario(id_usuarioManager);
             var row = tbl.Rows[0];
@@ -188,12 +233,58 @@ namespace VERPI.Administracion
             txtDireccion.Text = row["direccion"].ToString();
             Email.Text = row["correo"].ToString();
             ddlTipoPermiso.SelectedValue = row["id_tipousuario"].ToString();
-
         }
 
-        protected void EliminarUsuario(int id_usuarioManager)
+        protected bool EliminarUsuario(int id_usuarioManager)
         {
+            var respuesta = false;
 
+            objCEUsuario.ID_Usuario = id_usuarioManager;
+            objCEUsuario.ID_UsuarioAutoriza = Convert.ToInt32(Session["UsuarioID"].ToString());
+
+            respuesta = objCNUsuario.DeleteUsuario(objCEUsuario);
+
+            return respuesta;
+        }
+
+        protected bool ActualizarUsuario(int id_usuarioManager)
+        {
+            var respuesta = false;
+
+            objCEUsuario.ID_Usuario = id_usuarioManager;
+            objCEUsuario.CE_Nombres = getNombreUsuario();
+            objCEUsuario.CE_Apellidos = getApellido();
+            objCEUsuario.CE_CUI = getCUI();
+            objCEUsuario.CE_Telefono = getNumero();
+            objCEUsuario.CE_Direccion = getDirecion();            
+            objCEUsuario.ID_TipoUsuario = getId_TipoUsuario();
+            objCEUsuario.ID_UsuarioAutoriza = (int)Session["UsuarioID"];
+
+            respuesta = objCNUsuario.UpdateUsuario(objCEUsuario);
+
+            return respuesta;
+        }
+
+        protected void ModificarContraseña()
+        {
+            if (txtContraseña.Text == txtConfirmarContraseña.Text)
+            {
+                int id_usuarioManager = (int)Session["IDUsuarioManager"];
+                string correoUsuarioManager = Session["CorreoUsuarioManager"].ToString();
+
+                if (objCNUsuario.UpdateContraseña(id_usuarioManager, correoUsuarioManager, txtContraseña.Text))
+                {
+                    ErrorMessage.Text = "Se actualizo contraseña correctamente";
+                }
+                else
+                {
+                    ErrorPanelContraseña.Text = "Ha ocurrido un error al actualizar contraseña.";
+                }
+            }
+            else
+            {
+                ErrorPanelContraseña.Text = "Contraseña no coincide, verifique.";
+            }
         }
 
         #endregion
@@ -244,6 +335,7 @@ namespace VERPI.Administracion
         {
             return Convert.ToInt32(ddlTipoPermiso.SelectedValue);
         }
+
 
         #endregion
 

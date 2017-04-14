@@ -51,7 +51,7 @@ namespace VERPI.Account
 
                         //Obtengo datos de usuario para variables de session
                         var tbl = new DataTable();
-                        tbl = cnLogin.SelectDatosUsuario(idUsuario);
+                        tbl = objCNUsuario.SelectDatosUsuario(idUsuario);
                         DataRow row = tbl.Rows[0];
 
                         Session["UsuarioID"] = idUsuario;

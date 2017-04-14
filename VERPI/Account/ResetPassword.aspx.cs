@@ -15,6 +15,7 @@ namespace VERPI.Account
     {
         CNLogin objCNLogin = new CNLogin();
         CEUsuario objCEUsuario = new CEUsuario();
+        CNUsuario objCNUsuario = new CNUsuario();
 
         protected string StatusMessage
         {
@@ -37,15 +38,10 @@ namespace VERPI.Account
                     if (objCNLogin.ValidoCodigoRecuperacion(Email.Text, code))
                     {
 
-                        //Obtengo datos del usuario para actualizacion de password
-                        objCEUsuario.CE_Correo = Email.Text;
-                        objCEUsuario.CE_Password = Password.Text;
-                        string contraseñaConfirma = ConfirmPassword.Text;
-
                         //Valido que las contraseñas son iguales
-                        if (objCEUsuario.CE_Password == contraseñaConfirma)
+                        if (Password.Text == ConfirmPassword.Text)
                         {
-                                if (objCNLogin.UpdateContraseña(objCEUsuario))
+                                if (objCNUsuario.UpdateContraseña(Email.Text, Password.Text))
                                 {
                                     Response.Redirect("~/Account/ResetPasswordConfirmation");
                                     return;
