@@ -5,55 +5,74 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Owin;
 using VERPI.Models;
+using System.Web.Security;
+using Capa_Negocio.General;
+using System.Data;
 
 namespace VERPI.Account
 {
     public partial class Login : Page
     {
+        CNLogin cnLogin = new CNLogin();
+        CNUsuario objCNUsuario = new CNUsuario();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             RegisterHyperLink.NavigateUrl = "Register";
             // Habilite esta opción una vez tenga la confirmación de la cuenta habilitada para la funcionalidad de restablecimiento de contraseña
-            //ForgotPasswordHyperLink.NavigateUrl = "Forgot";
-            OpenAuthLogin.ReturnUrl = Request.QueryString["ReturnUrl"];
-            var returnUrl = HttpUtility.UrlEncode(Request.QueryString["ReturnUrl"]);
-            if (!String.IsNullOrEmpty(returnUrl))
-            {
-                RegisterHyperLink.NavigateUrl += "?ReturnUrl=" + returnUrl;
-            }
+            ForgotPasswordHyperLink.NavigateUrl = "Forgot";
+            //OpenAuthLogin.ReturnUrl = Request.QueryString["ReturnUrl"];
+            //var returnUrl = HttpUtility.UrlEncode(Request.QueryString["ReturnUrl"]);
+            //if (!String.IsNullOrEmpty(returnUrl))
+            //{
+            //    RegisterHyperLink.NavigateUrl += "?ReturnUrl=" + returnUrl;
+            //}
         }
 
         protected void LogIn(object sender, EventArgs e)
         {
             if (IsValid)
             {
-                // Validar la contraseña del usuario
-                var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-                var signinManager = Context.GetOwinContext().GetUserManager<ApplicationSignInManager>();
+                string strCorreo = string.Empty;
+                string strContraseña = string.Empty;
+                
 
-                // Esto no cuenta los errores de inicio de sesión hacia el bloqueo de cuenta
-                // Para habilitar los errores de contraseña para desencadenar el bloqueo, cambie a shouldLockout: true
-                var result = signinManager.PasswordSignIn(Email.Text, Password.Text, RememberMe.Checked, shouldLockout: false);
+                strCorreo = txtCorreo.Text;
+                strContraseña = Password.Text;
 
-                switch (result)
-                {
-                    case SignInStatus.Success:
-                        IdentityHelper.RedirectToReturnUrl(Request.QueryString["ReturnUrl"], Response);
-                        break;
-                    case SignInStatus.LockedOut:
-                        Response.Redirect("/Account/Lockout");
-                        break;
-                    case SignInStatus.RequiresVerification:
-                        Response.Redirect(String.Format("/Account/TwoFactorAuthenticationSignIn?ReturnUrl={0}&RememberMe={1}", 
-                                                        Request.QueryString["ReturnUrl"],
-                                                        RememberMe.Checked),
-                                          true);
-                        break;
-                    case SignInStatus.Failure:
-                    default:
-                        FailureText.Text = "Intento de inicio de sesión no válido";
+                if (cnLogin.AutorizaLogin(strCorreo))
+                {//Si el usuario esta autorizado
+                    if (cnLogin.AutenticarLogin(strCorreo, strContraseña))
+                    {//Si las credenciales son correctas
+                        int idUsuario = objCNUsuario.ConsultaUsuarioId(strCorreo);
+
+                        //Se almacena cuando el usuario ingresa al sistema
+                        cnLogin.Seguridad(idUsuario, DateTime.Now, Convert.ToString(Request.ServerVariables["REMOTE_ADDR"]));
+
+                        //Obtengo datos de usuario para variables de session
+                        var tbl = new DataTable();
+                        tbl = cnLogin.SelectDatosUsuario(idUsuario);
+                        DataRow row = tbl.Rows[0];
+
+                        Session["UsuarioID"] = idUsuario;
+                        //Session.Add("CorreoUsuarioLogin", txtCorreo.Text);
+                        Session.Add("CorreoUsuarioLogin", row["correo"].ToString());
+                        Session.Add("NombresUsuarioLogin", row["nombres"].ToString());
+                        Session.Add("ApellidosUsuarioLogin", row["apellidos"].ToString());
+
+
+                        FormsAuthentication.RedirectFromLoginPage(strCorreo, RememberMe.Checked);
+                    }
+                    else
+                    {//Si las credenciales son incorrectas
+                        FailureText.Text = "Usuario o contraseña incorrecta.";
                         ErrorMessage.Visible = true;
-                        break;
+                    }
+                }
+                else
+                {//Si el usuario no esta autorizado o no existe
+                    FailureText.Text = "Usuario no existe o aun no esta autorizado para ingresar.";
+                    ErrorMessage.Visible = true;
                 }
             }
         }

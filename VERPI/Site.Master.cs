@@ -86,22 +86,22 @@ namespace VERPI
                     //Genero menu con permisos                                        
                     LlenarMenu(idUsuario);
 
+                    var Item = new MenuItem();
                     if (Session["NombresUsuarioLogin"] != null)
                     {
-                        //lblUsuarioLogin.Text = "Bienvenido al sistema: " + Session["NombresUsuarioLogin"].ToString() + " " + Session["CorreoUsuarioLogin"].ToString();
-                        var Item = new MenuItem();
-
+                        //lblUsuarioLogin.Text = "Bienvenido al sistema: " + Session["NombresUsuarioLogin"].ToString() + " " + Session["CorreoUsuarioLogin"].ToString();                        
                         //Item.Value = Convert.ToString(enc["id_opcion"]);
                         Item.Text = Convert.ToString("Bienvenido: " + Session["NombresUsuarioLogin"].ToString());
                         //Item.ToolTip = Convert.ToString(enc["descripcion"]);
-                        Item.NavigateUrl = Convert.ToString("#");
-                        menuDinamico.Items.Add(Item);
                     }
                     else
                     {
-                        lblUsuarioLogin.Text = string.Format("Bienvenido al sistema: {0} ", Thread.CurrentPrincipal.Identity.Name);
+                        //lblUsuarioLogin.Text = string.Format("Bienvenido al sistema: {0} ", Thread.CurrentPrincipal.Identity.Name);
+                        Item.Text = Convert.ToString(string.Format("Bienvenido al sistema: {0} ", Thread.CurrentPrincipal.Identity.Name));
                     }
 
+                    Item.NavigateUrl = Convert.ToString("#");
+                    menuDinamico.Items.Add(Item);
                 }
                 else
                 {// Genero Menu sin permisos

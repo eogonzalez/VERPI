@@ -28,11 +28,6 @@ namespace Capa_Negocio.General
             return objCDLogin.RegistrarUsuario(objCEUsuario);
         }
 
-        public DataSet SelectSolicitudRegistroUsuarios()
-        {
-            return objCDLogin.SelectSolicitudRegistroUsuarios();
-        }
-
         public Boolean AutorizaLogin(string correo)
         {
             return objCDLogin.AutorizaLogin(correo);
@@ -41,16 +36,6 @@ namespace Capa_Negocio.General
         public Boolean Seguridad(int id_usuario, DateTime fecha_acceso, string dir_ip)
         {
             return objCDLogin.Seguridad(id_usuario, fecha_acceso, dir_ip);
-        }
-
-        public int ConsultaUsuarioId(string correo)
-        {
-            return objCDLogin.ConsultaUsuarioId(correo);
-        }
-
-        public DataTable SelectComboPerfiles()
-        {
-            return objCDLogin.SelectComboPerfiles();
         }
 
         public Boolean InsertAutorizacionPermisoUsuario(int id_usuario, int id_tipousuario, int id_usuarioAutoriza)
@@ -63,14 +48,24 @@ namespace Capa_Negocio.General
             return objCDLogin.UpdateRechazoPermisoUsuario(id_usuarioAutoriza, id_usuario);
         }
 
-        public DataTable SelectComboDepartamentos()
-        {
-            return objCDLogin.SelectComboDepartamentos();
-        }
-
         public DataTable SelectDatosUsuario(int idUsuario)
         {
             return objCDLogin.SelectDatosUsuario(idUsuario);
+        }
+
+        public Boolean InsertCodigoRecuperacion(string correo, string codigo)
+        {
+            return objCDLogin.InsertCodigoRecuperacion(correo, codigo);
+        }
+
+        public Boolean ValidoCodigoRecuperacion(string correo, string codigo)
+        {
+            return objCDLogin.ValidoCodigoRecuperacion(correo, codigo);
+        }
+
+        public Boolean UpdateContraseña(CEUsuario objCEUsuario)
+        {
+            return objCDLogin.UpdateContraseña(objCEUsuario);
         }
     }
 }

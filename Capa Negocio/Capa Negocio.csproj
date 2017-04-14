@@ -44,6 +44,7 @@
     <Compile Include="Administracion\CNPermisosPerfiles.cs" />
     <Compile Include="Administracion\CNTipoUsuarios.cs" />
     <Compile Include="General\CNLogin.cs" />
+    <Compile Include="General\CNUsuario.cs" />
     <Compile Include="General\Correo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -47,6 +47,7 @@
     <Compile Include="General\Conexion.cs" />
     <Compile Include="General\General.cs" />
     <Compile Include="General\Login.cs" />
+    <Compile Include="General\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

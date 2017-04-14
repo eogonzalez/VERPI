@@ -14,7 +14,11 @@
     </asp:PlaceHolder>
     <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-
+        <style type="text/css">
+        .hiddencol {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <form runat="server">
@@ -41,7 +45,7 @@
 
         <asp:UpdatePanel runat="server" ID="UPMenuDinamico">
             <ContentTemplate>
-                <div class="navbar navbar-inverse navbar-fixed-top">
+                <div class="navbar navbar-default navbar-fixed-top">
                     <div class="container">
                         <div class="navbar-header">
                             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -67,9 +71,9 @@
             </ContentTemplate>
         </asp:UpdatePanel>
 
-        <div class="label label-info">
+<%--        <div class="label label-info">
             <asp:Label ID="lblUsuarioLogin" runat="server"></asp:Label>
-        </div>
+        </div>--%>
 
         <div class="container body-content">
             <asp:UpdatePanel runat="server" ID="UPMainContent">
@@ -83,7 +87,7 @@
 
             <hr />
             <footer>
-                <p>&copy; <%: DateTime.Now.Year %> - SGEO - Ministerio de Economia</p>
+                <p>&copy; <%: DateTime.Now.Year %> - VERPI - Registro de la Propiedad Intelectual - Ministerio de Economia</p>
             </footer>
         </div>
     </form>

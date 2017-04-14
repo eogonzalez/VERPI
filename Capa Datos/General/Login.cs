@@ -113,95 +113,102 @@ namespace Capa_Datos.General
         public Boolean RegistrarUsuario(CEUsuario objCEUsuario)
         {
             //Declaracion de variables
-            Boolean estado = true;
+            var estado = false;
             string sql_query = string.Empty;           
 
             //Iniciamos proceso de conexion con db
-            using (SqlConnection cn = objConexion.Conectar())
+            using (var conn = objConexion.Conectar())
             {
-                //Query para insertar
-                sql_query = " INSERT INTO g_usuarios "+
-                    " (nombres,apellidos,cui,telefono "+
-                    " ,idDepartamento,direccion,correo "+
-                    " ,password,fecha_registro,estado " +
-                    " ,id_usuarioAutoriza) "+
-                    " VALUES "+
-                    " (@nombres,@apellidos,@cui,@telefono "+
-                    " ,@idDepartamento,@direccion,@correo "+
-                    " ,@password,@fecha_registro,@estado "+
-                    " ,@id_usuarioAutoriza) ";
+                conn.Open();
+                var command = conn.CreateCommand();
+                SqlTransaction transaccion;
 
+                //Iniciar Transaccion
+                transaccion = conn.BeginTransaction("RegistrarUsuario");
+
+                command.Connection = conn;
+                command.Transaction = transaccion;
 
                 try
                 {
-
-                    SqlCommand command = new SqlCommand(sql_query, cn);
+                    /*
+                        Query para registrar usuario
+                    */
+                    command.CommandText = " INSERT INTO g_usuarios " +
+                        " (nombres,apellidos,cui,telefono " +
+                        " ,direccion,correo " +
+                        " ,password,fecha_registro,estado " +
+                        " ,id_usuarioAutoriza) " +
+                        " VALUES " +
+                        " (@nombres,@apellidos,@cui,@telefono " +
+                        " ,@direccion,@correo " +
+                        " ,@password,@fecha_registro,@estado " +
+                        " ,@id_usuarioAutoriza); " +
+                        " SELECT SCOPE_IDENTITY(); ";
 
                     command.Parameters.AddWithValue("@nombres", objCEUsuario.CE_Nombres);
                     command.Parameters.AddWithValue("@apellidos", objCEUsuario.CE_Apellidos);
-
                     command.Parameters.AddWithValue("@cui", objCEUsuario.CE_CUI);
-
                     command.Parameters.AddWithValue("@telefono", objCEUsuario.CE_Telefono);
-                    command.Parameters.AddWithValue("@idDepartamento", objCEUsuario.CE_IDDepto);
                     command.Parameters.AddWithValue("@direccion", objCEUsuario.CE_Direccion);
-
                     command.Parameters.AddWithValue("@correo", objCEUsuario.CE_Correo);
                     command.Parameters.AddWithValue("@fecha_registro", DateTime.Now);
-                    command.Parameters.AddWithValue("@estado", 'R');
+                    command.Parameters.AddWithValue("@estado", 'A');
                     command.Parameters.AddWithValue("@id_usuarioAutoriza", '0');
-                    
 
                     //Encriptamos la contrasenia
                     General encript = new General();
                     string hash = encript.EncodePassword(objCEUsuario.CE_Correo + objCEUsuario.CE_Password);
-
                     command.Parameters.AddWithValue("@password", hash);
 
-                    cn.Open();
-                    command.ExecuteScalar();
+                    int id_usuario = 0;
+                    id_usuario = Convert.ToInt32(command.ExecuteScalar());
+
+                    /*
+                        Query para asignar permiso de usuario externo
+                    */
+
+                    command.CommandText = "INSERT INTO G_UsuarioPermiso "+
+                        " ([id_usuario],[id_tipousuario],[fecha_creacion] "+
+                        " ,[fecha_modificacion],[estado],[id_usuarioAutoriza]) "+
+                        " VALUES "+
+                        " (@id_usuario , @id_tipousuario, @fecha_creacion_permiso "+
+                        " , @fecha_modificacion_permiso, @estado_permiso, @id_usuarioAutoriza_permiso);";
+
+                    command.Parameters.AddWithValue("@id_usuario", id_usuario);
+                    command.Parameters.AddWithValue("@id_tipousuario", '2');
+                    command.Parameters.AddWithValue("@fecha_creacion_permiso", DateTime.Now);
+                    command.Parameters.AddWithValue("@fecha_modificacion_permiso", DateTime.Now);
+                    command.Parameters.AddWithValue("@estado_permiso", "A");
+                    command.Parameters.AddWithValue("@id_usuarioAutoriza_permiso", '0');
+                    command.ExecuteNonQuery();
+
+                    transaccion.Commit();
+                    estado = true;
+
 
                 }
                 catch (Exception)
                 {
+                    //Manejo primera excepcion
 
+                    try
+                    {
+                        transaccion.Rollback();
+                    }
+                    catch (Exception)
+                    {
+                        estado = false;
+                        //Manejo Segunda Excepcion
+                        throw;
+                    }
                     estado = false;
+                    throw;
                 }
+                
             }
                        
             return estado;
-        }
-
-        public DataSet SelectSolicitudRegistroUsuarios()
-        {
-            DataSet ds_usuarios = new DataSet();
-            SqlDataAdapter da_usuarios;
-
-            string sql_query = string.Empty;
-
-            using (SqlConnection cn = objConexion.Conectar())
-            {
-                sql_query = " SELECT id_usuario " +
-                    " ,nombres ,apellidos ,cui " +
-                    " ,correo,fecha_registro " +
-                    " FROM g_usuarios " +
-                    " where estado = 'R' ";
-                try
-                {
-                    SqlCommand command = new SqlCommand(sql_query, cn);
-                    da_usuarios = new SqlDataAdapter(command);
-
-                    da_usuarios.Fill(ds_usuarios);
-                }
-                catch (Exception)
-                {
-                    
-                    throw;
-                }
-            }
-
-
-            return ds_usuarios;
         }
 
         //Funcion para verificar si el usuario esta autorizado para login
@@ -292,67 +299,6 @@ namespace Capa_Datos.General
         
         }
         
-        //Funcion para obtener el id del usuario que hizo login
-        public int ConsultaUsuarioId(string correo)
-        {
-            int respuesta = 0;
-            string sql_query = string.Empty;
-
-            sql_query = "  SELECT id_usuario FROM g_usuarios WHERE correo = @correo ";
-
-            using (SqlConnection conexion = objConexion.Conectar())
-            {
-                try
-                {
-                    SqlCommand command = new SqlCommand(sql_query, conexion);
-                    command.Parameters.AddWithValue("@correo", correo);
-                    conexion.Open();
-                    respuesta = Convert.ToInt32(command.ExecuteScalar());
-                }
-                catch (Exception)
-                {
-                    
-                    throw;
-                }
-            }
-
-            return respuesta;
-        }
-
-        public DataTable SelectComboPerfiles()
-        {
-            var respuesta = new DataTable();
-
-            string sql_query = string.Empty;
-
-
-            using (SqlConnection cn = objConexion.Conectar())
-            {
-                try
-                {
-
-                    sql_query = " SELECT [id_tipousuario] " +
-                        " ,[nombre] " +
-                        " FROM [SGEODB].[dbo].[G_TipoUsuario] " +
-                        " where estado = 'A'; ";
-
-                    var command = new SqlCommand(sql_query, cn);
-                    SqlDataAdapter da = new SqlDataAdapter(command);
-
-                    da.Fill(respuesta);
-
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-
-            }
-
-            return respuesta;
-        }
-
         public Boolean InsertAutorizacionPermisoUsuario(int id_usuario, int id_tipousuario, int id_usuarioAutoriza)
         {
             Boolean respuesta = false;
@@ -461,32 +407,6 @@ namespace Capa_Datos.General
             return respuesta;
         }
 
-        public DataTable SelectComboDepartamentos()
-        {
-            var dt_respuesta = new DataTable();
-            string sql_query = string.Empty;
-
-            using (var cn = objConexion.Conectar())
-            {
-                sql_query = " SELECT idDepartamento "+
-                    " ,nombre,descripcion "+
-                    " FROM G_Departamento "+
-                    " where estado = 'A' ";
-                try
-                {
-                    var command = new SqlCommand(sql_query, cn);
-                    var da = new SqlDataAdapter(command);
-                    da.Fill(dt_respuesta);
-                }
-                catch (Exception)
-                {
-                    
-                    throw;
-                }
-            }
-            return dt_respuesta;
-        }
-
         public DataTable SelectDatosUsuario(int idUsuario)
         {
             var dt_respuesta = new DataTable();
@@ -515,6 +435,141 @@ namespace Capa_Datos.General
 
 
             return dt_respuesta;
+        }
+
+        public Boolean InsertCodigoRecuperacion(string correo, string codigo)
+        {
+            var respuesta = false;
+            var sql_query = string.Empty;
+
+            sql_query = " INSERT INTO G_UsuarioRecupera "+
+            " ([correo],[codigo],[fecha_solicitud]) "+
+            " VALUES "+
+            " (@correo, @codigo, @fecha_solicitud) ";
+
+            using (var conn = objConexion.Conectar())
+            {
+                var command = new SqlCommand(sql_query, conn);
+                command.Parameters.AddWithValue("correo", correo);
+                command.Parameters.AddWithValue("codigo", codigo);
+                command.Parameters.AddWithValue("fecha_solicitud", DateTime.Now);
+
+                conn.Open();
+                command.ExecuteNonQuery();
+                respuesta = true;
+            }
+
+            return respuesta;
+        }
+
+        public bool ValidoCodigoRecuperacion(string correo, string codigo)
+        {
+            var respuesta = false;
+            var sql_query = string.Empty;
+            sql_query = " SELECT COALESCE(count(1), 0)  as existe " +
+                " FROM g_usuariorecupera "+
+                " where correo = @correo and codigo = @codigo ";
+
+            using (var conn = objConexion.Conectar())
+            {
+                var command = new SqlCommand(sql_query, conn);
+                command.Parameters.AddWithValue("correo", correo);
+                command.Parameters.AddWithValue("codigo", codigo);
+                //command.Parameters.AddWithValue("fecha_solicitud", DateTime.Now);
+
+                try
+                {
+                    conn.Open();
+                    if (Convert.ToInt32(command.ExecuteScalar()) > 0)
+                    {
+                        respuesta = true;
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                
+            }
+
+            return respuesta;
+        }
+
+        public Boolean UpdateContraseña(CEUsuario objCEUsuario)
+        {
+            //Declaracion de variables
+            var respuesta = false;
+            
+
+            //Iniciamos proceso de conexion con db
+            using (var conn = objConexion.Conectar())
+            {
+                conn.Open();
+                var command = conn.CreateCommand();
+                SqlTransaction transaccion;
+
+                //Iniciar Transaccion
+                transaccion = conn.BeginTransaction("ActualizoContrasenia");
+
+                command.Connection = conn;
+                command.Transaction = transaccion;
+
+                try
+                {
+                    /*
+                        Query para registrar usuario
+                    */
+                    command.CommandText = " UPDATE G_Usuarios "+
+                    " SET "+
+                    " [password] = @password "+
+                    " WHERE correo = @correo; ";
+
+                    command.Parameters.AddWithValue("@correo", objCEUsuario.CE_Correo);
+
+                    //Encriptamos la contrasenia
+                    General encript = new General();
+                    string hash = encript.EncodePassword(objCEUsuario.CE_Correo + objCEUsuario.CE_Password);
+                    command.Parameters.AddWithValue("@password", hash);
+
+                    command.ExecuteNonQuery();
+
+                    /*
+                        Query para asignar permiso de usuario externo
+                    */
+
+                    command.CommandText = "DELETE FROM G_UsuarioRecupera "+
+                        " WHERE correo = @correo_recupera ";
+
+                    command.Parameters.AddWithValue("@correo_recupera", objCEUsuario.CE_Correo);
+                    command.ExecuteNonQuery();
+
+                    transaccion.Commit();
+                    respuesta = true;
+
+
+                }
+                catch (Exception)
+                {
+                    //Manejo primera excepcion
+
+                    try
+                    {
+                        transaccion.Rollback();
+                    }
+                    catch (Exception)
+                    {
+                        respuesta = false;
+                        //Manejo Segunda Excepcion
+                        throw;
+                    }
+                    respuesta = false;
+                    throw;
+                }
+
+            }
+
+            return respuesta;
         }
     }
 }

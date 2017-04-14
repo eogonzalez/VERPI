@@ -6,11 +6,16 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Owin;
 using VERPI.Models;
+using Capa_Negocio.General;
+using Capa_Entidad.General;
 
 namespace VERPI.Account
 {
     public partial class ResetPassword : Page
     {
+        CNLogin objCNLogin = new CNLogin();
+        CEUsuario objCEUsuario = new CEUsuario();
+
         protected string StatusMessage
         {
             get;
@@ -22,22 +27,47 @@ namespace VERPI.Account
             string code = IdentityHelper.GetCodeFromRequest(Request);
             if (code != null)
             {
-                var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                if (!objCNLogin.AutorizaLogin(Email.Text))
+                {
+                    ErrorMessage.Text = "El correo no tienen ningún usuario relacionado.";
+                    return;
+                }
+                else
+                {
+                    if (objCNLogin.ValidoCodigoRecuperacion(Email.Text, code))
+                    {
 
-                var user = manager.FindByName(Email.Text);
-                if (user == null)
-                {
-                    ErrorMessage.Text = "No se encontró ningún usuario";
-                    return;
+                        //Obtengo datos del usuario para actualizacion de password
+                        objCEUsuario.CE_Correo = Email.Text;
+                        objCEUsuario.CE_Password = Password.Text;
+                        string contraseñaConfirma = ConfirmPassword.Text;
+
+                        //Valido que las contraseñas son iguales
+                        if (objCEUsuario.CE_Password == contraseñaConfirma)
+                        {
+                                if (objCNLogin.UpdateContraseña(objCEUsuario))
+                                {
+                                    Response.Redirect("~/Account/ResetPasswordConfirmation");
+                                    return;
+                                }
+                                else
+                                {
+                                    ErrorMessage.Text = "Ha ocurrido un error al registrar usuario";
+                                    return;
+                                }
+                        }
+                        else
+                        {
+                            ErrorMessage.Text = "Contraseña no coincide, verifique.";
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        ErrorMessage.Text = "La direccion de recuperacion ha expirado o no ha generado una recuperacion de contraseña correcta, favor genere un nuevo correo de recuperacion de contraseña.";
+                        return;
+                    }
                 }
-                var result = manager.ResetPassword(user.Id, code, Password.Text);
-                if (result.Succeeded)
-                {
-                    Response.Redirect("~/Account/ResetPasswordConfirmation");
-                    return;
-                }
-                ErrorMessage.Text = result.Errors.FirstOrDefault();
-                return;
             }
 
             ErrorMessage.Text = "Se produjo un error";

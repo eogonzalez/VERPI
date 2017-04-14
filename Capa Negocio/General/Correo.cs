@@ -19,7 +19,7 @@ namespace Capa_Negocio.General
              *
              */
 
-            server.Credentials = new System.Net.NetworkCredential("alertas.dace@gmail.com", "DACE87654321");
+            server.Credentials = new System.Net.NetworkCredential("alertas.verpi@gmail.com", "iPhone12345678");
             server.EnableSsl = true;
         }
 

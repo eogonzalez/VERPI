@@ -16,7 +16,13 @@ namespace VERPI.Account
         protected void PhoneNumber_Click(object sender, EventArgs e)
         {
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            var code = manager.GenerateChangePhoneNumberToken(User.Identity.GetUserId(), PhoneNumber.Text);
+            string usuario = string.Empty;
+            if (Session["NombresUsuarioLogin"] != null)
+            {                
+                usuario = Session["NombresUsuarioLogin"].ToString();                
+            }
+
+            var code = manager.GenerateChangePhoneNumberToken(usuario, PhoneNumber.Text);
             if (manager.SmsService != null)
             {
                 var message = new IdentityMessage
