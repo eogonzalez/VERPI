@@ -100,7 +100,7 @@ namespace VERPI
                         Item.Text = Convert.ToString(string.Format("Bienvenido al sistema: {0} ", Thread.CurrentPrincipal.Identity.Name));
                     }
 
-                    Item.NavigateUrl = Convert.ToString("#");
+                    Item.NavigateUrl = Convert.ToString("~/Default");
                     menuDinamico.Items.Add(Item);
                 }
                 else

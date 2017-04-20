@@ -14,7 +14,9 @@ namespace Sistema_de_Gestion_Expedientes.Account
         {
             Session["UsuarioID"] = 0;
             FormsAuthentication.SignOut();
-            Server.Transfer("~/Default.aspx", false);
+            //Server.Transfer("~/Default.aspx", false);
+            //Server.Transfer("~/", false);
+            Response.Redirect("~/Index.html");
             //FormsAuthentication.RedirectToLoginPage();                        
         }
     }
