@@ -8,6 +8,7 @@ using VERPI.Models;
 using Capa_Negocio.General;
 //using WebMatrix.WebData;
 using System.Net.Mail;
+using System.Net.Mime;
 
 namespace VERPI.Account
 {
@@ -78,7 +79,19 @@ namespace VERPI.Account
                 /* Si deseamos Adjuntar algún archivo*/
                 //mnsj.Attachments.Add(new Attachment("C:\\archivo.pdf"));
 
-                mnsj.Body = mensaje+" Nota: Favor de no responder este correo.";
+                //mnsj.Body = mensaje+" Nota: Favor de no responder este correo.";
+
+                // Construir body alternativo de tipo HTML.
+                string body = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">";
+                body += "<HTML><HEAD><META http-equiv=Content-Type content=\"text/html; charset=iso-8859-1\">";
+                body += "</HEAD><BODY><DIV><FONT face=Arial color=#020202 size=2>" + mensaje;
+                body += "</font></div></br><DIV><strong><FONT face=Arial color=#020202 size=2>";
+                body += "Nota: Favor de no responder este correo.</FONT></strong></DIV></BODY></HTML>";
+                
+
+                ContentType mimeType = new ContentType("text/html");
+                AlternateView alternate = AlternateView.CreateAlternateViewFromString(body, mimeType);
+                mnsj.AlternateViews.Add(alternate);
 
                 /* Enviar */
                 Cr.EnviarCorreo(mnsj);

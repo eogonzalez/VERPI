@@ -195,6 +195,7 @@ namespace VERPI.Administracion
             objCEUsuario.CE_Password = getPassword();
             objCEUsuario.ID_TipoUsuario = getId_TipoUsuario();
             objCEUsuario.ID_UsuarioAutoriza = (int)Session["UsuarioID"];
+            objCEUsuario.CE_Estado = "A";
 
             respuesta = objCNUsuario.GuardarUsuario(objCEUsuario);
 

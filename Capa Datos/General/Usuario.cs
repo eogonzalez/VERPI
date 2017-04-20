@@ -319,7 +319,7 @@ namespace Capa_Datos.General
                     command.Parameters.AddWithValue("@direccion", objCEUsuario.CE_Direccion);
                     command.Parameters.AddWithValue("@correo", objCEUsuario.CE_Correo);
                     command.Parameters.AddWithValue("@fecha_registro", DateTime.Now);
-                    command.Parameters.AddWithValue("@estado", 'A');
+                    command.Parameters.AddWithValue("@estado", objCEUsuario.CE_Estado);
                     command.Parameters.AddWithValue("@id_usuarioAutoriza", '0');
 
                     //Encriptamos la contrasenia
@@ -584,6 +584,71 @@ namespace Capa_Datos.General
                     respuesta = false;
                     throw;
                 }
+            }
+
+            return respuesta;
+        }
+
+        public bool UpdateRegistro(string correo)
+        {
+            var respuesta = false;            
+
+            //Iniciamos proceso de conexion con db
+            using (var conn = objCDConexion.Conectar())
+            {
+                conn.Open();
+                var command = conn.CreateCommand();
+                SqlTransaction transaccion;
+
+                //Iniciar Transaccion
+                transaccion = conn.BeginTransaction("ActualizoContrasenia");
+
+                command.Connection = conn;
+                command.Transaction = transaccion;
+
+                try
+                {
+                    /*
+                        Query para registrar usuario
+                    */
+                    command.CommandText = " UPDATE G_Usuarios " +
+                    " SET " +
+                    " [estado] = @estado " +
+                    " WHERE correo = @correo; ";
+
+                    command.Parameters.AddWithValue("@correo", correo);
+                    command.Parameters.AddWithValue("@estado", "A");
+                    command.ExecuteNonQuery();
+
+                    command.CommandText = "DELETE FROM G_UsuarioRecupera " +
+                        " WHERE correo = @correo_recupera ";
+
+                    command.Parameters.AddWithValue("@correo_recupera", correo);
+                    command.ExecuteNonQuery();
+
+                    transaccion.Commit();
+                    respuesta = true;
+
+
+                }
+                catch (Exception)
+                {
+                    //Manejo primera excepcion
+
+                    try
+                    {
+                        transaccion.Rollback();
+                    }
+                    catch (Exception)
+                    {
+                        respuesta = false;
+                        //Manejo Segunda Excepcion
+                        throw;
+                    }
+                    respuesta = false;
+                    throw;
+                }
+
             }
 
             return respuesta;

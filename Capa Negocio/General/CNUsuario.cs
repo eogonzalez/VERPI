@@ -67,6 +67,11 @@ namespace Capa_Negocio.General
         {
             return objCDUsuario.DeleteUsuario(objCEUsuario);
         }
+
+        public bool UpdateRegistro(string correo)
+        {
+            return objCDUsuario.UpdateRegistro(correo);
+        }
     }
 
 

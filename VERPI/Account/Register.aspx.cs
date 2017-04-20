@@ -9,6 +9,7 @@ using VERPI.Models;
 using Capa_Entidad.General;
 using Capa_Negocio.General;
 using System.Net.Mail;
+using System.Net.Mime;
 
 namespace VERPI.Account
 {
@@ -28,6 +29,7 @@ namespace VERPI.Account
             objCEUsuario.CE_Direccion = txtDireccion.Text;
             objCEUsuario.CE_Correo = Email.Text;
             objCEUsuario.CE_Password = Password.Text;
+            objCEUsuario.CE_Estado = "C";
             string contraseñaConfirma = ConfirmPassword.Text;
 
             //Valido que las contraseñas son iguales
@@ -43,16 +45,32 @@ namespace VERPI.Account
 
                     if (objCNUsuario.RegistrarUsuario(objCEUsuario))
                     {
-                        //Enviar correo
-                        //Muestra a usuario pantalla que ha sido registrado y que revise su correo
-                        if (EnvioMensajeRegistro(objCEUsuario.CE_Nombres, objCEUsuario.CE_Apellidos, objCEUsuario.CE_Correo))
+                        Random rnd = new Random();
+                        string code = Convert.ToString(rnd.Next(DateTime.Now.Day, DateTime.Now.Month + 100));
+
+                        if (objCNLogin.InsertCodigoRecuperacion(Email.Text, code))
                         {
-                            Response.Redirect("RegisterDone.aspx");
-                            //Server.Transfer("RegisterDone.aspx", false);
+                            string callbackUrl = IdentityHelper.GetUserConfirmationRedirectUrl(code, Email.Text, Request);
+                            string mensaje = "Apreciable usuario " + objCEUsuario.CE_Nombres + " " + objCEUsuario.CE_Apellidos + " Bienvenido al Sistema de Ventanilla Electrónica del Registro de la Propiedad Intelectual -VERPI- </br> " +
+                                "Hemos recibido su solicitud de registro al sistema.</br> " +
+                                "Puede acceder al Sistema con los datos registrados.</br>" +
+                                 "Confirmando el registro haciendo clic <a href=\"" + callbackUrl + "\">aquí</a>.";
+
+                            //Enviar correo
+                            
+                            if (EnvioMensajeRegistro(mensaje, objCEUsuario.CE_Correo))
+                            {
+                                //Muestra a usuario pantalla que ha sido registrado y que revise su correo
+                                Response.Redirect("RegisterDone.aspx");                                
+                            }
+                            else
+                            {
+                                ErrorMessage.Text = "Mensaje no enviado!";
+                            }
                         }
                         else
                         {
-                            ErrorMessage.Text = "Mensaje no enviado!";
+                            ErrorMessage.Text = "No se ha podido generar codigos de confirmarcion de registro en este momento.";
                         }
 
                     }
@@ -69,7 +87,7 @@ namespace VERPI.Account
             }
         }
 
-        protected Boolean EnvioMensajeRegistro(string nombre, string apellido, string correo)
+        protected Boolean EnvioMensajeRegistro(string mensaje, string correo)
         {
             Boolean Enviado = false;
             try
@@ -87,10 +105,23 @@ namespace VERPI.Account
                 /* Si deseamos Adjuntar algún archivo*/
                 //mnsj.Attachments.Add(new Attachment("C:\\archivo.pdf"));
 
-                mnsj.Body = "Apreciable usuario " + nombre + " " + apellido + " Bienvenido al Sistema de Ventanilla Electrónica del Registro de la Propiedad Intelectual -VERPI- \n\n " +
-                    "Hemos recibido su solicitud de registro al sistema.\n\n" +
-                    "Puede acceder al Sistema con los datos registrados. \n\n" +
-                    "Nota: Favor de no responder este correo.";
+                //mnsj.Body = "Apreciable usuario " + nombre + " " + apellido + " Bienvenido al Sistema de Ventanilla Electrónica del Registro de la Propiedad Intelectual -VERPI- \n\n " +
+                //    "Hemos recibido su solicitud de registro al sistema.\n\n" +
+                //    "Puede acceder al Sistema con los datos registrados. \n\n" +
+                //    "Nota: Favor de no responder este correo.";
+
+                
+
+                // Construir body alternativo de tipo HTML.
+                string body = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">";
+                body += "<HTML><HEAD><META http-equiv=Content-Type content=\"text/html; charset=iso-8859-1\">";
+                body += "</HEAD><BODY><DIV><FONT face=Arial color=#020202 size=2>" +mensaje;
+                body += "</font></div></br><DIV><strong><FONT face=Arial color=#020202 size=2>";
+                body += "Nota: Favor de no responder este correo.</FONT></strong></DIV></BODY></HTML>";
+
+                ContentType mimeType = new ContentType("text/html");
+                AlternateView alternate = AlternateView.CreateAlternateViewFromString(body, mimeType);
+                mnsj.AlternateViews.Add(alternate);
 
                 /* Enviar */
                 Cr.EnviarCorreo(mnsj);

@@ -5,11 +5,16 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Owin;
 using VERPI.Models;
+using Capa_Negocio.General;
 
 namespace VERPI.Account
 {
     public partial class Confirm : Page
     {
+
+        CNLogin objCNLogin = new CNLogin();
+        CNUsuario objCNUsuario = new CNUsuario();
+           
         protected string StatusMessage
         {
             get;
@@ -20,15 +25,16 @@ namespace VERPI.Account
         {
             string code = IdentityHelper.GetCodeFromRequest(Request);
             string userId = IdentityHelper.GetUserIdFromRequest(Request);
+
             if (code != null && userId != null)
             {
-                var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-                var result = manager.ConfirmEmail(userId, code);
-                if (result.Succeeded)
+
+                if (objCNLogin.ValidoCodigoRecuperacion(userId, code) && objCNUsuario.UpdateRegistro(userId))
                 {
                     successPanel.Visible = true;
                     return;
                 }
+
             }
             successPanel.Visible = false;
             errorPanel.Visible = true;

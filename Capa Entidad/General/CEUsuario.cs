@@ -27,5 +27,7 @@ namespace Capa_Entidad.General
         public int ID_TipoUsuario { get; set; }
 
         public int ID_UsuarioAutoriza { get; set; }
+
+        public string CE_Estado { get; set; }
     }
 }

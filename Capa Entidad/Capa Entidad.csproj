@@ -43,6 +43,7 @@
     <Compile Include="Administracion\CEMenu.cs" />
     <Compile Include="Administracion\CEPermisosPerfiles.cs" />
     <Compile Include="Administracion\CETipoUsuarios.cs" />
+    <Compile Include="General\CEMantenimientos.cs" />
     <Compile Include="General\CEUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -7,14 +7,13 @@ using Microsoft.AspNet.Identity.Owin;
 using Owin;
 using VERPI.Models;
 using Capa_Negocio.General;
-using Capa_Entidad.General;
+
 
 namespace VERPI.Account
 {
     public partial class ResetPassword : Page
     {
-        CNLogin objCNLogin = new CNLogin();
-        CEUsuario objCEUsuario = new CEUsuario();
+        CNLogin objCNLogin = new CNLogin();        
         CNUsuario objCNUsuario = new CNUsuario();
 
         protected string StatusMessage
