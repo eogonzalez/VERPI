@@ -21,6 +21,21 @@ namespace VERPI.Account
             RegisterHyperLink.NavigateUrl = "Register";
             // Habilite esta opción una vez tenga la confirmación de la cuenta habilitada para la funcionalidad de restablecimiento de contraseña
             ForgotPasswordHyperLink.NavigateUrl = "Forgot";
+
+            if (!IsPostBack)
+            {
+                int i = 0;
+                if (Session["UsuarioID"] != null && int.TryParse(Session["UsuarioID"].ToString(), out i))
+                {
+                    if (i > 0)
+                    {
+                        Response.Redirect("~/Default");
+                    }
+
+                }
+            }
+            
+
             //OpenAuthLogin.ReturnUrl = Request.QueryString["ReturnUrl"];
             //var returnUrl = HttpUtility.UrlEncode(Request.QueryString["ReturnUrl"]);
             //if (!String.IsNullOrEmpty(returnUrl))

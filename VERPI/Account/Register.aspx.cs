@@ -137,5 +137,21 @@ namespace VERPI.Account
 
             return Enviado;
         }
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                int i = 0;
+                if (Session["UsuarioID"] != null && int.TryParse(Session["UsuarioID"].ToString(), out i))
+                {
+                    if (i > 0)
+                    {
+                        Response.Redirect("~/Default");
+                    }
+
+                }
+            }
+        }
     }
 }
