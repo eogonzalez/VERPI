@@ -8,12 +8,12 @@ using System.Data;
 using Capa_Entidad.General;
 using Capa_Negocio.General;
 
-namespace VERPI.Mantenimientos
+namespace VERPI.Administracion
 {
     public partial class TipoPagos : System.Web.UI.Page
     {
-        CEMantenimientos objCEMant = new CEMantenimientos();
-        CNMantenimientos objCNMant = new CNMantenimientos();
+        CEMantenimientosDinamicos objCEMant = new CEMantenimientosDinamicos();
+        CNMantenimientosDinamicos objCNMant = new CNMantenimientosDinamicos();
        
         #region Eventos del formulario
         
@@ -60,11 +60,11 @@ namespace VERPI.Mantenimientos
                     }
                     else
                     {
-
+                        lkBtn_viewPanel_ModalPopupExtender.Show();
+                        ErrorMessage.Text = "Ha ocurrido un error al actualizar Tipo de Pago.";
                     }
                     break;
-                default:
-                    break;
+                
             }
         }
 
@@ -95,8 +95,7 @@ namespace VERPI.Mantenimientos
                     EliminarTipoPago(id_tipopago);
                     Llenar_gvTipoPagos();
                     break;
-                default:
-                    break;
+                
             }
         }
 
@@ -179,6 +178,7 @@ namespace VERPI.Mantenimientos
         #endregion
 
         #region Obtener Valores del Formulario
+
         protected string getNombre()
         {
             return txtNombre.Text;

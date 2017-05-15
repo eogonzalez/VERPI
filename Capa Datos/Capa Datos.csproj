@@ -41,14 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Administracion\CamposFormularios.cs" />
     <Compile Include="Administracion\Menu.cs" />
     <Compile Include="Administracion\PermisosPerfiles.cs" />
     <Compile Include="Administracion\TipoUsuarios.cs" />
     <Compile Include="General\Conexion.cs" />
+    <Compile Include="General\Formularios.cs" />
     <Compile Include="General\General.cs" />
     <Compile Include="General\Login.cs" />
-    <Compile Include="General\Mantenimientos.cs" />
+    <Compile Include="General\MantenimientosDinamicos.cs" />
     <Compile Include="General\Usuario.cs" />
+    <Compile Include="Administracion\Formularios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

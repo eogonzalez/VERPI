@@ -9,11 +9,11 @@ using System.Data.SqlClient;
 
 namespace Capa_Datos.General
 {
-    public class Mantenimientos
+    public class MantenimientosDinamicos
     {
         Conexion objConexion = new Conexion();
 
-        public DataTable SelectMantenimientoGridView(CEMantenimientos objCEMant)
+        public DataTable SelectMantenimientoGridView(CEMantenimientosDinamicos objCEMant)
         {
             var dt_respuesta = new DataTable();
             var sql_query = string.Empty;
@@ -41,7 +41,7 @@ namespace Capa_Datos.General
             return dt_respuesta;
         }
 
-        public bool InsertMantenimiento(CEMantenimientos objCEMant)
+        public bool InsertMantenimiento(CEMantenimientosDinamicos objCEMant)
         {
             var respuesta = false;
             var sql_query = string.Empty;
@@ -72,7 +72,7 @@ namespace Capa_Datos.General
             return respuesta;
         }
 
-        public bool DeleteMantenimiento(CEMantenimientos objCEMant)
+        public bool DeleteMantenimiento(CEMantenimientosDinamicos objCEMant)
         {
             var respuesta = false;
 
@@ -99,7 +99,7 @@ namespace Capa_Datos.General
             return respuesta;
         }
 
-        public DataTable SelectMantenimientoRegistro(CEMantenimientos objCEMant)
+        public DataTable SelectMantenimientoRegistro(CEMantenimientosDinamicos objCEMant)
         {
             var dt_respuesta = new DataTable();
             var sql_query = string.Empty;
@@ -131,7 +131,7 @@ namespace Capa_Datos.General
             return dt_respuesta;
         }
 
-        public bool UpdateMantenimientoRegistro(CEMantenimientos objCEMant)
+        public bool UpdateMantenimientoRegistro(CEMantenimientosDinamicos objCEMant)
         {
             var respuesta = false;
             var sql_query = string.Empty;

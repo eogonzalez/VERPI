@@ -10,7 +10,7 @@
 namespace VERPI.Administracion {
     
     
-    public partial class TipoPagos {
+    public partial class Formularios {
         
         /// <summary>
         /// Control lkBtn_nuevo.
@@ -49,13 +49,13 @@ namespace VERPI.Administracion {
         protected global::AjaxControlToolkit.ModalPopupExtender lkBtn_viewPanel_ModalPopupExtender;
         
         /// <summary>
-        /// Control gvTipoPagos.
+        /// Control gvFormularios.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvTipoPagos;
+        protected global::System.Web.UI.WebControls.GridView gvFormularios;
         
         /// <summary>
         /// Control pnl_nuevo.
@@ -74,6 +74,15 @@ namespace VERPI.Administracion {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal ErrorMessage;
+        
+        /// <summary>
+        /// Control cbo_tipo_tramite.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList cbo_tipo_tramite;
         
         /// <summary>
         /// Control txtNombre.

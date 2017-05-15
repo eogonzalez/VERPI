@@ -9,31 +9,31 @@ using Capa_Datos.General;
 
 namespace Capa_Negocio.General
 {
-    public class CNMantenimientos
+    public class CNMantenimientosDinamicos
     {
-        Mantenimientos objCNMant = new Mantenimientos();
+        MantenimientosDinamicos objCNMant = new MantenimientosDinamicos();
 
-        public DataTable SelectMantenimientoGridView(CEMantenimientos objCEMant)
+        public DataTable SelectMantenimientoGridView(CEMantenimientosDinamicos objCEMant)
         {
             return objCNMant.SelectMantenimientoGridView(objCEMant);
         }
 
-        public bool InsertMantenimiento(CEMantenimientos objCEMant)
+        public bool InsertMantenimiento(CEMantenimientosDinamicos objCEMant)
         {
             return objCNMant.InsertMantenimiento(objCEMant);
         }
 
-        public bool DeleteMantenimiento(CEMantenimientos objCEMant)
+        public bool DeleteMantenimiento(CEMantenimientosDinamicos objCEMant)
         {
             return objCNMant.DeleteMantenimiento(objCEMant);
         }
 
-        public DataTable SelectMantenimientoRegistro(CEMantenimientos objCEMant)
+        public DataTable SelectMantenimientoRegistro(CEMantenimientosDinamicos objCEMant)
         {
             return objCNMant.SelectMantenimientoRegistro(objCEMant);
         }
 
-        public bool UpdateMantenimientoRegistro(CEMantenimientos objCEMant)
+        public bool UpdateMantenimientoRegistro(CEMantenimientosDinamicos objCEMant)
         {
             return objCNMant.UpdateMantenimientoRegistro(objCEMant);
         }

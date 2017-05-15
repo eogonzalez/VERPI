@@ -104,8 +104,6 @@ namespace VERPI.Administracion
                     Llenar_gvMenu();
                     break;
 
-                default:
-                    break;
             }
 
         }

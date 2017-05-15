@@ -40,11 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Administracion\CECamposFormularios.cs" />
     <Compile Include="Administracion\CEMenu.cs" />
     <Compile Include="Administracion\CEPermisosPerfiles.cs" />
     <Compile Include="Administracion\CETipoUsuarios.cs" />
-    <Compile Include="General\CEMantenimientos.cs" />
+    <Compile Include="General\CEFormularios.cs" />
+    <Compile Include="General\CEMantenimientosDinamicos.cs" />
     <Compile Include="General\CEUsuario.cs" />
+    <Compile Include="Administracion\CEFormularios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

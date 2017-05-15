@@ -141,8 +141,7 @@ namespace Capa_Datos.Administracion
                         " ,nombre ,descripcion " +
                         " ,url ,id_padre " +
                         " FROM dbo.g_menu_opcion " +
-                        " where obligatorio = 1 Or visible = 1 and login = 0 " +
-                        " and estado = 'A' " +
+                        " where estado = 'A' and (obligatorio = 1 Or visible = 1 and login = 0) " +                        
                         " order by orden ";
                 }
                 else

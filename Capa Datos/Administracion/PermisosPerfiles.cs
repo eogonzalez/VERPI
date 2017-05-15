@@ -32,7 +32,7 @@ namespace Capa_Datos.Administracion
                     " on gtu.id_tipousuario = gptu.id_tipousuario " +
                     " join g_menu_opcion gmo " +
                     " on gmo.id_opcion = gptu.id_opcion " +
-                    " where	gptu.estado = 'A'  "+
+                    " where	gptu.estado = 'A' and gmo.estado = 'A' " +
                     " AND gptu.id_tipousuario = @id_usuarioPermiso ";
             }
             else

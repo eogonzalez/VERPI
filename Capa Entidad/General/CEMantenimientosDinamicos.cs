@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Capa_Entidad.General
 {
-    public class CEMantenimientos
+    public class CEMantenimientosDinamicos
     {
         public string TBL_Mant { get; set; }
         public string ID_Mant { get; set; }

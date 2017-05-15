@@ -40,13 +40,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Administracion\CNCamposFormularios.cs" />
     <Compile Include="Administracion\CNMenu.cs" />
     <Compile Include="Administracion\CNPermisosPerfiles.cs" />
     <Compile Include="Administracion\CNTipoUsuarios.cs" />
+    <Compile Include="General\CNFormularios.cs" />
     <Compile Include="General\CNLogin.cs" />
-    <Compile Include="General\CNMantenimientos.cs" />
+    <Compile Include="General\CNMantenimientosDinamicos.cs" />
     <Compile Include="General\CNUsuario.cs" />
     <Compile Include="General\Correo.cs" />
+    <Compile Include="Administracion\CNFormularios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +62,7 @@
       <Name>Capa Entidad</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
