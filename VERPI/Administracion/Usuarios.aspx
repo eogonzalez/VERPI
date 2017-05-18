@@ -98,9 +98,9 @@
                 <div class="form-group input-sm">
                     <asp:Label runat="server" AssociatedControlID="txtNumero" CssClass="col-md-2 control-label">Telefono</asp:Label>
                     <div class="col-md-10">
-                        <asp:TextBox runat="server" ID="txtNumero" CssClass="form-control input-sm" TextMode="Number" />
+                        <asp:TextBox runat="server" ID="txtNumero" CssClass="form-control input-sm" TextMode="SingleLine" />
                         <asp:RequiredFieldValidator runat="server" ControlToValidate="txtNumero"
-                            CssClass="text-danger" ErrorMessage="El campo Telefono es obligatorio y debe de ser numerico." />
+                            CssClass="text-danger" ErrorMessage="El campo Telefono es obligatorio." />
                     </div>
                 </div>
 

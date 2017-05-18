@@ -23,6 +23,10 @@ namespace Capa_Negocio.General
             return objCDFormulario.SelectCantidadCamposFormulario(no_formulario);
         }
 
+        public DataTable SelectFormularios(int tipo_tramite)
+        {
+            return objCDFormulario.SelectFormularios(tipo_tramite);
+        }
 
     }
 }

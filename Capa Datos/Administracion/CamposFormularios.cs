@@ -22,7 +22,7 @@ namespace Capa_Datos.Administracion
 
             sql_query = " SELECT [correlativo_campo] "+
                 " ,[no_formulario],[no_orden],[seccion] "+
-                " ,[Etiqueta],[nombre_control],[tipo_control] "+
+                " ,[Etiqueta],[nombre_control], case [tipo_control] when 1 then 'Texto' when 2 then 'Combo' when 3 then 'Adjunto' else 'Check' end as tipo_control " +
                 " ,[descripcion],[modo_texto],[nombre_campo_db] "+
                 " ,[obligatorio],[expresion_regular] "+
                 " FROM[dbo].[M_Campos_Formulario] "+
@@ -178,7 +178,7 @@ namespace Capa_Datos.Administracion
 
             sql_query = " SELECT " +
                 " [no_formulario],[no_orden],[seccion] " +
-                " ,[Etiqueta],[nombre_control],[tipo_control] " +
+                " ,[Etiqueta],[nombre_control], [tipo_control] " +
                 " ,[descripcion],[modo_texto],[nombre_campo_db] " +
                 " ,[obligatorio],[expresion_regular] " +
                 " FROM[dbo].[M_Campos_Formulario] " +

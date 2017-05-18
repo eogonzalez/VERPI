@@ -52,6 +52,7 @@ namespace VERPI.Administracion
                 case "Guardar":
                     if (GuardarPermisoPerfil())
                     {
+                        LimpiarPanel();
                         int id_usuarioPermiso = 0;
 
                         if (Request.QueryString["id"] != null)
@@ -61,6 +62,7 @@ namespace VERPI.Administracion
                         }
                         else
                         {
+                            
                             Llenar_gvPermisosPerfiles();
                         }
 
@@ -85,6 +87,8 @@ namespace VERPI.Administracion
                         }
                         else
                         {
+                            cboMenu.Enabled = true;
+                            
                             Llenar_gvPermisosPerfiles();
                         }                                                
                     }
@@ -119,6 +123,8 @@ namespace VERPI.Administracion
             switch (e.CommandName)
             {   
                 case "modificar":
+                    cboMenu.Enabled = false;
+                    cboPerfil.Enabled = false;
                     MostrarDatos(id_permisoPerfil);
                     lkBtn_viewPanel_ModalPopupExtender.Show();
                     break;
@@ -133,6 +139,7 @@ namespace VERPI.Administracion
 
         protected void btnSalir_Click(object sender, EventArgs e)
         {
+            cboMenu.Enabled = true;
             LimpiarPanel();
             btnGuardar.Text = "Guardar";
             btnGuardar.CommandName = "Guardar";

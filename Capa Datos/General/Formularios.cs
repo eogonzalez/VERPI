@@ -77,6 +77,37 @@ namespace Capa_Datos.General
             return dt_respuesta;
         }
 
+        public DataTable SelectFormularios(int tipo_tramite)
+        {
+            var dt_respuesta = new DataTable();
+            var sql_query = string.Empty;
+
+            sql_query = " SELECT [no_formulario]    "+  
+                " ,[nombre] "+
+                " FROM[dbo].[G_Formularios] "+
+                " where estado = 'A' and tipo_tramite = @tipo_tramite "+
+                " order by no_formulario ";
+            using (var con = objConexion.Conectar())
+            {
+                var command = new SqlCommand(sql_query, con);
+                command.Parameters.AddWithValue("tipo_tramite", tipo_tramite);
+
+                try
+                {
+                    con.Open();
+                    var da = new SqlDataAdapter(command);
+                    da.Fill(dt_respuesta);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+
+
+            return dt_respuesta;
+        }
 
     }
 }

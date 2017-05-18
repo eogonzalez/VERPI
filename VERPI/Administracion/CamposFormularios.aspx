@@ -30,10 +30,11 @@
 
                     <Columns>
                         <asp:BoundField DataField="correlativo_campo" SortExpression="no_formulario" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" />
-                        <%--<asp:BoundField DataField="no_orden" HeaderText="Orden" />
-                        <asp:BoundField DataField="seccion" HeaderText="Seccion" />         --%>
+                        <asp:BoundField DataField="seccion" HeaderText="Seccion" />         
+                        <asp:BoundField DataField="no_orden" HeaderText="Orden" />
                         <asp:BoundField DataField="Etiqueta" HeaderText="Etiqueta" />
                         <asp:BoundField DataField="descripcion" HeaderText="Descripcion" />
+                        <asp:BoundField DataField="tipo_control" HeaderText="Tipo de Control" />
 
                         <asp:ButtonField ButtonType="Button" Text="Modificar" HeaderText="Modificar" CommandName="modificar" ControlStyle-CssClass="btn btn-success" />
                         <asp:TemplateField HeaderText="Eliminar">
@@ -73,6 +74,7 @@
                             <asp:ListItem Value="1">Seccion Uno (Encabezado)</asp:ListItem>
                             <asp:ListItem Value="2">Seccion Dos (Cuerpo)</asp:ListItem>
                             <asp:ListItem Value="3">Seccion Tres (Adjuntos)</asp:ListItem>
+                            <asp:ListItem Value="4">Seccion Cuatro</asp:ListItem>
                         </asp:DropDownList>
 
                     </div>
@@ -115,7 +117,8 @@
                         <asp:DropDownList runat="server" ID="cbo_tipoControl" CssClass="form-control">
                             <asp:ListItem Value="1">Texto</asp:ListItem>
                             <asp:ListItem Value="2">Combo</asp:ListItem>
-                            <%--<asp:ListItem Value="3">Seccion Tres (Adjuntos)</asp:ListItem>--%>
+                            <asp:ListItem Value="3">Adjunto</asp:ListItem>
+                            <asp:ListItem Value="4">Check</asp:ListItem>                            
                         </asp:DropDownList>
                     </div>
 

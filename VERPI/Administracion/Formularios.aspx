@@ -32,7 +32,7 @@
                         <asp:BoundField DataField="no_formulario" SortExpression="no_formulario" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" />
                         <asp:BoundField DataField="tipo_tramite"  ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol"/>                        
                         <asp:BoundField DataField="nombre_tipo" HeaderText="Tipo de Tramite" />
-                        <asp:BoundField DataField="nombre" HeaderText="Tipo de Pago" />                        
+                        <asp:BoundField DataField="nombre" HeaderText="Nombre Formulario" />                        
                         <asp:BoundField DataField="descripcion_formulario" HeaderText="Descripcion" />                        
 
                         <asp:ButtonField ButtonType="Button" Text="Modificar" HeaderText="Modificar" CommandName="modificar" ControlStyle-CssClass="btn btn-success" />
