@@ -44,6 +44,7 @@
     <Compile Include="Administracion\CNMenu.cs" />
     <Compile Include="Administracion\CNPermisosPerfiles.cs" />
     <Compile Include="Administracion\CNTipoUsuarios.cs" />
+    <Compile Include="Bandeja\CNBandejaUsuario.cs" />
     <Compile Include="General\CNFormularios.cs" />
     <Compile Include="General\CNLogin.cs" />
     <Compile Include="General\CNMantenimientosDinamicos.cs" />

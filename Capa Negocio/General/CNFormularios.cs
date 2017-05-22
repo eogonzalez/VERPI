@@ -28,5 +28,9 @@ namespace Capa_Negocio.General
             return objCDFormulario.SelectFormularios(tipo_tramite);
         }
 
+        public bool InsertDatosFormularioBorrador(CEFormularios objCEFormulario)
+        {
+            return objCDFormulario.InsertDatosFormularioBorrador(objCEFormulario);
+        }
     }
 }

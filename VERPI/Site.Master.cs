@@ -74,7 +74,7 @@ namespace VERPI
         {
             if (!IsPostBack)
             {
-                MinecoHyperLink.NavigateUrl = "http://www.mineco.gob.gt/";
+                MinecoHyperLink.NavigateUrl = "https://www.rpi.gob.gt";
                 CompactHyperLink.NavigateUrl = "http://www.compactdeveloper.com/";
                 if (Session["UsuarioID"] == null)
                 {//Si  la variable de sesion no esta creada

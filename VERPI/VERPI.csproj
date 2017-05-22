@@ -182,6 +182,8 @@
     <Content Include="Administracion\PermisosPerfiles.aspx" />
     <Content Include="Administracion\TipoUsuarios.aspx" />
     <Content Include="Administracion\Usuarios.aspx" />
+    <Content Include="Bandeja\BandejaTrabajo.aspx" />
+    <Content Include="Bandeja\BandejaUsuario.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -420,6 +422,20 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Bandeja\BandejaTrabajo.aspx.cs">
+      <DependentUpon>BandejaTrabajo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Bandeja\BandejaTrabajo.aspx.designer.cs">
+      <DependentUpon>BandejaTrabajo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Bandeja\BandejaUsuario.aspx.cs">
+      <DependentUpon>BandejaUsuario.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Bandeja\BandejaUsuario.aspx.designer.cs">
+      <DependentUpon>BandejaUsuario.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Contact.aspx.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -485,6 +501,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="doctos\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Capa Entidad\Capa Entidad.csproj">

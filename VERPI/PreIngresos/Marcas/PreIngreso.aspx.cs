@@ -8,6 +8,8 @@ using Capa_Entidad.General;
 using Capa_Negocio.General;
 using System.Data;
 using System.Web.UI.HtmlControls;
+using System.Text;
+using System.IO;
 
 namespace VERPI.PreIngresos.Marcas
 {
@@ -15,7 +17,7 @@ namespace VERPI.PreIngresos.Marcas
     {
         CEFormularios objCEFormulario = new CEFormularios();
         CNFormularios objCNFormulario = new CNFormularios();
-
+        
         #region Eventos del formulario
 
         protected void Page_Load(object sender, EventArgs e)
@@ -24,25 +26,38 @@ namespace VERPI.PreIngresos.Marcas
             {
                 int tipo_tramite = 0;
                 if (Request.QueryString["cmd"] != null)
-                {//Si se envia de query string se reasigna el valor                    
+                {//Si se envia de query string se reasigna el valor      
                     tipo_tramite  = Convert.ToInt32(Request.QueryString["cmd"]);
                     //Session.Add("TipoTramite", tipo_tramite);
                 }
 
+                divAlertCorrecto.Visible = false;
+                divAlertError.Visible = false;
+
                 pnlFormulario.Visible = false;
                 Llenar_cbo_tramite(tipo_tramite);
 
+                btnGuardar.Attributes.Add("onclick", "this.value='Procesando Espere...';this.disabled=true;" + ClientScript.GetPostBackEventReference(btnGuardar, ""));
             }
         }
 
         protected void CargaFormulario(object sender, EventArgs e)
         {
-
+            
             var no_formulario = Convert.ToInt32(cbo_tramite.SelectedValue);
+            Session.Add("no_formulario", no_formulario);
+            
+
             if (no_formulario > 0)
             {
+                pnl_seccion_1.Controls.Clear();
+                pnl_seccion_2.Controls.Clear();
+                pnl_seccion_3.Controls.Clear();
+
+
                 LlenarFormulario(no_formulario);
                 pnlFormulario.Visible = true;
+                //ViewState["controlsadded"] = null;
             }
             else
             {
@@ -53,6 +68,50 @@ namespace VERPI.PreIngresos.Marcas
 
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
+            divAlertCorrecto.Visible = false;
+            divAlertError.Visible = false;
+
+            DataTable dt = new DataTable();
+            dt = ObtengoControlesConValores();
+
+            objCEFormulario.Dt_Campos = dt;
+            objCEFormulario.ID_Usuario_Solicita = (int)Session["UsuarioID"];
+            objCEFormulario.No_Formulario = (int)Session["no_formulario"];
+
+            //if (objCNFormulario.InsertDatosFormularioBorrador(objCEFormulario))
+            //{
+            //    MensajeCorrectoPrincipal.Text = "Se almacenaron los campos.";
+
+            //    if (GuardarAnexos())
+            //    {
+            //        MensajeCorrectoPrincipal.Text += " Se han almacenado los documentos anexos.";
+            //    }
+            //    else
+            //    {
+            //        ErrorMessagePrincipal.Text = "Ha ocurrido un error al cargar archivos anexos.";
+            //        divAlertError.Visible = true;
+            //    }
+
+
+            //    divAlertCorrecto.Visible = true;
+                
+            //}
+            //else
+            //{
+            //    divAlertError.Visible = true;
+            //    ErrorMessagePrincipal.Text = "Ha ocurrido un error al almacenar el formulario.";
+            //}
+
+
+            if (GuardarAnexos())
+            {
+                MensajeCorrectoPrincipal.Text += " Se han almacenado los documentos anexos.";
+            }
+            else
+            {
+                ErrorMessagePrincipal.Text = "Ha ocurrido un error al cargar archivos anexos.";
+                divAlertError.Visible = true;
+            }
 
         }
 
@@ -64,6 +123,33 @@ namespace VERPI.PreIngresos.Marcas
         protected void gvAnexos_RowCommand(object sender, GridViewCommandEventArgs e)
         {
 
+        }
+
+        protected void btnEnviar_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected override void LoadViewState(object savedState)
+        {
+            base.LoadViewState(savedState);
+            if (ViewState["controlsadded"] != null)
+            {
+                if (Session["no_formulario"] != null)
+                {
+                    var no_formulario = (int)Session["no_formulario"];
+                    if (no_formulario > 0)
+                    {
+                        LlenarFormulario(no_formulario);
+                        pnlFormulario.Visible = true;
+                    }
+                    else
+                    {
+                        pnlFormulario.Visible = false;
+                    }
+                }
+
+            }
         }
 
         #endregion
@@ -177,26 +263,30 @@ namespace VERPI.PreIngresos.Marcas
 
                 
             }
+            Session.Add("PNL1", pnl_seccion_1);
+            
+            int cantidad = pnl_seccion_1.Controls.Count;
+            int otra;
 
         }
 
-        protected void ConstruirControlesCiclo(HtmlGenericControl panel, DataRow row, int cantidad_controles,ref int cont, ref int x)
+        protected void ConstruirControlesCiclo(Panel pnl_contenedor, DataRow row, int cantidad_controles,ref int cont, ref int x)
         {
             if (cantidad_controles >= 6)
             {
                 //Agrego Primer div
                 if (cont == 1)
-                {
-                    panel.Controls.Add(new LiteralControl("<div class='form-group'>"));
+                {                    
+                    pnl_contenedor.Controls.Add(new LiteralControl("<div class='form-group'>"));
                 }
 
                 //Creo controles
-                ConstruirControles(panel, row, cantidad_controles);
+                ConstruirControles(pnl_contenedor, row, cantidad_controles);
                 
 
                 if (cont == 2 || cantidad_controles == x)
                 {
-                    panel.Controls.Add(new LiteralControl("</div>"));
+                    pnl_contenedor.Controls.Add(new LiteralControl("</div>"));
                     cont = 0;
                 }
 
@@ -204,38 +294,43 @@ namespace VERPI.PreIngresos.Marcas
                 x++;
             }
             else {
-                panel.Controls.Add(new LiteralControl("<div class='form-group'>"));
+                pnl_contenedor.Controls.Add(new LiteralControl("<div class='form-group'>"));
                 //Si es la seccion 1, se agregan campos en encabezado del formulario
-                ConstruirControles(panel, row, cantidad_controles);
-                panel.Controls.Add(new LiteralControl("</div>"));
+                ConstruirControles(pnl_contenedor, row, cantidad_controles);
+                pnl_contenedor.Controls.Add(new LiteralControl("</div>"));
             }
         }
 
-        protected void ConstruirControles(HtmlGenericControl panel, DataRow row, int total_campos)
+        protected void ConstruirControles(Panel pnl_contenedor, DataRow row, int total_campos)
         {
             /*Agrego Label*/
             var label = new Label();
             label.Text = row["etiqueta"].ToString();
 
             label.CssClass = "control-label col-xs-2";
-            panel.Controls.Add(label);
+            pnl_contenedor.Controls.Add(label);
 
             if (total_campos >= 6)
             {
-                panel.Controls.Add(new LiteralControl("<div class='col-xs-4'>"));
+                pnl_contenedor.Controls.Add(new LiteralControl("<div class='col-xs-4'>"));
             }
             else
             {
-                panel.Controls.Add(new LiteralControl("<div class='col-xs-10'>"));
+                pnl_contenedor.Controls.Add(new LiteralControl("<div class='col-xs-10'>"));
             }
 
+            int no_control = 0;
+            no_control = 10000+(int)row["correlativo_campo"];
+            var identificacion = string.Empty;
+            identificacion = row["nombre_control"].ToString() + "_" + no_control.ToString();
 
             switch (row["tipo_control"].ToString())
             {
                 case "1":
                     //Si es textbox
                     TextBox MiTexBox = new TextBox();
-                    MiTexBox.ID = row["nombre_control"].ToString();
+                    MiTexBox.ID = identificacion;
+                    MiTexBox.Text = "";
                     MiTexBox.CssClass = "form-control";
                     MiTexBox.ToolTip = row["descripcion"].ToString();
                     MiTexBox.ViewStateMode = ViewStateMode.Disabled;
@@ -259,19 +354,22 @@ namespace VERPI.PreIngresos.Marcas
                             MiTexBox.TextMode = TextBoxMode.Email;
                             break;
                     }
-                    
-                    panel.Controls.Add(MiTexBox);
+
+                    pnl_contenedor.Controls.Add(MiTexBox);
+                    ViewState["controlsadded"] = true;                                        
+                    //EnsureChildControls();
                     break;
 
                 case "2":
                     
                     //Si es dropdowlist
                     DropDownList MiCombo = new DropDownList();
-                    MiCombo.ID = row["nombre_control"].ToString();
+                    MiCombo.ID = identificacion;
                     MiCombo.CssClass = "form-control";
                     MiCombo.ToolTip = row["descripcion"].ToString();
                     //Metodo para llenar el combo
-                    panel.Controls.Add(MiCombo);
+                    pnl_contenedor.Controls.Add(MiCombo);
+                    EnsureChildControls();
                     break;
 
                 case "3":
@@ -281,17 +379,18 @@ namespace VERPI.PreIngresos.Marcas
                 case "4":
                     //Si es checkbox
                     CheckBox MiCheckbox = new CheckBox();
-                    MiCheckbox.ID = row["nombre_control"].ToString();
+                    MiCheckbox.ID = identificacion;
                     MiCheckbox.CssClass = row["descripcion"].ToString();
-                    panel.Controls.Add(MiCheckbox);
+                    pnl_contenedor.Controls.Add(MiCheckbox);
+                    EnsureChildControls();
                     break;
                 
             }
-           
-            panel.Controls.Add(new LiteralControl("</div>"));
 
+            pnl_contenedor.Controls.Add(new LiteralControl("</div>"));
+            
         }
-
+       
         protected void Llenar_gvAnexos(DataTable dt_anexos, DataRow row)
         {
             DataRow row_Anexos = dt_anexos.NewRow();
@@ -304,8 +403,346 @@ namespace VERPI.PreIngresos.Marcas
             gvAnexos.DataBind();
         }
 
+        protected DataTable ObtengoControlesConValores()
+        {
+            /*Contruyo datatable*/
+            DataTable dt_controles = new DataTable();
+            dt_controles.Columns.Add("correlativo_campo");
+            dt_controles.Columns.Add("nombre_control");
+            dt_controles.Columns.Add("valor");
+
+            
+            int correlativo_campo = 0;
+            string nombre_control = string.Empty;
+            int numero_control = 0;
+            string valor = string.Empty;
+
+            foreach (Control c in pnl_seccion_1.Controls)
+            {
+                string tipo = Controls.GetType().ToString();
+
+                if (c is TextBox)
+                {
+                    TextBox tbx;
+                    tbx = (TextBox)c;
+                                        
+                    nombre_control = tbx.ID.Remove(tbx.ID.Length - 6);                    
+                    numero_control = Convert.ToInt32(tbx.ID.Substring(tbx.ID.Length - 5, 5));
+                    correlativo_campo = numero_control - 10000;
+                    valor = tbx.Text;
+
+                    DataRow row = dt_controles.NewRow();
+                    row["correlativo_campo"] = correlativo_campo;
+                    row["nombre_control"] = nombre_control;
+                    row["valor"] = valor;
+                    dt_controles.Rows.Add(row);
+                }
+                else if(c is DropDownList)
+                {
+                    DropDownList ddl;
+                    ddl = (DropDownList)c;
+
+                    nombre_control = ddl.ID.Remove(ddl.ID.Length-6);
+                    numero_control = Convert.ToInt32(ddl.ID.Substring(ddl.ID.Length - 5, 5));
+                    correlativo_campo = numero_control - 10000;
+                    valor = ddl.SelectedValue;
+
+                    DataRow row = dt_controles.NewRow();
+                    row["correlativo_campo"] = correlativo_campo;
+                    row["nombre_control"] = nombre_control;
+                    row["valor"] = valor;
+                    dt_controles.Rows.Add(row);
+
+                }
+                else if (c is CheckBox)
+                {
+                    CheckBox chk;
+                    chk = (CheckBox)c;
+
+                    nombre_control = chk.ID.Remove(chk.ID.Length - 6);
+                    numero_control = Convert.ToInt32(chk.ID.Substring(chk.ID.Length - 5, 5));
+                    correlativo_campo = numero_control - 10000;
+                    valor = chk.Checked.ToString();
+
+                    DataRow row = dt_controles.NewRow();
+                    row["correlativo_campo"] = correlativo_campo;
+                    row["nombre_control"] = nombre_control;
+                    row["valor"] = valor;
+                    dt_controles.Rows.Add(row);
+                }
+
+            }
+
+            foreach (Control c in pnl_seccion_2.Controls)
+            {
+                string tipo = Controls.GetType().ToString();
+
+                if (c is TextBox)
+                {
+                    TextBox tbx;
+                    tbx = (TextBox)c;
+
+                    nombre_control = tbx.ID.Remove(tbx.ID.Length - 6);
+                    numero_control = Convert.ToInt32(tbx.ID.Substring(tbx.ID.Length - 5, 5));
+                    correlativo_campo = numero_control - 10000;
+                    valor = tbx.Text;
+
+                    DataRow row = dt_controles.NewRow();
+                    row["correlativo_campo"] = correlativo_campo;
+                    row["nombre_control"] = nombre_control;
+                    row["valor"] = valor;
+                    dt_controles.Rows.Add(row);
+                }
+                else if (c is DropDownList)
+                {
+                    DropDownList ddl;
+                    ddl = (DropDownList)c;
+
+                    nombre_control = ddl.ID.Remove(ddl.ID.Length - 6);
+                    numero_control = Convert.ToInt32(ddl.ID.Substring(ddl.ID.Length - 5, 5));
+                    correlativo_campo = numero_control - 10000;
+                    valor = ddl.SelectedValue;
+
+                    DataRow row = dt_controles.NewRow();
+                    row["correlativo_campo"] = correlativo_campo;
+                    row["nombre_control"] = nombre_control;
+                    row["valor"] = valor;
+                    dt_controles.Rows.Add(row);
+
+                }
+                else if (c is CheckBox)
+                {
+                    CheckBox chk;
+                    chk = (CheckBox)c;
+
+                    nombre_control = chk.ID.Remove(chk.ID.Length - 6);
+                    numero_control = Convert.ToInt32(chk.ID.Substring(chk.ID.Length - 5, 5));
+                    correlativo_campo = numero_control - 10000;
+                    valor = chk.Checked.ToString();
+
+                    DataRow row = dt_controles.NewRow();
+                    row["correlativo_campo"] = correlativo_campo;
+                    row["nombre_control"] = nombre_control;
+                    row["valor"] = valor;
+                    dt_controles.Rows.Add(row);
+                }
+
+            }
+
+            foreach (Control c in pnl_seccion_3.Controls)
+            {
+                string tipo = Controls.GetType().ToString();
+
+                if (c is TextBox)
+                {
+                    TextBox tbx;
+                    tbx = (TextBox)c;
+
+                    nombre_control = tbx.ID.Remove(tbx.ID.Length - 6);
+                    numero_control = Convert.ToInt32(tbx.ID.Substring(tbx.ID.Length - 5, 5));
+                    correlativo_campo = numero_control - 10000;
+                    valor = tbx.Text;
+
+                    DataRow row = dt_controles.NewRow();
+                    row["correlativo_campo"] = correlativo_campo;
+                    row["nombre_control"] = nombre_control;
+                    row["valor"] = valor;
+                    dt_controles.Rows.Add(row);
+                }
+                else if (c is DropDownList)
+                {
+                    DropDownList ddl;
+                    ddl = (DropDownList)c;
+
+                    nombre_control = ddl.ID.Remove(ddl.ID.Length - 6);
+                    numero_control = Convert.ToInt32(ddl.ID.Substring(ddl.ID.Length - 5, 5));
+                    correlativo_campo = numero_control - 10000;
+                    valor = ddl.SelectedValue;
+
+                    DataRow row = dt_controles.NewRow();
+                    row["correlativo_campo"] = correlativo_campo;
+                    row["nombre_control"] = nombre_control;
+                    row["valor"] = valor;
+                    dt_controles.Rows.Add(row);
+
+                }
+                else if (c is CheckBox)
+                {
+                    CheckBox chk;
+                    chk = (CheckBox)c;
+
+                    nombre_control = chk.ID.Remove(chk.ID.Length - 6);
+                    numero_control = Convert.ToInt32(chk.ID.Substring(chk.ID.Length - 5, 5));
+                    correlativo_campo = numero_control - 10000;
+                    valor = chk.Checked.ToString();
+
+                    DataRow row = dt_controles.NewRow();
+                    row["correlativo_campo"] = correlativo_campo;
+                    row["nombre_control"] = nombre_control;
+                    row["valor"] = valor;
+                    dt_controles.Rows.Add(row);
+                }
+                else if (c is GridView)
+                {
+                    string entragrid = "0";
+                }
+
+
+            }
+
+            return dt_controles;
+        }
+
+        protected bool GuardarAnexos()
+        {
+            var respuesta = false;
+
+            foreach (GridViewRow row in gvAnexos.Rows)
+            {
+                int correlativo_campo = Convert.ToInt32(row.Cells[0].Text);                
+                string nombre_campo = row.Cells[1].Text;
+
+                int tipo_tramite = 0;
+                if (Request.QueryString["cmd"] != null)
+                {//Si se envia de query string se reasigna el valor      
+                    tipo_tramite = Convert.ToInt32(Request.QueryString["cmd"]);
+                    Session.Add("TipoTramite", tipo_tramite);
+                }
+
+                FileUpload fu = (FileUpload)row.Cells[2].FindControl("flup");
+
+                if (fu.HasFile)
+                {
+                    string archivo = Path.GetFileName(fu.PostedFile.FileName);
+                }
+
+                if (fu.PostedFile.FileName != "")
+                {
+                    string archivo = Path.GetFileName(fu.PostedFile.FileName);
+                }
+
+            }
+
+
+            //for (int i = 0; i < gvAnexos.Rows.Count; i++)
+            //{
+            //    int correlativo_campo = Convert.ToInt32(gvAnexos.Rows[i].Cells[0].Text);
+            //    string nombre_campo = gvAnexos.Rows[i].Cells[1].Text;
+            //    FileUpload FileUpload = gvAnexos.Rows[i].Cells[2].FindControl("flup") as FileUpload;
+
+            //    if (FileUpload.HasFile)
+            //    {
+            //        string archivo = Path.GetFileName(FileUpload.PostedFile.FileName);
+            //    }
+
+            //    if (FileUpload.PostedFile.FileName != "")
+            //    {
+            //        string archivo = Path.GetFileName(FileUpload.PostedFile.FileName);
+            //    }
+
+            //}
+
+            return respuesta;
+        }
+
+        protected Boolean GuardarDocumento(int id_solicitud, string tipo_tramite, ref int correlativo, int tipo_requisito, FileUpload FileUpload_Anexo)
+        {
+            var respuesta = false;
+            correlativo++;
+            string carpeta = Path.Combine(Request.PhysicalApplicationPath, "doctos");
+            string prefijo = id_solicitud.ToString() + "_" + tipo_tramite + "_" + tipo_requisito.ToString() + "_" + correlativo.ToString();
+
+            if (FileUpload_Anexo.PostedFile.FileName == "")
+            {
+
+                ErrorMessagePrincipal.Text += "No ha seleccionado ningun archivo.";
+            }
+            else
+            {
+                string extension = Path.GetExtension(FileUpload_Anexo.PostedFile.FileName);
+
+                switch (extension.ToLower())
+                {
+                    case ".pdf":
+                        break;
+                    case ".jpg":
+                        break;
+                    case ".png":
+                        break;
+                    default:
+                        ErrorMessagePrincipal.Text += "Extension no valida.";
+                        return false;
+                }
+
+                try
+                {
+                    string archivo = Path.GetFileName(FileUpload_Anexo.PostedFile.FileName);
+                    string carpeta_final = Path.Combine(carpeta, prefijo /*+ archivo*/+ extension);
+                    FileUpload_Anexo.PostedFile.SaveAs(carpeta_final);
+                    //Archivo copiado correctamente
+                    respuesta = true;
+
+                    //Guardarficha de documento
+                    respuesta = GuardarFichaDocumentoAnexo(id_solicitud, tipo_tramite , archivo, prefijo /*+ archivo*/+ extension, carpeta_final);
+
+
+                }
+                catch (Exception ex)
+                {
+
+                    ErrorMessagePrincipal.Text += "Error: " + ex.Message;
+                    divAlertError.Visible = true;
+                }
+            }
+
+            return respuesta;
+        }
+
+        protected Boolean GuardarFichaDocumentoAnexo(int id_solicitud, string tipo_tramite, string DocumentoOriginal, string DocumentoSistema, string Path)
+        {
+            var respuesta = false;
+            //objCEVerificacion.Estado = Session["STDEX"].ToString();
+            //objCEVerificacion.ID_Solicitud = id_solicitud;
+            //objCEVerificacion.TipoSolicitud = cmd;
+            //objCEVerificacion.IdRequisito = getTipoRequisito();
+
+            //objCEVerificacion.OficioSAT_Check = getOficioSATCheck();
+            //objCEVerificacion.IDPrefijoSAT = getIdPrefijoSAT();
+
+            //objCEVerificacion.PrefijoSAT = getPrefijoSAT();
+            //objCEVerificacion.numeroOficioSAT = getNumeroOficioSAT();
+            //objCEVerificacion.anioOficioSAT = getAnioOficioSAT();
+            //objCEVerificacion.numeroReferencia = getNumeroReferencia();
+
+            //objCEVerificacion.ObservacionesAnexo = getObservacionesAnexo();
+
+            //objCEVerificacion.NombreDocumentoOriginal = DocumentoOriginal;
+            //objCEVerificacion.NombreDocumentoSistema = DocumentoSistema;
+            //objCEVerificacion.Path = Path;
+
+            //respuesta = objCNVerificacion.InsertDocumentoAnexo(objCEVerificacion);
+
+            return respuesta;
+        }
+
 
         #endregion
+
+        protected void gvAnexos_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            int rowid = Convert.ToInt32(gvAnexos.DataKeys[e.RowIndex].Value);
+
+            FileUpload fileupload = gvAnexos.Rows[e.RowIndex].FindControl("flup") as FileUpload;
+
+            if (fileupload.HasFile)
+            {
+
+            }
+
+            gvAnexos.EditIndex = -1;
+            
+
+        }
 
     }
 }

@@ -59,7 +59,7 @@
                 <div class="form-group">
                     <asp:Label AssociatedControlID="txtNombre" CssClass="control-label col-xs-2" runat="server" Text="Tipo de Pago: "></asp:Label>
                     <div class="col-xs-10">
-                        <asp:TextBox ID="txtNombre" type="text" CssClass="form-control" runat="server"></asp:TextBox>
+                        <asp:TextBox ID="txtNombre" CssClass="form-control" runat="server" TextMode="SingleLine"></asp:TextBox>
                         <asp:RequiredFieldValidator runat="server" ControlToValidate="txtNombre"
                             CssClass="text-danger" ErrorMessage="El campo no puede quedar vacio." />
                     </div>
@@ -68,7 +68,7 @@
                 <div class="form-group">
                     <asp:Label AssociatedControlID="txtDescripcion" CssClass="control-label col-xs-2" runat="server" Text="Descripcion:"></asp:Label>
                     <div class="col-xs-10">
-                        <asp:TextBox ID="txtDescripcion" type="text" CssClass="form-control" runat="server" TextMode="MultiLine"></asp:TextBox>
+                        <asp:TextBox ID="txtDescripcion"  CssClass="form-control" runat="server" TextMode="MultiLine"></asp:TextBox>
                     </div>
                 </div>
 

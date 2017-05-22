@@ -7,7 +7,7 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace VERPI.Administracion {
+namespace VERPI.Mantenimientos {
     
     
     public partial class TipoPagos {

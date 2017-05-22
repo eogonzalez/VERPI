@@ -8,7 +8,7 @@ using System.Data;
 using Capa_Entidad.General;
 using Capa_Negocio.General;
 
-namespace VERPI.Administracion
+namespace VERPI.Mantenimientos
 {
     public partial class TipoPagos : System.Web.UI.Page
     {

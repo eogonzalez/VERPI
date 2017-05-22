@@ -2,9 +2,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
-
     <div class="panel panel-primary" runat="server" id="pnlMarcas">
         <div class="panel-heading"><%:Title %></div>
+
         <div class="panel-body form-horizontal" runat="server" id="pnlBody">
 
             <div class="form-group">
@@ -27,66 +27,81 @@
                 <div class="tab-content">
                     <%--Tab Encabezado--%>
                     <div role="tabpanel" class="tab-pane active" id="tbEncabezado">
-                        <div class="panel-body form-horizontal" runat="server" id="pnl_seccion_1">
+                        <div class="panel-body form-horizontal">
+                            <asp:Panel ID="pnl_seccion_1" runat="server"></asp:Panel>
                         </div>
                     </div>
 
                     <%--Tab Datos del Pre Ingreso--%>
                     <div role="tabpanel" class="tab-pane" id="tbDatos">
-                        <div class="panel-body form-horizontal" runat="server" id="pnl_seccion_2">
+                        <div class="panel-body form-horizontal">
+                            <asp:Panel ID="pnl_seccion_2" runat="server"></asp:Panel>
                         </div>
                     </div>
 
                     <%-- Tab Documentos Adjuntos --%>
                     <div role="tabpanel" class="tab-pane" id="tbAnexos">
+                        <div class="panel-body form-horizontal">
 
-                        <div class="panel-body form-horizontal" runat="server" id="pnl_seccion_3">
-                            <br>
-                            <div class="form-group ">
-                                <div class="col-xs-12">
-                                    <asp:UpdatePanel runat="server">
-                                        <ContentTemplate>
+                            <%--Panel de Anexos--%>
+                            <asp:Panel ID="pnl_anexos" runat="server">
+                                <br>
+                                <div class="form-group ">
+                                    <div class="col-xs-12">
+                                        <%--<asp:UpdatePanel runat="server">--%>
+                                            <%--<ContentTemplate>--%>
 
-                                            <asp:GridView runat="server" ID="gvAnexos"
-                                                CssClass="table table-hover table-striped"
-                                                GridLines="None"                                                
-                                                AutoGenerateColumns="false" OnRowCommand="gvAnexos_RowCommand">
+                                                <asp:GridView runat="server" ID="gvAnexos"
+                                                    CssClass="table table-hover table-striped"
+                                                    GridLines="None"
+                                                    AutoGenerateColumns="false" OnRowCommand="gvAnexos_RowCommand" OnRowUpdating="gvAnexos_RowUpdating" >
 
-                                                <Columns>
-                                                    <asp:BoundField DataField="correlativo_campo" SortExpression="ID_TipoPago" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" />
-                                                    <asp:BoundField DataField="Etiqueta" HeaderText="Documento" />
+                                                    <Columns>
+                                                        <asp:BoundField DataField="correlativo_campo" SortExpression="correlativo_campo" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" />
+                                                        <asp:BoundField DataField="Etiqueta" HeaderText="Documento" />
 
-
-                                                    <%--<asp:ButtonField ButtonType="Button" Text="Adjuntar" HeaderText="Adjuntar" CommandName="adjuntar" ControlStyle-CssClass="btn btn-success" />--%>
-                                                    <asp:TemplateField HeaderText="Eliminar">
-                                                        <ItemTemplate>
-                                                            <%--<asp:Button Text="Eliminar" runat="server" ID="btnEliminar" CausesValidation="false" CommandName="eliminar" CommandArgument="<%# Container.DataItemIndex %>" CssClass="btn btn-danger" OnClientClick="return confirm(&quot;¿Esta seguro de borrar opcion seleccionada?&quot;)" />--%>
-                                                            <asp:FileUpload runat="server"></asp:FileUpload>
-                                                        </ItemTemplate>
-                                                    </asp:TemplateField>
+                                                        <asp:TemplateField HeaderText="Documento">
+                                                            <ItemTemplate>
+                                                                <asp:FileUpload ID="flup" runat="server"></asp:FileUpload>
+                                                            </ItemTemplate>
+                                                        </asp:TemplateField>
 
 
-                                                </Columns>
+                                                    </Columns>
 
-                                            </asp:GridView>
+                                                </asp:GridView>
 
-                                        </ContentTemplate>
-                                    </asp:UpdatePanel>
+<%--                                            </ContentTemplate>
+                                        </asp:UpdatePanel>--%>
+                                    </div>
                                 </div>
-                            </div>
+                            </asp:Panel>
+
+                            <%--Panel de Controles adicionales--%>
+                            <asp:Panel ID="pnl_seccion_3" runat="server">
+                            </asp:Panel>
 
                         </div>
-
                     </div>
                 </div>
-
             </div>
 
-
         </div>
+
         <div class="panel-footer">
+            <div id="divAlertCorrecto" runat="server">
+                <p class="alert alert-success">
+                    <asp:Literal runat="server" ID="MensajeCorrectoPrincipal" />
+                </p>
+            </div>
+            <div id="divAlertError" runat="server">
+                <p class="alert alert-danger" id="pAlertError" runat="server">
+                    <asp:Literal runat="server" ID="ErrorMessagePrincipal" />
+                </p>
+            </div>
+
             <asp:Button runat="server" ID="btnGuardar" CssClass="btn btn-primary" Text="Guardar" CommandName="Guardar" OnClick="btnGuardar_Click" />
-            <asp:Button runat="server" ID="btnEnviar" CssClass="btn btn-success" Text="Enviar" CommandName="Enviar" OnClick="" />
+            <asp:Button runat="server" ID="btnEnviar" CssClass="btn btn-success" Text="Enviar" CommandName="Enviar" OnClick="btnEnviar_Click" />
             <asp:Button runat="server" ID="btnSalir" CssClass="btn btn-default" Text="Salir" CausesValidation="false" OnClick="btnSalir_Click" />
         </div>
     </div>

@@ -86,7 +86,7 @@ namespace Capa_Datos.General
                 " ,[nombre] "+
                 " FROM[dbo].[G_Formularios] "+
                 " where estado = 'A' and tipo_tramite = @tipo_tramite "+
-                " order by no_formulario ";
+                " order by nombre ";
             using (var con = objConexion.Conectar())
             {
                 var command = new SqlCommand(sql_query, con);
@@ -107,6 +107,75 @@ namespace Capa_Datos.General
 
 
             return dt_respuesta;
+        }
+
+        public bool InsertDatosFormularioBorrador(CEFormularios objCEFormulario)
+        {
+
+            var respuesta = false;
+            var sql_query = string.Empty;
+
+            try
+            {
+
+
+            /*Inserta encabezado*/
+            sql_query = " INSERT INTO [dbo].[PreIngreso_Encabezado] "+
+                " ([id_usuario_solicita],[no_formulario] "+
+                " ,[fecha_creacion],[fecha_modificacion] "+
+                " ,[estado]) "+
+                " VALUES "+
+                " (@id_usuario_solicita, @no_formulario "+
+                " , @fecha_creacion, @fecha_modificacion "+
+                " , @estado); "+
+                " SELECT SCOPE_IDENTITY(); " ;
+
+            using (var con = objConexion.Conectar())
+            {
+                var command = new SqlCommand(sql_query, con);
+
+                command.Parameters.AddWithValue("id_usuario_solicita", objCEFormulario.ID_Usuario_Solicita);
+                command.Parameters.AddWithValue("no_formulario", objCEFormulario.No_Formulario);
+                command.Parameters.AddWithValue("fecha_creacion", DateTime.Now);
+                command.Parameters.AddWithValue("fecha_modificacion", DateTime.Now);
+                command.Parameters.AddWithValue("estado", 'T');
+
+                con.Open();
+                int no_preingreso = 0;
+                no_preingreso = Convert.ToInt32(command.ExecuteScalar());
+
+                /*Inserta Detalles*/
+                sql_query = " INSERT INTO [dbo].[PreIngreso_Detalle] "+
+                        " ([no_preingreso],[correlativo_campo] "+
+                        " ,[nombre_control],[valor]) "+
+                        " VALUES "+
+                        " (@no_preingreso, @correlativo_campo "+
+                        " , @nombre_control, @valor); ";
+
+                foreach (DataRow row in objCEFormulario.Dt_Campos.Rows)
+                {
+                    command = new SqlCommand(sql_query, con);
+                    command.Parameters.AddWithValue("no_preingreso", no_preingreso);
+                    command.Parameters.AddWithValue("correlativo_campo", row["correlativo_campo"]);
+                    command.Parameters.AddWithValue("nombre_control", row["nombre_control"]);
+                    command.Parameters.AddWithValue("valor", row["valor"]);                    
+                    command.ExecuteNonQuery();
+                }
+
+                /*Inserta Archivos*/
+
+                respuesta = true;
+
+            }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+            return respuesta;
         }
 
     }

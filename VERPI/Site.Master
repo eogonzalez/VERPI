@@ -90,7 +90,7 @@
                 <p>&copy; <%: DateTime.Now.Year %> - VERPI - Registro de la Propiedad Intelectual - Ministerio de Economia</p>
                 <p>
                     Todos los derechos reservados
-                    <asp:HyperLink runat="server" ID="MinecoHyperLink" ViewStateMode="Disabled">www.mineco.gob.gt</asp:HyperLink>
+                    <asp:HyperLink runat="server" ID="MinecoHyperLink" ViewStateMode="Disabled">www.rpi.gob.gt</asp:HyperLink>
                     | Desarrollado por <asp:HyperLink runat="server" ID="CompactHyperLink" ViewStateMode="Disabled">CompactDeveloper</asp:HyperLink>
                 </p>
             </footer>
