@@ -7,127 +7,91 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace VERPI.PreIngresos.Marcas {
+namespace VERPI.Administracion {
     
     
-    public partial class PreIngreso {
+    public partial class ValoresCombo {
         
         /// <summary>
-        /// Control pnlMarcas.
+        /// Control lkBtn_nuevo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlMarcas;
+        protected global::System.Web.UI.WebControls.LinkButton lkBtn_nuevo;
         
         /// <summary>
-        /// Control pnlBody.
+        /// Control lkBtn_viewPanel.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlBody;
+        protected global::System.Web.UI.WebControls.LinkButton lkBtn_viewPanel;
         
         /// <summary>
-        /// Control cbo_tramite.
+        /// Control lkBtn_nuevo_ModalPopupExtender.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cbo_tramite;
+        protected global::AjaxControlToolkit.ModalPopupExtender lkBtn_nuevo_ModalPopupExtender;
         
         /// <summary>
-        /// Control pnlFormulario.
+        /// Control lkBtn_viewPanel_ModalPopupExtender.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlFormulario;
+        protected global::AjaxControlToolkit.ModalPopupExtender lkBtn_viewPanel_ModalPopupExtender;
         
         /// <summary>
-        /// Control pnl_seccion_1.
+        /// Control gvValoresCombo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnl_seccion_1;
+        protected global::System.Web.UI.WebControls.GridView gvValoresCombo;
         
         /// <summary>
-        /// Control pnl_seccion_2.
+        /// Control pnl_nuevo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnl_seccion_2;
+        protected global::System.Web.UI.WebControls.Panel pnl_nuevo;
         
         /// <summary>
-        /// Control pnl_seccion_adjuntos.
+        /// Control ErrorMessage.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnl_seccion_adjuntos;
+        protected global::System.Web.UI.WebControls.Literal ErrorMessage;
         
         /// <summary>
-        /// Control pnl_seccion_3.
+        /// Control txtTexto.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnl_seccion_3;
+        protected global::System.Web.UI.WebControls.TextBox txtTexto;
         
         /// <summary>
-        /// Control divAlertCorrecto.
+        /// Control txtValor.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divAlertCorrecto;
-        
-        /// <summary>
-        /// Control MensajeCorrectoPrincipal.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal MensajeCorrectoPrincipal;
-        
-        /// <summary>
-        /// Control divAlertError.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divAlertError;
-        
-        /// <summary>
-        /// Control pAlertError.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pAlertError;
-        
-        /// <summary>
-        /// Control ErrorMessagePrincipal.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal ErrorMessagePrincipal;
+        protected global::System.Web.UI.WebControls.TextBox txtValor;
         
         /// <summary>
         /// Control btnGuardar.
@@ -137,24 +101,6 @@ namespace VERPI.PreIngresos.Marcas {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGuardar;
-        
-        /// <summary>
-        /// Control btnAdjuntar.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAdjuntar;
-        
-        /// <summary>
-        /// Control btnEnviar.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnEnviar;
         
         /// <summary>
         /// Control btnSalir.

@@ -12,7 +12,9 @@ namespace Sistema_de_Gestion_Expedientes.Account
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            Session["UsuarioID"] = 0;
+            //Session["UsuarioID"] = 0;
+            Session.Clear();
+            ViewState.Clear();
             FormsAuthentication.SignOut();
             //Server.Transfer("~/Default.aspx", false);
             //Server.Transfer("~/", false);

@@ -32,5 +32,11 @@ namespace Capa_Negocio.General
         {
             return objCDFormulario.InsertDatosFormularioBorrador(objCEFormulario);
         }
+
+        public DataTable SelectDatosCombos(int correlativo_campo)
+        {
+            return objCDFormulario.SelectDatosCombos(correlativo_campo);
+        }
+
     }
 }

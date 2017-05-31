@@ -59,6 +59,10 @@ namespace VERPI.Administracion
                     Llenar_gvCamposFormulario((int)Session["NoFormulario"]);
                     break;
 
+                case "combo":
+                    Response.Redirect("~/Administracion/ValoresCombo.aspx?cc=" + correlativo_campo.ToString());
+                    break;
+
             }
         }
 
@@ -114,6 +118,23 @@ namespace VERPI.Administracion
             LimpiarPanel();
             btnGuardar.Text = "Guardar";
             btnGuardar.CommandName = "Guardar";
+        }
+
+        protected void gvCamposFormulario_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType != DataControlRowType.DataRow)
+                return;
+
+            if (e.Row.Cells[5] != null)
+            {
+                var valor = e.Row.Cells[5].Text;
+
+                if (valor != "Combo")
+                {
+                    e.Row.Cells[7].Controls.Clear();
+                }
+            }
+
         }
 
         #endregion
@@ -285,6 +306,9 @@ namespace VERPI.Administracion
             return txt_ExpresionRegular.Text;
         }
 
+
         #endregion
+
+
     }
 }

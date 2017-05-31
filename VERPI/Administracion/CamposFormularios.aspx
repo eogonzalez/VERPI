@@ -26,7 +26,7 @@
                     CssClass="table table-hover table-striped"
                     GridLines="None"
                     EmptyDataText="No existen registros."
-                    AutoGenerateColumns="false" OnRowCommand="gvCamposFormulario_RowCommand">
+                    AutoGenerateColumns="false" OnRowCommand="gvCamposFormulario_RowCommand" OnRowDataBound="gvCamposFormulario_RowDataBound">
 
                     <Columns>
                         <asp:BoundField DataField="correlativo_campo" SortExpression="no_formulario" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" />
@@ -37,11 +37,13 @@
                         <asp:BoundField DataField="tipo_control" HeaderText="Tipo de Control" />
 
                         <asp:ButtonField ButtonType="Button" Text="Modificar" HeaderText="Modificar" CommandName="modificar" ControlStyle-CssClass="btn btn-success" />
+                        <asp:ButtonField ButtonType="Button" Text="Combo" HeaderText="Combo" CommandName="combo" ControlStyle-CssClass="btn btn-info" />
                         <asp:TemplateField HeaderText="Eliminar">
                             <ItemTemplate>
                                 <asp:Button Text="Eliminar" runat="server" ID="btnEliminar" CausesValidation="false" CommandName="eliminar" CommandArgument="<%# Container.DataItemIndex %>" CssClass="btn btn-danger" OnClientClick="return confirm(&quot;¿Esta seguro de borrar opcion seleccionada?&quot;)" />
                             </ItemTemplate>
                         </asp:TemplateField>
+
 
 
                     </Columns>

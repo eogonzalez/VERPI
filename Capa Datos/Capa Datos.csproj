@@ -45,6 +45,7 @@
     <Compile Include="Administracion\Menu.cs" />
     <Compile Include="Administracion\PermisosPerfiles.cs" />
     <Compile Include="Administracion\TipoUsuarios.cs" />
+    <Compile Include="Administracion\ValoresCombo.cs" />
     <Compile Include="Bandeja\BandejaUsuario.cs" />
     <Compile Include="General\Conexion.cs" />
     <Compile Include="General\Formularios.cs" />

@@ -20,7 +20,7 @@
                 <ul class="nav nav-tabs nav-justified">
                     <li role="presentation" class="active"><a href="#tbEncabezado" aria-controls="tbEncabezado" data-toggle="tab">Encabezado</a></li>
                     <li role="presentation"><a href="#tbDatos" aria-controls="tbDatos" data-toggle="tab">Datos del Pre Ingreso</a></li>
-                    <li role="presentation"><a href="#tbAnexos" aria-controls="tbAnexos" data-toggle="tab">Documentacion Anexa</a></li>
+                    <li role="presentation"><a href="#tbAnexos" aria-controls="tbAnexos" data-toggle="tab">Otros Controles</a></li>
                 </ul>
 
                 <%--Contenido de los paneles--%>
@@ -43,47 +43,27 @@
                     <div role="tabpanel" class="tab-pane" id="tbAnexos">
                         <div class="panel-body form-horizontal">
 
-                            <%--Panel de Anexos--%>
-                            <asp:Panel ID="pnl_anexos" runat="server">
-                                <br>
-                                <div class="form-group ">
-                                    <div class="col-xs-12">
-                                        <%--<asp:UpdatePanel runat="server">--%>
-                                            <%--<ContentTemplate>--%>
-
-                                                <asp:GridView runat="server" ID="gvAnexos"
-                                                    CssClass="table table-hover table-striped"
-                                                    GridLines="None"
-                                                    AutoGenerateColumns="false" OnRowCommand="gvAnexos_RowCommand" OnRowUpdating="gvAnexos_RowUpdating" >
-
-                                                    <Columns>
-                                                        <asp:BoundField DataField="correlativo_campo" SortExpression="correlativo_campo" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" />
-                                                        <asp:BoundField DataField="Etiqueta" HeaderText="Documento" />
-
-                                                        <asp:TemplateField HeaderText="Documento">
-                                                            <ItemTemplate>
-                                                                <asp:FileUpload ID="flup" runat="server"></asp:FileUpload>
-                                                            </ItemTemplate>
-                                                        </asp:TemplateField>
-
-
-                                                    </Columns>
-
-                                                </asp:GridView>
-
-<%--                                            </ContentTemplate>
-                                        </asp:UpdatePanel>--%>
-                                    </div>
-                                </div>
-                            </asp:Panel>
+                            <asp:UpdatePanel runat="server">
+                                <ContentTemplate>
+                                    <asp:Panel runat="server" ID="pnl_seccion_adjuntos"></asp:Panel>
+                                </ContentTemplate>
+                                <Triggers>
+                                    <asp:PostBackTrigger ControlID="btnGuardar" />
+                                </Triggers>
+                            </asp:UpdatePanel>
+                            
 
                             <%--Panel de Controles adicionales--%>
                             <asp:Panel ID="pnl_seccion_3" runat="server">
                             </asp:Panel>
 
+
+
                         </div>
                     </div>
                 </div>
+
+
             </div>
 
         </div>
@@ -101,9 +81,11 @@
             </div>
 
             <asp:Button runat="server" ID="btnGuardar" CssClass="btn btn-primary" Text="Guardar" CommandName="Guardar" OnClick="btnGuardar_Click" />
+            <asp:Button runat="server" ID="btnAdjuntar" CssClass="btn btn-info" Text="Adjuntar Documentos" CommandName="Adjungar" OnClick="btnAdjuntar_Click" />
             <asp:Button runat="server" ID="btnEnviar" CssClass="btn btn-success" Text="Enviar" CommandName="Enviar" OnClick="btnEnviar_Click" />
             <asp:Button runat="server" ID="btnSalir" CssClass="btn btn-default" Text="Salir" CausesValidation="false" OnClick="btnSalir_Click" />
         </div>
     </div>
+
 
 </asp:Content>

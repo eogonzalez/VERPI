@@ -36,6 +36,7 @@ namespace VERPI.Administracion
                 }
 
                 Llenar_combos();
+                btnGuardar.Attributes.Add("onclick", "this.value='Procesando Espere...';this.disabled=true;" + ClientScript.GetPostBackEventReference(btnGuardar, ""));
             }
         }
 

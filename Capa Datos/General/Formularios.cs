@@ -178,5 +178,27 @@ namespace Capa_Datos.General
             return respuesta;
         }
 
+        public DataTable SelectDatosCombos(int correlativo_campo)
+        {
+            var dt_respuesta = new DataTable();
+            var sql_query = string.Empty;
+
+            sql_query = " select valor, texto "+
+                " from m_valor_combo "+
+                " where correlativo_campo = @correlativo_campo "+
+                " order by valor ";
+
+            using (var con = objConexion.Conectar())
+            {
+                var command = new SqlCommand(sql_query, con);
+                command.Parameters.AddWithValue("correlativo_campo", correlativo_campo);
+                con.Open();
+                var da = new SqlDataAdapter(command);
+                da.Fill(dt_respuesta);
+            }
+
+
+            return dt_respuesta;
+        }
     }
 }
