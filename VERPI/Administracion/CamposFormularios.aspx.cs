@@ -52,13 +52,13 @@ namespace VERPI.Administracion
                 case "modificar":
                     MostrarDatos(correlativo_campo);
                     this.lkBtn_viewPanel_ModalPopupExtender.Show();
+                    Llenar_gvCamposFormulario((int)Session["NoFormulario"]);
                     break;
 
                 case "eliminar":
                     EliminarDatos(correlativo_campo);
                     Llenar_gvCamposFormulario((int)Session["NoFormulario"]);
                     break;
-
                 case "combo":
                     Response.Redirect("~/Administracion/ValoresCombo.aspx?cc=" + correlativo_campo.ToString());
                     break;
@@ -118,6 +118,9 @@ namespace VERPI.Administracion
             LimpiarPanel();
             btnGuardar.Text = "Guardar";
             btnGuardar.CommandName = "Guardar";
+
+            Llenar_gvCamposFormulario((int)Session["NoFormulario"]);
+            
         }
 
         protected void gvCamposFormulario_RowDataBound(object sender, GridViewRowEventArgs e)

@@ -67,15 +67,6 @@ namespace VERPI.PreIngresos.Marcas {
         protected global::System.Web.UI.WebControls.Panel pnl_seccion_2;
         
         /// <summary>
-        /// Control pnl_seccion_adjuntos.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnl_seccion_adjuntos;
-        
-        /// <summary>
         /// Control pnl_seccion_3.
         /// </summary>
         /// <remarks>

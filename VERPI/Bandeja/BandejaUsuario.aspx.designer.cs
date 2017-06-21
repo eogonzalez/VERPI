@@ -22,6 +22,24 @@ namespace VERPI.Bandeja {
         protected global::System.Web.UI.WebControls.Label lblCantidadBandeja;
         
         /// <summary>
+        /// Control divAlertCorrecto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divAlertCorrecto;
+        
+        /// <summary>
+        /// Control MensajeCorrectoPrincipal.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal MensajeCorrectoPrincipal;
+        
+        /// <summary>
         /// Control divAlertError.
         /// </summary>
         /// <remarks>

@@ -144,7 +144,7 @@ namespace VERPI.Administracion
 
             objetoEntidad.Nombre = txtNombre.Text;
             objetoEntidad.Descripcion = txtDescripcion.Text;
-            objetoEntidad.TipoPermiso = ddlTipoPermiso.SelectedValue;
+            //objetoEntidad.TipoPermiso = ddlTipoPermiso.SelectedValue;
             objetoEntidad.ID_UsuarioAutoriza = Convert.ToInt32(Session["UsuarioID"].ToString());
 
             respuesta = objCapaNegocio.InsertTipoUsuarios(objetoEntidad);
@@ -160,7 +160,7 @@ namespace VERPI.Administracion
 
             objetoEntidad.Nombre = txtNombre.Text;
             objetoEntidad.Descripcion = txtDescripcion.Text;
-            objetoEntidad.TipoPermiso = ddlTipoPermiso.SelectedValue;
+            //objetoEntidad.TipoPermiso = ddlTipoPermiso.SelectedValue;
             objetoEntidad.ID_TipoUsuario = id_tipousuario;
             objetoEntidad.ID_UsuarioAutoriza = Convert.ToInt32(Session["UsuarioID"].ToString());
 
@@ -199,7 +199,7 @@ namespace VERPI.Administracion
 
             txtNombre.Text = row["nombre"].ToString();
             txtDescripcion.Text = row["descripcion"].ToString();
-            ddlTipoPermiso.SelectedValue = row["tipo_permiso"].ToString();
+            //ddlTipoPermiso.SelectedValue = row["tipo_permiso"].ToString();
 
             //lkBtn_nuevo_ModalPopupExtender.Show();
             this.lkBtn_testModalPopupExtender.Show();
@@ -208,10 +208,5 @@ namespace VERPI.Administracion
 
         #endregion
         
-
-
-
-
-
     }
 }

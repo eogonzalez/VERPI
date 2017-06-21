@@ -8,6 +8,11 @@
             <div class="btn-group" role="group">
             </div>
             <br />
+            <div id="divAlertCorrecto" runat="server">
+                <p class="alert alert-success">
+                    <asp:Literal runat="server" ID="MensajeCorrectoPrincipal" />
+                </p>
+            </div>
             <div id="divAlertError" runat="server">
                 <p class="alert alert-danger" id="pAlertError" runat="server">
                     <asp:Literal runat="server" ID="ErrorMessagePrincipal" />
@@ -18,7 +23,19 @@
                     CssClass="table table-hover table-striped"
                     GridLines="None"
                     EmptyDataText="No existen registros."
-                    AutoGenerateColumns="false" OnRowCommand="gvExpedientes_RowCommand">
+                    AllowPaging="true"
+                    AutoGenerateColumns="false"
+                    OnRowCommand="gvExpedientes_RowCommand"
+                    OnPageIndexChanging="gvExpedientes_PageIndexChanging">
+
+                    <PagerSettings Mode="Numeric"
+                        Position="Bottom"
+                        PageButtonCount="10" />
+
+                    <PagerStyle BackColor="LightBlue"
+                        Height="30px"
+                        VerticalAlign="Bottom"
+                        HorizontalAlign="Center" />
 
                     <Columns>
                         <asp:BoundField DataField="no_expediente" HeaderText="No Expediente" SortExpression="no_expediente" />

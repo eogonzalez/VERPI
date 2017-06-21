@@ -18,7 +18,7 @@ namespace Capa_Datos.Bandeja
             var dt_respuesta = new DataTable();
             var sql_query = string.Empty;
 
-            sql_query = " select pe.no_preingreso, gf.nombre, pe.fecha_creacion, "+
+            sql_query = " select pe.no_preingreso, gf.tipo_tramite as cmd, gf.no_formulario, gf.nombre, pe.fecha_creacion, " +
                 " case  pe.estado when 'T' then  'Borrador' else 'Enviado' end as estado_txt "+
                 " from preingreso_encabezado pe, g_formularios gf "+
                 " where "+
@@ -59,5 +59,7 @@ namespace Capa_Datos.Bandeja
 
             return respuesta;
         }
+
+
     }
 }

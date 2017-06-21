@@ -33,7 +33,7 @@
                         <asp:BoundField DataField="seccion" HeaderText="Seccion" />         
                         <asp:BoundField DataField="no_orden" HeaderText="Orden" />
                         <asp:BoundField DataField="Etiqueta" HeaderText="Etiqueta" />
-                        <asp:BoundField DataField="descripcion" HeaderText="Descripcion" />
+                        <asp:BoundField DataField="nombre_control" HeaderText="Control" />
                         <asp:BoundField DataField="tipo_control" HeaderText="Tipo de Control" />
 
                         <asp:ButtonField ButtonType="Button" Text="Modificar" HeaderText="Modificar" CommandName="modificar" ControlStyle-CssClass="btn btn-success" />
@@ -119,8 +119,10 @@
                         <asp:DropDownList runat="server" ID="cbo_tipoControl" CssClass="form-control">
                             <asp:ListItem Value="1">Texto</asp:ListItem>
                             <asp:ListItem Value="2">Combo</asp:ListItem>
+                            <asp:ListItem Value="5">Combo de Paises</asp:ListItem>
                             <asp:ListItem Value="3">Adjunto</asp:ListItem>
-                            <asp:ListItem Value="4">Check</asp:ListItem>                            
+                            <asp:ListItem Value="4">Check</asp:ListItem>
+                            <asp:ListItem Value="6">Etiqueta de Bloque</asp:ListItem>                            
                         </asp:DropDownList>
                     </div>
 

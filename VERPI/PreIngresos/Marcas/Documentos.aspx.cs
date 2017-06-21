@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using System.Data;
 using Capa_Negocio.General;
 using Capa_Entidad.General;
+using System.IO;
 
 namespace VERPI.PreIngresos.Marcas
 {
@@ -15,42 +16,126 @@ namespace VERPI.PreIngresos.Marcas
         CNFormularios objCNFormulario = new CNFormularios();
         CEFormularios objCEFormulario = new CEFormularios();
 
+        #region Eventos del formulario
+       
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
 
-                LlenarPanel();
+                divAlertCorrecto.Visible = false;
+                divAlertError.Visible = false;
+
+                var cmd = 0;
+                if (Request.QueryString["cmd"] != null)
+                {
+                    cmd = Convert.ToInt32(Request.QueryString["cmd"].ToString());
+                    Session.Add("cmd", cmd);
+                }
+
+                var no_PreIngreso = 0;
+                if (Request.QueryString["np"] != null)
+                {
+                    no_PreIngreso = Convert.ToInt32(Request.QueryString["np"].ToString());
+                    Session.Add("noPreIngreso", no_PreIngreso);
+                    
+                }
+
+                var no_formulario = 0;
+                if (Request.QueryString["nf"] != null)
+                {
+                    no_formulario = Convert.ToInt32(Request.QueryString["nf"].ToString());
+                    Session.Add("no_formulario", no_formulario);
+
+                }
+
+                LlenarPanel(no_PreIngreso, no_formulario);
+                Llenar_gvAnexos(no_PreIngreso);
+
+                btnGuardar.Attributes.Add("onclick", "this.value='Procesando Espere...';this.disabled=true;" + ClientScript.GetPostBackEventReference(btnGuardar, ""));
+                btnEnviar.Attributes.Add("onclick", "this.value='Procesando Espere...';this.disabled=true;" + ClientScript.GetPostBackEventReference(btnEnviar, ""));
             }
         }
-
 
         protected override void LoadViewState(object savedState)
         {
             base.LoadViewState(savedState);
 
-
-
             if (ViewState["controlsadded"] != null)
             {
-               
-                    
-                        LlenarPanel();
-
-
-                
-
+                if (Session["noPreingreso"] != null && Session["no_formulario"] != null)
+                {
+                    int no_PreIngreso = (int)Session["noPreingreso"];
+                    int no_formulario = (int)Session["no_formulario"];
+                    LlenarPanel(no_PreIngreso, no_formulario);
+                }
             }
 
         }
 
-        protected void LlenarPanel()
+        protected void gvAnexos_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            int index = Convert.ToInt32(e.CommandArgument);
+            GridViewRow row = gvAnexos.Rows[index];
+            int id_anexo = Convert.ToInt32(row.Cells[0].Text);
+            string pathAnexo = row.Cells[1].Text;
+            string archivo = Path.GetFileName(pathAnexo);
+            
+            switch (e.CommandName)
+            {
+                case "mostrar":
+                    Response.Redirect("~/doctos/" + archivo);
+                    return;
+                case "Eliminar":
+                    EliminoDocumento(id_anexo, pathAnexo);
+                    Llenar_gvAnexos((int)Session["noPreIngreso"]);
+                    break;
+            }
+        }
+
+        protected void btnRegresar_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/PreIngresos/Marcas/PreIngreso.aspx?cmd=" + Session["cmd"].ToString() + "&nf=" + Session["no_formulario"].ToString() + "&np=" + Session["noPreIngreso"].ToString());
+        }
+
+        protected void btnEnviar_Click(object sender, EventArgs e)
+        {
+            if (Session["noPreIngreso"] != null)
+            {
+                //Realiza el envio del formulario
+                /*Valida que los campos cumplan los requisitos de obligatorio*/
+                ValidoCamposObligatorios();
+            }
+            else
+            {
+                divAlertCorrecto.Visible = false;
+
+                ErrorMessagePrincipal.Text = "Debe de guardar primero el formulario para poder enviarlo.";
+                divAlertError.Visible = true;
+            }
+        }
+
+        protected void btnSalir_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/#");
+        }
+
+        protected void btnGuardar_Click(object sender, EventArgs e)
+        {                    
+            GuardoDocumentos(pnl_seccion_adjuntos, (int)Session["noPreingreso"]);
+            Llenar_gvAnexos((int)Session["noPreingreso"]);
+        }
+
+        #endregion
+
+
+        #region Funciones
+
+        protected void LlenarPanel(int noPreingreso, int no_formulario)
         {
             var dt_total_campos = new DataTable();
-            var cantidad_s1 = 0;
-            var cantidad_s2 = 0;
-            var cantidad_s3 = 0;
-            int no_formulario = 1;
+            var cantidad_s4 = 0;
+
 
             objCEFormulario.Nombre_Tabla = "M_Campos_Formulario";
             objCEFormulario.No_Formulario = no_formulario;
@@ -61,25 +146,10 @@ namespace VERPI.PreIngresos.Marcas
             {
                 switch (rowc["seccion"].ToString())
                 {
-                    case "1":
+                    case "4":
                         if (rowc["total"] != null)
                         {
-                            cantidad_s1 = (int)rowc["total"];
-                        }
-
-                        break;
-                    case "2":
-                        if (rowc["total"] != null)
-                        {
-                            cantidad_s2 = (int)rowc["total"];
-                        }
-
-
-                        break;
-                    case "3":
-                        if (rowc["total"] != null)
-                        {
-                            cantidad_s3 = (int)rowc["total"];
+                            cantidad_s4 = (int)rowc["total"];
                         }
                         break;
                 }
@@ -101,13 +171,8 @@ namespace VERPI.PreIngresos.Marcas
 
                         if (row["tipo_control"].ToString() == "3")
                         {//Si es documento
-                            ConstruirControlesCiclo(pnl_seccion_adjuntos, row, cantidad_s3, ref cont, ref cs3);
+                            ConstruirControlesCiclo(pnl_seccion_adjuntos, row, cantidad_s4, ref cont, ref cs3);
                         }
-                        else
-                        {
-                            //ConstruirControlesCiclo(pnl_seccion_3, row, cantidad_s3, ref cont, ref cs3);
-                        }
-
 
                         break;
                 }
@@ -118,7 +183,7 @@ namespace VERPI.PreIngresos.Marcas
 
         protected void ConstruirControlesCiclo(Panel pnl_contenedor, DataRow row, int cantidad_controles, ref int cont, ref int x)
         {
-            if (cantidad_controles >= 6)
+            if (cantidad_controles >= 4)
             {
                 //Agrego Primer div
                 if (cont == 1)
@@ -159,7 +224,7 @@ namespace VERPI.PreIngresos.Marcas
             label.CssClass = "control-label col-xs-2";
             pnl_contenedor.Controls.Add(label);
 
-            if (total_campos >= 6)
+            if (total_campos >= 4)
             {
                 pnl_contenedor.Controls.Add(new LiteralControl("<div class='col-xs-4'>"));
             }
@@ -175,73 +240,31 @@ namespace VERPI.PreIngresos.Marcas
 
             switch (row["tipo_control"].ToString())
             {
-                case "1":
-                    //Si es textbox
-                    TextBox MiTexBox = new TextBox();
-                    MiTexBox.ID = identificacion;
-                    MiTexBox.Text = "";
-                    MiTexBox.CssClass = "form-control";
-                    MiTexBox.ToolTip = row["descripcion"].ToString();
-                    MiTexBox.ViewStateMode = ViewStateMode.Disabled;
-
-                    switch (row["modo_texto"].ToString())
-                    {
-                        case "Number":
-                            //panel.Controls.Add(new LiteralControl("<div class='col-xs-2'>"));
-                            MiTexBox.TextMode = TextBoxMode.Number;
-                            break;
-                        case "SingleLine":
-                            //panel.Controls.Add(new LiteralControl("<div class='col-xs-10'>"));
-                            MiTexBox.TextMode = TextBoxMode.SingleLine;
-                            break;
-                        case "Multiline":
-                            //panel.Controls.Add(new LiteralControl("<div class='col-xs-10'>"));
-                            MiTexBox.TextMode = TextBoxMode.MultiLine;
-                            break;
-                        case "Email":
-                            //panel.Controls.Add(new LiteralControl("<div class='col-xs-10'>"));
-                            MiTexBox.TextMode = TextBoxMode.Email;
-                            break;
-                    }
-
-                    pnl_contenedor.Controls.Add(MiTexBox);
-
-
-                    break;
-
-                case "2":
-
-                    //Si es dropdowlist
-                    DropDownList MiCombo = new DropDownList();
-                    MiCombo.ID = identificacion;
-                    MiCombo.CssClass = "form-control";
-                    MiCombo.ToolTip = row["descripcion"].ToString();
-                    //Metodo para llenar el combo
-                    pnl_contenedor.Controls.Add(MiCombo);
-                    //ViewState["controlsadded"] = true;
-                    break;
+                
 
                 case "3":
 
                     //Si es Adjunto
                     FileUpload MiFileUpload = new FileUpload();
                     MiFileUpload.ID = identificacion;
-
-                    //MiFileUpload.ToolTip = row["descripcion"].ToString();
+                    MiFileUpload.ToolTip = row["descripcion"].ToString();
                     MiFileUpload.EnableViewState = true;
                     //MiFileUpload.ViewStateMode = ViewStateMode.Enabled;
 
                     pnl_contenedor.Controls.Add(MiFileUpload);
-                    //ViewState["controlsadded"] = true;
+                    
+                    //Button MiBoton = new Button();
+                    //MiBoton.ID = "btn_" + identificacion;
+                    //MiBoton.Click += new System.EventHandler(subeArchivo_Click);
+                    //MiBoton.Text = "Subir Documento";
+                    //MiBoton.CommandName = identificacion;
+                    //pnl_contenedor.Controls.Add(MiBoton);
+                    
 
-                    break;
-                case "4":
-                    //Si es checkbox
-                    CheckBox MiCheckbox = new CheckBox();
-                    MiCheckbox.ID = identificacion;
-                    MiCheckbox.CssClass = row["descripcion"].ToString();
-                    pnl_contenedor.Controls.Add(MiCheckbox);
-                    //ViewState["controlsadded"] = true;
+                    //AsyncPostBackTrigger trigger = new AsyncPostBackTrigger();
+                    //trigger.ControlID = MiBoton.ID;
+                    //trigger.EventName = "Click";
+                    //upnlDoctos.Triggers.Add(trigger);
                     break;
 
             }
@@ -250,17 +273,7 @@ namespace VERPI.PreIngresos.Marcas
 
         }
 
-        protected void btnGuardar_Click(object sender, EventArgs e)
-        {
-            /*Construyo datatable*/
-            DataTable dt_controles = new DataTable();
-            dt_controles.Columns.Add("correlativo_campo");
-            dt_controles.Columns.Add("nombre_control");
-            dt_controles.Columns.Add("valor");
-            ObtengoControlesConValores(pnl_seccion_adjuntos, ref dt_controles);
-        }
-
-        protected void ObtengoControlesConValores(Panel pnl_contenedor, ref DataTable dt_controles)
+        protected void GuardoDocumentos(Panel pnl_contenedor, int no_preingreso)
         {
 
             int correlativo_campo = 0;
@@ -271,68 +284,76 @@ namespace VERPI.PreIngresos.Marcas
             foreach (Control c in pnl_contenedor.Controls)
             {
 
-
-                if (c is TextBox)
-                {
-                    TextBox tbx;
-                    tbx = (TextBox)c;
-
-                    nombre_control = tbx.ID.Remove(tbx.ID.Length - 6);
-                    numero_control = Convert.ToInt32(tbx.ID.Substring(tbx.ID.Length - 5, 5));
-                    correlativo_campo = numero_control - 10000;
-                    valor = tbx.Text;
-
-                    DataRow row = dt_controles.NewRow();
-                    row["correlativo_campo"] = correlativo_campo;
-                    row["nombre_control"] = nombre_control;
-                    row["valor"] = valor;
-                    dt_controles.Rows.Add(row);
-                }
-                else if (c is DropDownList)
-                {
-                    DropDownList ddl;
-                    ddl = (DropDownList)c;
-
-                    nombre_control = ddl.ID.Remove(ddl.ID.Length - 6);
-                    numero_control = Convert.ToInt32(ddl.ID.Substring(ddl.ID.Length - 5, 5));
-                    correlativo_campo = numero_control - 10000;
-                    valor = ddl.SelectedValue;
-
-                    DataRow row = dt_controles.NewRow();
-                    row["correlativo_campo"] = correlativo_campo;
-                    row["nombre_control"] = nombre_control;
-                    row["valor"] = valor;
-                    dt_controles.Rows.Add(row);
-
-                }
-                else if (c is CheckBox)
-                {
-                    CheckBox chk;
-                    chk = (CheckBox)c;
-
-                    nombre_control = chk.ID.Remove(chk.ID.Length - 6);
-                    numero_control = Convert.ToInt32(chk.ID.Substring(chk.ID.Length - 5, 5));
-                    correlativo_campo = numero_control - 10000;
-                    valor = chk.Checked.ToString();
-
-                    DataRow row = dt_controles.NewRow();
-                    row["correlativo_campo"] = correlativo_campo;
-                    row["nombre_control"] = nombre_control;
-                    row["valor"] = valor;
-                    dt_controles.Rows.Add(row);
-                }
                 if (c is FileUpload)
                 {
                     FileUpload flup;
                     flup = (FileUpload)c;
 
-                    string archivo = string.Empty;
-                    archivo = flup.FileName;
-
                     if (flup.HasFile)
                     {
-                        divAlertCorrecto.Visible = true;
-                        MensajeCorrectoPrincipal.Text = archivo;
+                        //string archivo = string.Empty;
+                        //archivo = flup.FileName;
+                        string carpeta = Path.Combine(Request.PhysicalApplicationPath, "doctos");
+
+                        string prefijo = no_preingreso.ToString() + "_" + flup.ID;
+
+                        nombre_control = flup.ID.Remove(flup.ID.Length - 6);
+                        numero_control = Convert.ToInt32(flup.ID.Substring(flup.ID.Length - 5, 5));
+                        correlativo_campo = numero_control - 10000;
+
+                        string extension = Path.GetExtension(flup.PostedFile.FileName);
+
+                        switch (extension.ToLower())
+                        {
+                            case ".pdf":
+                                break;
+                            default:
+                                ErrorMessagePrincipal.Text = "Extension no valida";
+                                break;
+                        }
+
+                        try
+                        {
+                            string archivo = Path.GetFileName(flup.PostedFile.FileName);
+
+                            string carpeta_final = Path.Combine(carpeta, prefijo + ".pdf");
+
+                            flup.PostedFile.SaveAs(carpeta_final);
+
+                            objCEFormulario.No_PreIngreso = (int)Session["noPreingreso"];
+                            objCEFormulario.Correlativo_Campo = correlativo_campo;
+                            objCEFormulario.Nombre_Documento = archivo;
+                            objCEFormulario.TipoDocto = extension;
+
+                            if (!objCNFormulario.ExisteArchivo((int)Session["noPreingreso"], correlativo_campo))
+                            {                               
+                                objCEFormulario.PathDocto = carpeta_final;
+
+                                //guarda ficha archivo
+                                objCNFormulario.InsertDoctoAnexoFormulario(objCEFormulario);
+                            }
+                            else
+                            {
+                                //Actualiza ficha archivo
+                                objCNFormulario.UpdateDoctoAnexoFormulario(objCEFormulario);
+                            }
+                            
+
+                        }
+                        catch (Exception ex)
+                        {
+                            ErrorMessagePrincipal.Text = "Error: " + ex.Message;
+                            divAlertError.Visible = true;
+                            throw;
+                        }
+                    
+                        //DataRow row = dt_controles.NewRow();
+                        //row["correlativo_campo"] = correlativo_campo;
+                        //row["nombre_documento"] = archivo;
+                        //row["tipo"]
+                        //row["path"]
+                        
+                        
                     }
 
                 }
@@ -341,5 +362,138 @@ namespace VERPI.PreIngresos.Marcas
 
             //return dt_controles;
         }
+
+        protected void Llenar_gvAnexos(int no_preingreso)
+        {
+            DataTable tbl = new DataTable();
+            tbl = objCNFormulario.SelectAnexosFormulario(no_preingreso);
+            gvAnexos.DataSource = tbl;
+            gvAnexos.DataBind();
+        }
+
+        protected void EliminoDocumento(int id_anexo, string path)
+        {            
+            if (objCNFormulario.EliminoArchivoFormulario(id_anexo, path))
+            {
+                divAlertCorrecto.Visible = true;
+                MensajeCorrectoPrincipal.Text = "Se ha eliminado archivo correctamente.";
+            }
+            else
+            {
+                divAlertError.Visible = true;
+                ErrorMessagePrincipal.Text = "Ha ocurrido un error al tratar de eliminar archivo.";
+            }
+        }
+
+        protected void ValidoCamposObligatorios()
+        {
+            /*Selecciono valores obligatorios del formulario*/
+            var dt_obligatorios = objCNFormulario.SelectCamposObligatorios((int)Session["no_formulario"]);
+            var dt_valoresControles = objCNFormulario.SelectValoresFormulario((int)Session["noPreIngreso"]);
+
+            bool cumple = true;
+            string nombre_campo = string.Empty;
+            int x = 1;
+
+            if (dt_obligatorios.Rows.Count > 0)
+            {//Si trae valores obligatorios
+
+
+                foreach (DataRow row in dt_obligatorios.Rows)
+                {/*recorro campos obligatorios*/
+                    int corr_obligatorio = (int)row["correlativo_campo"];
+                    int tipo_control = Convert.ToInt32(row["tipo_control"].ToString());
+
+                    foreach (DataRow rowValor in dt_valoresControles.Rows)
+                    {/*Busco si cumple en los datos del formulario*/
+                        int corr_valor = (int)rowValor["correlativo_campo"];
+                        if (corr_obligatorio == corr_valor)
+                        {
+                            if (rowValor["valor"] != null)
+                            {
+
+                                if (tipo_control == 1)
+                                {/*si es texto*/
+                                    string valor = rowValor["valor"].ToString();
+                                    if (valor.Length == 0)
+                                    {
+                                        cumple = false;
+                                        if (x == 1)
+                                        {
+                                            nombre_campo += row["Etiqueta"].ToString();
+                                        }
+                                        else
+                                        {
+                                            nombre_campo += " , " + row["Etiqueta"].ToString();
+                                        }
+                                        x++;
+                                        break;
+                                    }
+                                }
+                                else if (tipo_control == 2)
+                                {/*Si es combo*/
+                                    int valor = Convert.ToInt32(rowValor["valor"].ToString());
+                                    if (valor == 0)
+                                    {
+                                        cumple = false;
+                                        if (x == 1)
+                                        {
+                                            nombre_campo += row["Etiqueta"].ToString();
+                                        }
+                                        else
+                                        {
+                                            nombre_campo += " , " + row["Etiqueta"].ToString();
+                                        }
+                                        x++;
+                                        break;
+                                    }
+                                }
+                                else if (tipo_control == 4)
+                                {/*Si es check*/
+                                    /*El tipo check es obligatorio?*/
+                                }
+
+
+                            }
+                        }
+                    }
+
+                    if (tipo_control == 3)
+                    {/*Si es documento adjunto*/
+                        bool existe = objCNFormulario.ExisteArchivo((int)Session["noPreIngreso"], corr_obligatorio);
+                        if (!existe)
+                        {
+                            cumple = false;
+                            if (x == 1)
+                            {
+                                nombre_campo += row["Etiqueta"].ToString();
+                            }
+                            else
+                            {
+                                nombre_campo += " , " + row["Etiqueta"].ToString();
+                            }
+                            x++;
+                            //break;
+                        }
+                    }
+                }
+            }
+
+            if (!cumple)
+            {
+                divAlertError.Visible = true;
+                ErrorMessagePrincipal.Text = "Los siguientes campos son obligatorios, favor verifique: " + nombre_campo;
+            }
+            else
+            {
+                divAlertCorrecto.Visible = true;
+                MensajeCorrectoPrincipal.Text = "Los campos obligatorios han sido validados correctamente.";
+            }
+
+
+        }
+
+        #endregion
+
     }
 }

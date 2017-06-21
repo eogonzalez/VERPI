@@ -88,8 +88,8 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <asp:Label runat="server" AssociatedControlID="ddlTipoPermiso" CssClass="control-label col-xs-2" Text="Permiso: "></asp:Label>
+<%--                <div class="form-group">
+                    <asp:Label runat="server" AssociatedControlID="ddlTipoPermiso" CssClass="control-label col-xs-2" Text="Categoria de Perfil: "></asp:Label>
                     <div class="col-xs-10">
                         <asp:DropDownList runat="server" ID="ddlTipoPermiso" CssClass="form-control">
                             <asp:ListItem Value="A">Administrador</asp:ListItem>
@@ -97,7 +97,7 @@
                             <asp:ListItem Value="F">Funcionario</asp:ListItem>                                                        
                         </asp:DropDownList>
                     </div>
-                </div>
+                </div>--%>
 
 
                 <div class="panel-footer">

@@ -10,7 +10,7 @@ namespace Capa_Entidad.Administracion
     {
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
-        public string TipoPermiso { get; set; }
+        //public string TipoPermiso { get; set; }
 
         public int ID_TipoUsuario { get; set; }
         public int ID_UsuarioAutoriza { get; set; }

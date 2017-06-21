@@ -45,6 +45,7 @@
     <Compile Include="Administracion\CNPermisosPerfiles.cs" />
     <Compile Include="Administracion\CNTipoUsuarios.cs" />
     <Compile Include="Administracion\CNValoresCombo.cs" />
+    <Compile Include="Bandeja\CNBandejaTrabajo.cs" />
     <Compile Include="Bandeja\CNBandejaUsuario.cs" />
     <Compile Include="General\CNFormularios.cs" />
     <Compile Include="General\CNLogin.cs" />
