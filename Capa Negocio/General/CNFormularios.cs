@@ -88,5 +88,10 @@ namespace Capa_Negocio.General
             return objCDFormulario.GenerarExpediente(no_preingreso);
         }
 
+        public string SelectEstadoPreIngreso(int no_preingreso)
+        {
+            return objCDFormulario.SelectEstadoPreIngreso(no_preingreso);
+        }
+
     }
 }

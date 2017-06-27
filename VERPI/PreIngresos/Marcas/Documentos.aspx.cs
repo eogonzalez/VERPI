@@ -49,7 +49,18 @@ namespace VERPI.PreIngresos.Marcas
 
                 }
 
-                LlenarPanel(no_PreIngreso, no_formulario);
+
+                string estado = string.Empty;
+                estado = objCNFormulario.SelectEstadoPreIngreso(no_PreIngreso);
+                Session.Add("estado", estado);
+                ConfiguracionEstado();
+
+                if (estado != "E")
+                {
+                    LlenarPanel(no_PreIngreso, no_formulario);
+                }
+                
+                
                 Llenar_gvAnexos(no_PreIngreso);
 
                 btnGuardar.Attributes.Add("onclick", "this.value='Procesando Espere...';this.disabled=true;" + ClientScript.GetPostBackEventReference(btnGuardar, ""));
@@ -104,7 +115,23 @@ namespace VERPI.PreIngresos.Marcas
             {
                 //Realiza el envio del formulario
                 /*Valida que los campos cumplan los requisitos de obligatorio*/
-                ValidoCamposObligatorios();
+                if (ValidoCamposObligatorios())
+                {
+                    var idExpediente = GeneroExpediente((int)Session["noPreIngreso"]);
+
+                    if (idExpediente > 0)
+                    {
+                        MensajeCorrectoPrincipal.Text += "Se ha generado expediente correctamente. ";
+
+                        /*BloqueoGeneral*/
+                    }
+                    else
+                    {
+                        ErrorMessagePrincipal.Text += "Ha ocurrido un error al generar ";
+                        divAlertError.Visible = true;
+                    }
+
+                }
             }
             else
             {
@@ -125,6 +152,7 @@ namespace VERPI.PreIngresos.Marcas
             GuardoDocumentos(pnl_seccion_adjuntos, (int)Session["noPreingreso"]);
             Llenar_gvAnexos((int)Session["noPreingreso"]);
         }
+
 
         #endregion
 
@@ -385,7 +413,7 @@ namespace VERPI.PreIngresos.Marcas
             }
         }
 
-        protected void ValidoCamposObligatorios()
+        protected bool ValidoCamposObligatorios()
         {
             /*Selecciono valores obligatorios del formulario*/
             var dt_obligatorios = objCNFormulario.SelectCamposObligatorios((int)Session["no_formulario"]);
@@ -397,7 +425,6 @@ namespace VERPI.PreIngresos.Marcas
 
             if (dt_obligatorios.Rows.Count > 0)
             {//Si trae valores obligatorios
-
 
                 foreach (DataRow row in dt_obligatorios.Rows)
                 {/*recorro campos obligatorios*/
@@ -490,10 +517,34 @@ namespace VERPI.PreIngresos.Marcas
                 MensajeCorrectoPrincipal.Text = "Los campos obligatorios han sido validados correctamente.";
             }
 
+            return cumple;
+        }
 
+        protected int GeneroExpediente(int no_preingreso)
+        {
+            var respuesta = 0;
+
+            respuesta = objCNFormulario.GenerarExpediente(no_preingreso);
+
+            return respuesta;
+        }
+
+        protected void ConfiguracionEstado()
+        {
+            if (Session["estado"] != null)
+            {
+                if (Session["estado"].ToString() == "E")
+                {
+                    btnGuardar.Visible = false;
+                    btnEnviar.Visible = false;
+                    gvAnexos.Columns[5].Visible = false;
+                }
+            }
+            
         }
 
         #endregion
+
 
     }
 }

@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Administracion\CNCamposFormularios.cs" />
+    <Compile Include="Administracion\CNEstados.cs" />
     <Compile Include="Administracion\CNMenu.cs" />
     <Compile Include="Administracion\CNPermisosPerfiles.cs" />
     <Compile Include="Administracion\CNTipoUsuarios.cs" />

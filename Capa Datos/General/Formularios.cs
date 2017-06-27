@@ -684,5 +684,26 @@ namespace Capa_Datos.General
 
             return respuesta;
         }
+
+        public string SelectEstadoPreIngreso(int no_preingreso)
+        {
+            var respuesta = string.Empty;
+            var sql_query = string.Empty;
+
+            sql_query = " select rtrim(estado) " +
+                " from preingreso_encabezado " +
+                " where no_preingreso = @no_preingreso ";
+
+            using (var con = objConexion.Conectar() )
+            {
+                var command = new SqlCommand(sql_query, con);
+                command.Parameters.AddWithValue("no_preingreso", no_preingreso);
+                con.Open();
+                respuesta = (string)command.ExecuteScalar();
+
+            }
+
+            return respuesta;
+        }
     }
 }

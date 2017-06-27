@@ -1,8 +1,8 @@
-﻿<%@ Page Title="Bandeja de Trabajo" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BandejaTrabajo.aspx.cs" Inherits="VERPI.Bandeja.BandejaTrabajo" %>
+﻿<%@ Page Title="Bandeja de Entrada" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BandejaTrabajo.aspx.cs" Inherits="VERPI.Bandeja.BandejaTrabajo" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="panel panel-primary">
-        <div class="panel-heading"><%: Title %><asp:Label runat="server" ID="lblCantidadBandeja" CssClass="label label-info" /></div>
+        <div class="panel-heading"><%: Title %> <asp:Label runat="server" ID="lblCantidadBandeja" CssClass="label label-info" /></div>
         <br />
         <div class="panel-body form-vertical">
             <div class="btn-group" role="group">
@@ -39,17 +39,15 @@
 
                     <Columns>
                         <asp:BoundField DataField="no_expediente" HeaderText="No Expediente" SortExpression="no_expediente" />
-                        <asp:BoundField DataField="nombre" HeaderText="Formulario" />
+                        <asp:BoundField DataField="cmd" HeaderText="cmd" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" />
+                        <asp:BoundField DataField="no_preingreso" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" />
+                        <asp:BoundField DataField="nombres" HeaderText="Usuario" />
+                        <asp:BoundField DataField="nombre_formulario" HeaderText="Formulario" />
                         <asp:BoundField DataField="fecha_creacion" HeaderText="Fecha Creacion" />
                         <asp:BoundField DataField="estado_txt" HeaderText="Estado" />
 
-                        <asp:ButtonField ButtonType="Button" Text="Modificar" HeaderText="Modificar" CommandName="modificar" ControlStyle-CssClass="btn btn-success" />
-
-                        <asp:TemplateField HeaderText="Eliminar">
-                            <ItemTemplate>
-                                <asp:Button Text="Eliminar" runat="server" ID="btnEliminar" CausesValidation="false" CommandName="eliminar" CommandArgument="<%# Container.DataItemIndex %>" CssClass="btn btn-danger" OnClientClick="return confirm(&quot;¿Esta seguro de borrar opcion seleccionada?&quot;)" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                        <asp:ButtonField ButtonType="Button" Text="Auto Asignar" HeaderText="Asignar" CommandName="Asignar" ControlStyle-CssClass="btn btn-success" />
+                        <asp:ButtonField ButtonType="Button" Text="Asignar Funcionario" HeaderText="AsignarFuncionario" CommandName="AsignarFuncionario" ControlStyle-CssClass="btn btn-info" />
 
                     </Columns>
 

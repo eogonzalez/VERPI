@@ -43,10 +43,12 @@ namespace VERPI.Bandeja
                 int no_PreIngreso = Convert.ToInt32(row.Cells[0].Text);
                 int cmd = Convert.ToInt32(row.Cells[1].Text);
                 int no_formulario = Convert.ToInt32(row.Cells[2].Text);
+                string estado = row.Cells[5].Text;
 
                 Session.Add("NoPreIngreso", no_PreIngreso);
                 Session.Add("cmd", cmd);
                 Session.Add("no_formulario", no_formulario);
+                //Session.Add("Estado", estado);
 
                 switch (e.CommandName)
                 {
@@ -54,9 +56,18 @@ namespace VERPI.Bandeja
                         Response.Redirect("~/PreIngresos/Marcas/PreIngreso.aspx?cmd="+cmd.ToString()+"&nf="+no_formulario.ToString()+"&np="+no_PreIngreso.ToString());
                         break;
                     case "eliminar":
-                        EliminarFormulario(no_PreIngreso);
-                        Llenar_gvBorradores((int)Session["UsuarioID"]);
-                        Llenar_CantidadBorradores((int)Session["UsuarioID"]);
+                        if (estado == "Enviado")
+                        {
+                            divAlertError.Visible = true;
+                            ErrorMessagePrincipal.Text = "No es posible eliminar el formulario, ya ha sido enviado.";
+                        }
+                        else if (estado == "Borrador")
+                        {
+                            EliminarFormulario(no_PreIngreso);
+                            Llenar_gvBorradores((int)Session["UsuarioID"]);
+                            Llenar_CantidadBorradores((int)Session["UsuarioID"]);
+                        }
+
                         break;
                 }
 

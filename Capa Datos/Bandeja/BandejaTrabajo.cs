@@ -18,12 +18,23 @@ namespace Capa_Datos.Bandeja
             var dt_respuesta = new DataTable();
             var sql_query = string.Empty;
 
-            sql_query = "select pe.no_expediente, gf.tipo_tramite as cmd, gf.no_formulario, "+
-                " gf.nombre, pe.fecha_creacion,  "+
+            sql_query = " select pe.no_expediente, pe.no_preingreso, "+
+                " gf.tipo_tramite as cmd,  "+
+                " pie.id_usuario_solicita, "+
+                " gu.nombres, "+
+                " gf.no_formulario,  "+
+                " gf.nombre as nombre_formulario, pe.fecha_creacion,   "+
                 " case  pe.estado when 'T' then  'Borrador' else 'Enviado' end as estado_txt "+
-                " from expediente_encabezado pe, g_formularios gf "+
+                " from "+
+                " expediente_encabezado pe,  "+
+	            " g_formularios gf, "+
+                " preingreso_encabezado pie, "+
+	            " g_usuarios gu "+
                 " where "+
-                " pe.no_formulario = gf.no_formulario ";
+                " pe.no_formulario = gf.no_formulario and "+
+                " pie.no_preingreso = pe.no_preingreso and "+
+                " gu.id_usuario = pie.id_usuario_solicita and "+
+                " pe.estado = 'E'";
 
             using (var con = objConexion.Conectar())
             {

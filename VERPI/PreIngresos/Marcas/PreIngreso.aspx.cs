@@ -47,6 +47,7 @@ namespace VERPI.PreIngresos.Marcas
                 {
                     noPreingreso = Convert.ToInt32(Request.QueryString["np"]);
                     Session.Add("noPreIngreso", noPreingreso);
+
                 }
 
                 if (no_formulario > 0 && noPreingreso > 0)
@@ -62,7 +63,6 @@ namespace VERPI.PreIngresos.Marcas
                     //Llenar_cbo_tramite(tipo_tramite);
                     cbo_tramite.SelectedValue = no_formulario.ToString();
 
-
                     pnl_seccion_1.Controls.Clear();
                     pnl_seccion_2.Controls.Clear();
                     pnl_seccion_3.Controls.Clear();
@@ -70,6 +70,7 @@ namespace VERPI.PreIngresos.Marcas
                     LlenarFormulario(no_formulario);
                     pnlFormulario.Visible = true;
                     LlenarValoresFormulario(noPreingreso);
+                    ConfiguracionEstado();
                 }
 
                                
@@ -594,6 +595,8 @@ namespace VERPI.PreIngresos.Marcas
         {
             var dt_valoresControles = new DataTable();
             dt_valoresControles = objCNFormulario.SelectValoresFormulario(noPreIngreso);
+            var estado = objCNFormulario.SelectEstadoPreIngreso(noPreIngreso);
+            Session.Add("estado", estado);
 
             foreach (DataRow row in dt_valoresControles.Rows)
             {
@@ -601,13 +604,13 @@ namespace VERPI.PreIngresos.Marcas
                 string ID_Control = row["nombre_control"]+"_"+correlativo.ToString();
                 string valor = row["valor"].ToString();
 
-                EstablecerValoresCampos(pnl_seccion_1, ID_Control, valor);
-                EstablecerValoresCampos(pnl_seccion_2, ID_Control, valor);
-                EstablecerValoresCampos(pnl_seccion_3, ID_Control, valor);
+                EstablecerValoresCampos(pnl_seccion_1, ID_Control, valor, estado);
+                EstablecerValoresCampos(pnl_seccion_2, ID_Control, valor, estado);
+                EstablecerValoresCampos(pnl_seccion_3, ID_Control, valor, estado);
             }
         }
 
-        protected void EstablecerValoresCampos(Panel pnl_contenedor, string ID_Control, string Valor)
+        protected void EstablecerValoresCampos(Panel pnl_contenedor, string ID_Control, string Valor, string estado)
         {
             foreach (Control c in pnl_contenedor.Controls)
             {
@@ -618,6 +621,12 @@ namespace VERPI.PreIngresos.Marcas
                     if (MiTexBox.ID == ID_Control)
                     {
                         MiTexBox.Text = Valor;
+
+                        if (estado == "E")
+                        {
+                            MiTexBox.Enabled = false;
+                        }
+                        
                         break;
                     }
                 }
@@ -628,6 +637,11 @@ namespace VERPI.PreIngresos.Marcas
                     if (MiCombo.ID == ID_Control)
                     {
                         MiCombo.SelectedValue = Valor;
+
+                        if (estado == "E")
+                        {
+                            MiCombo.Enabled = false;
+                        }
                         break;
                     }
                 }
@@ -638,6 +652,12 @@ namespace VERPI.PreIngresos.Marcas
                     if (MiCheck.ID == ID_Control)
                     {
                         MiCheck.Checked = Convert.ToBoolean(Valor);
+
+                        if (estado == "E")
+                        {
+                            MiCheck.Enabled = false;
+                        }
+
                         break;
                     }
                 }
@@ -656,8 +676,7 @@ namespace VERPI.PreIngresos.Marcas
 
             if (dt_obligatorios.Rows.Count > 0)
             {//Si trae valores obligatorios
-                
-                
+                                
                 foreach (DataRow row in dt_obligatorios.Rows)
                 {/*recorro campos obligatorios*/
                     int corr_obligatorio = (int)row["correlativo_campo"];
@@ -759,6 +778,16 @@ namespace VERPI.PreIngresos.Marcas
             respuesta = objCNFormulario.GenerarExpediente(no_preingreso);
 
             return respuesta;
+        }
+
+        protected void ConfiguracionEstado()
+        {
+            if ( Session["estado"].ToString() == "E")
+            {
+                btnGuardar.Visible = false;
+                btnEnviar.Visible = false;
+                btnAdjuntar.Text = "Ir a documentos adjuntos ";
+            }
         }
 
         #endregion

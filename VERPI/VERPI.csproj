@@ -183,6 +183,7 @@
     <Content Include="Account\TwoFactorAuthenticationSignIn.aspx" />
     <Content Include="Account\VerifyPhoneNumber.aspx" />
     <Content Include="Administracion\CamposFormularios.aspx" />
+    <Content Include="Administracion\Estados.aspx" />
     <Content Include="Administracion\Menu.aspx" />
     <Content Include="Administracion\MenuOpcion.aspx" />
     <Content Include="Administracion\PermisosPerfiles.aspx" />
@@ -386,6 +387,13 @@
     </Compile>
     <Compile Include="Administracion\CamposFormularios.aspx.designer.cs">
       <DependentUpon>CamposFormularios.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Administracion\Estados.aspx.cs">
+      <DependentUpon>Estados.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administracion\Estados.aspx.designer.cs">
+      <DependentUpon>Estados.aspx</DependentUpon>
     </Compile>
     <Compile Include="Administracion\Menu.aspx.cs">
       <DependentUpon>Menu.aspx</DependentUpon>

@@ -3,7 +3,7 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="panel panel-primary">
-        <div class="panel-heading"><%: Title %><asp:Label runat="server" ID="lblCantidadBandeja" CssClass="label label-info" /></div>
+        <div class="panel-heading"><%: Title %> <asp:Label runat="server" ID="lblCantidadBandeja" CssClass="label label-info" /></div>
         <br />
         <div class="panel-body form-vertical">
             <div class="btn-group" role="group">

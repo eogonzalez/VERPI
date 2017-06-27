@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Administracion\CECamposFormularios.cs" />
+    <Compile Include="Administracion\CEEstados.cs" />
     <Compile Include="Administracion\CEMenu.cs" />
     <Compile Include="Administracion\CEPermisosPerfiles.cs" />
     <Compile Include="Administracion\CETipoUsuarios.cs" />
