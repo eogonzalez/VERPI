@@ -9,6 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%: Page.Title %> - VERPI </title>
 
+    <%--<asp:ContentPlaceHolder  id="head" runat="server"></asp:ContentPlaceHolder>--%>
+
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
@@ -19,8 +21,27 @@
             display: none;
         }
     </style>
+
+    <script type="text/javascript">
+        function UncheckOthers(objchkbox) {
+            //Get the parent control of checkbox which is the checkbox list
+            var objchkList = objchkbox.parentNode.parentNode.parentNode;
+            //Get the checkbox controls in checkboxlist
+            var chkboxControls = objchkList.getElementsByTagName("input");
+            //Loop through each check box controls
+            for (var i = 0; i < chkboxControls.length; i++) {
+                //Check the current checkbox is not the one user selected
+                if (chkboxControls[i] != objchkbox && objchkbox.checked) {
+                    //Uncheck all other checkboxes
+                    chkboxControls[i].checked = false;
+                }
+            }
+        }
+    </script>
+
 </head>
 <body>
+
     <form runat="server">
         <asp:ScriptManager runat="server">
             <Scripts>
@@ -39,6 +60,7 @@
                 <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
                 <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
                 <asp:ScriptReference Name="WebFormsBundle" />
+                <asp:ScriptReference Path="~/Scripts/Funciones.js" />
                 <%--Scripts del sitio--%>
             </Scripts>
         </asp:ScriptManager>
@@ -91,7 +113,8 @@
                 <p>
                     Todos los derechos reservados
                     <asp:HyperLink runat="server" ID="MinecoHyperLink" ViewStateMode="Disabled">www.rpi.gob.gt</asp:HyperLink>
-                    | Desarrollado por <asp:HyperLink runat="server" ID="CompactHyperLink" ViewStateMode="Disabled">CompactDeveloper</asp:HyperLink>
+                    | Desarrollado por
+                    <asp:HyperLink runat="server" ID="CompactHyperLink" ViewStateMode="Disabled">CompactDeveloper</asp:HyperLink>
                 </p>
             </footer>
         </div>

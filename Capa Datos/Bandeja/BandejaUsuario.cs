@@ -13,7 +13,7 @@ namespace Capa_Datos.Bandeja
     {
         Conexion objConexion = new Conexion();
 
-        public DataTable SelectFormulariosBorrador(int id_usuario_solicita)
+        public DataTable SelectFormulariosBorrador(int id_usuario_solicita, int estado = 0, int tipo_tramite = 0, string fecha_inicial = "", string fecha_final = "")
         {
             var dt_respuesta = new DataTable();
             var sql_query = string.Empty;
@@ -23,12 +23,59 @@ namespace Capa_Datos.Bandeja
                 " from preingreso_encabezado pe, g_formularios gf "+
                 " where "+
                 " pe.no_formulario = gf.no_formulario and "+
-                " pe.id_usuario_solicita = @id_usuario_solicita;  ";
+                " pe.id_usuario_solicita = @id_usuario_solicita  ";
+
+            if (estado > 0)
+            {
+                sql_query = sql_query + "  and pe.estado = @estado ";
+            }
+
+            if (tipo_tramite > 0)
+            {
+                sql_query = sql_query + " and gf.tipo_tramite = @tipo_tramite ";
+            }
+
+            if (fecha_inicial.Length > 0)
+            {
+                sql_query = sql_query + " and pe.fecha_creacion >= @fecha_inicial ";
+            }
+
+            if (fecha_final.Length > 0)
+            {
+                sql_query = sql_query + " and pe.fecha_creacion <= @fecha_final ";
+            }
 
             using (var con = objConexion.Conectar())
             {
                 var command = new SqlCommand(sql_query, con);
                 command.Parameters.AddWithValue("id_usuario_solicita", id_usuario_solicita);
+
+
+                if (estado == 1)
+                {
+                    command.Parameters.AddWithValue("estado", "E");
+                }
+
+                if (estado == 2)
+                {
+                    command.Parameters.AddWithValue("estado", "T");
+                }
+
+                if (tipo_tramite > 0)
+                {
+                    command.Parameters.AddWithValue("tipo_tramite", tipo_tramite);
+                }
+
+                if (fecha_inicial.Length > 0)
+                {
+                    command.Parameters.AddWithValue("fecha_inicial", Convert.ToDateTime(fecha_inicial));
+                }
+
+                if (fecha_final.Length > 0)
+                {
+                    command.Parameters.AddWithValue("fecha_final", Convert.ToDateTime(fecha_final));
+                }
+
                 con.Open();
                 var da = new SqlDataAdapter(command);
                 da.Fill(dt_respuesta);

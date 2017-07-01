@@ -202,7 +202,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Account\Web.config" />
     <Content Include="Mantenimientos\Paises.aspx" />
+    <Content Include="Scripts\Funciones.js" />
     <Content Include="WebForm1.aspx" />
+    <None Include="Properties\PublishProfiles\localverpi.pubxml" />
     <None Include="Properties\PublishProfiles\prbest - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\verpi - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\verpiazure.pubxml" />
