@@ -12,5 +12,7 @@ namespace Capa_Entidad.Administracion
         public int TipoTramite { get; set; }
         public string NombreFormulario { get; set; }
         public string Descripcion { get; set; }
+
+        public string Path_Reporte { get; set; }
     }
 }

@@ -6,14 +6,16 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
 using Capa_Negocio.Bandeja;
-using Capa_Negocio.General;
+using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
 
 namespace VERPI.Bandeja
 {
     public partial class BandejaUsuario : System.Web.UI.Page
     {
         CNBandejaUsuario objCNBandeja = new CNBandejaUsuario();
-        CNFormularios objCNFormulario = new CNFormularios();
+        Capa_Negocio.General.CNFormularios objCNFormulario = new Capa_Negocio.General.CNFormularios();
+        Capa_Negocio.Administracion.CNFormularios objCNForm = new Capa_Negocio.Administracion.CNFormularios();
 
         #region Eventos del Formulario
 
@@ -62,6 +64,13 @@ namespace VERPI.Bandeja
                 {
                     case "modificar":
                         Response.Redirect("~/PreIngresos/Marcas/PreIngreso.aspx?cmd="+cmd.ToString()+"&nf="+no_formulario.ToString()+"&np="+no_PreIngreso.ToString());
+                        break;
+
+                    case "reporte":
+                        Response.Redirect("~/Reportes/Formularios/DesplegarFormulario.aspx?nf=" + no_formulario.ToString() + "&np=" + no_PreIngreso.ToString());
+                        break;
+                    case "imprimir":
+                        ImprimirReporte(no_formulario, no_PreIngreso);
                         break;
                     case "eliminar":
                         if (estado == "Enviado")
@@ -173,6 +182,7 @@ namespace VERPI.Bandeja
 
         #region Funciones
 
+
         protected void Llenar_gvBorradores(int id_usuario)
         {
             var dt = new DataTable();
@@ -203,7 +213,58 @@ namespace VERPI.Bandeja
             }
         }
 
+        protected void ImprimirReporte(int no_formulario, int noPreingreso)
+        {
 
+            var tbl = new DataTable();
+            tbl = objCNForm.SelectFormulario(no_formulario);
+            if (tbl.Rows.Count > 0)
+            {
+                var rowForm = tbl.Rows[0];
+
+                if (rowForm["path_reporte"] != null)
+                {
+                    string pathdb = rowForm["path_reporte"].ToString();
+
+                    string path = Server.MapPath(pathdb);
+                    ReportDocument reporte = new ReportDocument();
+
+                    reporte.Load(path);
+                    /*Agrego valores iniciales*/
+                    reporte.DataDefinition.FormulaFields["txt_correoelectronico_tramitador"].Text = "'" + Session["CorreoUsuarioLogin"].ToString() + "'";
+                    reporte.DataDefinition.FormulaFields["txt_fecha_ingreso"].Text = "'" + DateTime.Now.ToString() + "'";
+                    reporte.DataDefinition.FormulaFields["txt_no_electronico"].Text = "'" + noPreingreso.ToString() + "'";
+
+                    DataTable dt = new DataTable();
+                    dt = objCNFormulario.SelectValoresFormulario(noPreingreso);
+
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        string ID_Control = row["nombre_control"].ToString();
+                        string valor = row["valor"].ToString();
+
+                        try
+                        {
+                            reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor + "'";
+                        }
+                        catch (Exception)
+                        {
+
+                            //throw;
+                        }
+
+                    }
+
+                    string saveFilePath = Server.MapPath("~/doctos");
+                    string nombreArchivo = noPreingreso.ToString() + "_formulario.pdf";
+                    string nombreDocto = saveFilePath + "\\" + nombreArchivo;
+                                        
+                    reporte.ExportToDisk(ExportFormatType.PortableDocFormat, nombreDocto);                    
+                    Response.Redirect("~/doctos/" + nombreArchivo);
+                }
+
+            }
+        }
 
         #endregion
 

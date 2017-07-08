@@ -94,6 +94,8 @@
                         <asp:BoundField DataField="estado_txt" HeaderText="Estado" />
 
                         <asp:ButtonField ButtonType="Button" Text="Modificar" HeaderText="Modificar" CommandName="modificar" ControlStyle-CssClass="btn btn-success" />
+                        <asp:ButtonField ButtonType="Button" Text="Vista Previa" HeaderText="Formulario" CommandName="reporte" ControlStyle-CssClass="btn btn-info" />
+                        <asp:ButtonField ButtonType="Button" Text="Imprimir" HeaderText="Formulario" CommandName="imprimir" ControlStyle-CssClass="btn btn-info" />
 
                         <asp:TemplateField HeaderText="Eliminar">
                             <ItemTemplate>

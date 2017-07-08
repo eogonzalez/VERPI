@@ -39,6 +39,9 @@
         }
     </script>
 
+<%--    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/0.1.0/css/footable.min.css"
+        rel="stylesheet" type="text/css" />--%>
+
 </head>
 <body>
 
@@ -61,8 +64,10 @@
                 <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
                 <asp:ScriptReference Name="WebFormsBundle" />
                 <asp:ScriptReference Path="~/Scripts/Funciones.js" />
+
                 <%--Scripts del sitio--%>
             </Scripts>
+
         </asp:ScriptManager>
 
         <asp:UpdatePanel runat="server" ID="UPMenuDinamico">
@@ -119,5 +124,11 @@
             </footer>
         </div>
     </form>
+<%--    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/0.1.0/js/footable.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('[id*=GridView1]').footable();
+        });
+    </script>--%>
 </body>
 </html>

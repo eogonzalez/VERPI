@@ -2,7 +2,7 @@
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-     <div class="panel panel-primary">
+    <div class="panel panel-primary">
         <div class="panel-heading"><%: Title %></div>
         <br />
         <div class="panel-body form-vertical">
@@ -11,13 +11,13 @@
                 <asp:LinkButton runat="server" ID="lkBtn_nuevo" CssClass="btn btn-primary"><i aria-hidden="true" class="glyphicon glyphicon-pencil"></i> Nuevo </asp:LinkButton>
                 <asp:LinkButton runat="server" ID="lkBtn_viewPanel"></asp:LinkButton>
 
-                <cc1:modalpopupextender id="lkBtn_nuevo_ModalPopupExtender" runat="server" backgroundcssclass="modalBackground"
-                    behaviorid="lkBtn_nuevo_ModalPopupExtender" popupcontrolid="pnl_nuevo" targetcontrolid="lkBtn_nuevo" cancelcontrolid="btnHide">
-                </cc1:modalpopupextender>
+                <cc1:ModalPopupExtender ID="lkBtn_nuevo_ModalPopupExtender" runat="server" BackgroundCssClass="modalBackground"
+                    BehaviorID="lkBtn_nuevo_ModalPopupExtender" PopupControlID="pnl_nuevo" TargetControlID="lkBtn_nuevo" CancelControlID="btnHide">
+                </cc1:ModalPopupExtender>
 
-                <cc1:modalpopupextender id="lkBtn_viewPanel_ModalPopupExtender" runat="server" backgroundcssclass="modalBackground"
-                    behaviorid="lkBtn_viewPanel_ModalPopupExtender" popupcontrolid="pnl_nuevo" targetcontrolid="lkBtn_viewPanel">
-                </cc1:modalpopupextender>
+                <cc1:ModalPopupExtender ID="lkBtn_viewPanel_ModalPopupExtender" runat="server" BackgroundCssClass="modalBackground"
+                    BehaviorID="lkBtn_viewPanel_ModalPopupExtender" PopupControlID="pnl_nuevo" TargetControlID="lkBtn_viewPanel">
+                </cc1:ModalPopupExtender>
 
             </div>
             <br />
@@ -30,10 +30,10 @@
 
                     <Columns>
                         <asp:BoundField DataField="no_formulario" SortExpression="no_formulario" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" />
-                        <asp:BoundField DataField="tipo_tramite"  ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol"/>                        
+                        <asp:BoundField DataField="tipo_tramite" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" />
                         <asp:BoundField DataField="nombre_tipo" HeaderText="Tipo de Tramite" />
-                        <asp:BoundField DataField="nombre" HeaderText="Nombre Formulario" />                        
-                        <asp:BoundField DataField="descripcion_formulario" HeaderText="Descripcion" />                        
+                        <asp:BoundField DataField="nombre" HeaderText="Nombre Formulario" />
+                        <asp:BoundField DataField="descripcion_formulario" HeaderText="Descripcion" />
 
                         <asp:ButtonField ButtonType="Button" Text="Modificar" HeaderText="Modificar" CommandName="modificar" ControlStyle-CssClass="btn btn-success" />
                         <asp:TemplateField HeaderText="Eliminar">
@@ -42,7 +42,7 @@
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                        <asp:ButtonField  ButtonType="Button" Text="Campos" HeaderText="Campos" CommandName="campos" ControlStyle-CssClass="btn btn-primary" />
+                        <asp:ButtonField ButtonType="Button" Text="Campos" HeaderText="Campos" CommandName="campos" ControlStyle-CssClass="btn btn-primary" />
                     </Columns>
 
                 </asp:GridView>
@@ -62,13 +62,13 @@
                 <div class="form-group">
                     <asp:Label AssociatedControlID="cbo_tipo_tramite" CssClass="control-label col-xs-2" runat="server" Text="Tipo de Tramite: "></asp:Label>
                     <div class="col-xs-10">
-                        
+
                         <asp:DropDownList runat="server" ID="cbo_tipo_tramite" CssClass="form-control">
-                            <asp:ListItem Value="1" >Marcas</asp:ListItem>
-                            <asp:ListItem Value="2" >Pantentes</asp:ListItem>
-                            <asp:ListItem Value="3" >Derechos de Autor</asp:ListItem>
+                            <asp:ListItem Value="1">Marcas</asp:ListItem>
+                            <asp:ListItem Value="2">Pantentes</asp:ListItem>
+                            <asp:ListItem Value="3">Derechos de Autor</asp:ListItem>
                         </asp:DropDownList>
-                        
+
                     </div>
                 </div>
 
@@ -88,6 +88,12 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <asp:Label AssociatedControlID="txtPathReporte" CssClass="control-label col-xs-2" runat="server" Text="Path Reporte:"></asp:Label>
+                    <div class="col-xs-10">
+                        <asp:TextBox ID="txtPathReporte" type="text" CssClass="form-control" runat="server" ></asp:TextBox>
+                    </div>
+                </div>
 
                 <div class="panel-footer">
                     <asp:Button runat="server" ID="btnGuardar" CssClass="btn btn-primary" Text="Guardar" CommandName="Guardar" OnClick="btnGuardar_Click" />

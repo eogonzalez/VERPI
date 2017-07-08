@@ -31,22 +31,22 @@
 
                     <Columns>
                         <asp:BoundField DataField="id_opcion" SortExpression="id_opcion" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol"/>
-                        <asp:BoundField DataField="nombre" HeaderText="Nombre" />
-                        <asp:BoundField DataField="descripcion" HeaderText="Descripcion" />
-                        <asp:BoundField DataField="url" HeaderText="URL" />
-                        <asp:BoundField DataField="comando" HeaderText="Comando" />
-                        <asp:BoundField DataField="obligatorio" HeaderText="Obligatorio" />
-                        <asp:BoundField DataField="visible" HeaderText="Visible" />
-                        <asp:BoundField DataField="login" HeaderText="Login" />
+                        <asp:BoundField DataField="nombre" HeaderText="Nombre" HeaderStyle-CssClass="visible-xs" ItemStyle-CssClass="visible-xs"/>
+                        <asp:BoundField DataField="descripcion" HeaderText="Descripcion" HeaderStyle-CssClass="hidden-xs" ItemStyle-CssClass="hidden-xs"/>
+                        <asp:BoundField DataField="url" HeaderText="URL" HeaderStyle-CssClass="hidden-xs" ItemStyle-CssClass="hidden-xs"/>
+                        <asp:BoundField DataField="comando" HeaderText="Comando" HeaderStyle-CssClass="hidden-xs" ItemStyle-CssClass="hidden-xs"/>
+                        <asp:BoundField DataField="obligatorio" HeaderText="Obligatorio" HeaderStyle-CssClass="hidden-xs" ItemStyle-CssClass="hidden-xs"/>
+                        <asp:BoundField DataField="visible" HeaderText="Visible" HeaderStyle-CssClass="hidden-xs" ItemStyle-CssClass="hidden-xs"/>
+                        <asp:BoundField DataField="login" HeaderText="Login" HeaderStyle-CssClass="hidden-xs" ItemStyle-CssClass="hidden-xs"/>
                         
-                        <asp:ButtonField  ButtonType="Button" Text="Modificar" HeaderText="Modificar" CommandName="modificar" ControlStyle-CssClass="btn btn-success" />
-                        <asp:TemplateField HeaderText="Eliminar">
+                        <asp:ButtonField  ButtonType="Link" Text="<i aria-hidden='true' class='glyphicon glyphicon-edit'></i> Eliminar" HeaderText="Modificar" CommandName="modificar" ControlStyle-CssClass="btn btn-success"/>
+                        <asp:TemplateField HeaderText="Eliminar" HeaderStyle-CssClass="hidden-xs" ItemStyle-CssClass="hidden-xs">
                             <ItemTemplate>
-                                <asp:Button Text="Eliminar" runat="server" id="btnEliminar" CausesValidation="false" CommandName="eliminar" CommandArgument="<%# Container.DataItemIndex %>" CssClass="btn btn-danger" OnClientClick="return confirm(&quot;¿Esta seguro de borrar opcion seleccionada?&quot;)"/>
+                                <asp:LinkButton class="glyphicon glyphicon-remove" Text="Eliminar" runat="server" id="btnEliminar" CausesValidation="false" CommandName="eliminar" CommandArgument="<%# Container.DataItemIndex %>" CssClass="btn btn-danger" OnClientClick="return confirm(&quot;¿Esta seguro de borrar opcion seleccionada?&quot;)"/>
                             </ItemTemplate>
                         </asp:TemplateField>
                         
-                        <asp:ButtonField  ButtonType="Button" Text="Sub Menu" HeaderText="Sub Menu" CommandName="submenu" ControlStyle-CssClass="btn btn-primary" />
+                        <asp:ButtonField  ButtonType="Link" Text="<i aria-hidden='true' class='glyphicon glyphicon-th-list'></i> Sub Menu" HeaderText="Sub Menu" CommandName="submenu" ControlStyle-CssClass="btn btn-primary" />
                     
                     </Columns>
 
