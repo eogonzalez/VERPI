@@ -1,12 +1,57 @@
 ﻿<%@ Page Title="Bandeja de Entrada" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BandejaTrabajo.aspx.cs" Inherits="VERPI.Bandeja.BandejaTrabajo" %>
 
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="panel panel-primary">
-        <div class="panel-heading"><%: Title %> <asp:Label runat="server" ID="lblCantidadBandeja" CssClass="label label-info" /></div>
+        <div class="panel-heading"><%: Title %>
+            <asp:Label runat="server" ID="lblCantidadBandeja" CssClass="label label-info" /></div>
         <br />
-        <div class="panel-body form-vertical">
-            <div class="btn-group" role="group">
+        <div class="panel-body form-horizontal">
+
+            <div class="form-group">
+<%--                <asp:Label AssociatedControlID="cbo_estado_Filtro" Text="Estado:" CssClass="control-label col-xs-2" runat="server" />
+                <div class="col-xs-4">
+                    <asp:DropDownList runat="server" ID="cbo_estado_Filtro" CssClass="form-control"
+                        OnSelectedIndexChanged="cbo_estado_Filtro_SelectedIndexChanged" AutoPostBack="true">
+                        <asp:ListItem Value="0">Seleccione Opcion..</asp:ListItem>
+                        <asp:ListItem Value="1">Enviado</asp:ListItem>
+                        <asp:ListItem Value="2">Borrador</asp:ListItem>
+                    </asp:DropDownList>
+                </div>--%>
+
+                <asp:Label Text="Seleccione Tipo de Tramite:" runat="server" CssClass="control-label col-xs-2" />
+                <div class="col-xs-3">
+                    <asp:CheckBox runat="server" ID="chk_Marcas" onclick="UncheckOthers(this);"
+                        Text="Marcas" OnCheckedChanged="chk_Marcas_CheckedChanged" AutoPostBack="true" />
+                </div>
+
+                <div class="col-xs-3">
+                    <asp:CheckBox runat="server" ID="chk_Patentes" onclick="UncheckOthers(this);"
+                        Text="Patentes" OnCheckedChanged="chk_Patentes_CheckedChanged" AutoPostBack="true" />
+                </div>
+
+                <div class="col-xs-4">
+                    <asp:CheckBox runat="server" ID="chk_Derechos" onclick="UncheckOthers(this);"
+                        Text="Derechos de Autor" OnCheckedChanged="chk_Derechos_CheckedChanged" AutoPostBack="true" />
+                </div>
             </div>
+
+            <div class="form-group">
+                <asp:Label ID="lblPeriodo" AssociatedControlID="txtFechaInicial" CssClass="control-label col-xs-2"
+                    runat="server" Text="Periodo: Fecha Inicial:"></asp:Label>
+                <div class="col-xs-4">
+                    <asp:TextBox ID="txtFechaInicial" CssClass="form-control" runat="server" OnTextChanged="txtFechaInicial_TextChanged" AutoPostBack="true"></asp:TextBox>
+                    <cc1:calendarextender id="txtFechaInicial_CalendarExtender" runat="server" behaviorid="txtFechaInicial_CalendarExtender"
+                        targetcontrolid="txtFechaInicial" format="dd/MM/yyyy" />
+                </div>
+                <asp:Label ID="lblFechaFin" AssociatedControlID="txtFechaFinal" CssClass="control-label col-xs-2" runat="server" Text=" Fecha Final:"></asp:Label>
+                <div class="col-xs-4">
+                    <asp:TextBox ID="txtFechaFinal" CssClass="form-control" runat="server" OnTextChanged="txtFechaFinal_TextChanged" AutoPostBack="true"></asp:TextBox>
+                    <cc1:calendarextender id="txtFechaFinal_CalendarExtender" runat="server" behaviorid="txtFechaFinal_CalendarExtender"
+                        targetcontrolid="txtFechaFinal" format="dd/MM/yyyy" />
+                </div>
+            </div>
+
             <br />
             <div id="divAlertCorrecto" runat="server">
                 <p class="alert alert-success">
@@ -18,6 +63,7 @@
                     <asp:Literal runat="server" ID="ErrorMessagePrincipal" />
                 </p>
             </div>
+
             <div>
                 <asp:GridView runat="server" ID="gvExpedientes"
                     CssClass="table table-hover table-striped"

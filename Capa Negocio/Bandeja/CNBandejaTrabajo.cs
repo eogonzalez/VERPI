@@ -12,9 +12,9 @@ namespace Capa_Negocio.Bandeja
     {
         BandejaTrabajo objCDBandeja = new BandejaTrabajo();
 
-        public DataTable SelectFormularios()
+        public DataTable SelectFormularios(int tipo_tramite = 0, string fecha_inicial = "", string fecha_final = "")
         {
-            return objCDBandeja.SelectFormularios();
+            return objCDBandeja.SelectFormularios(tipo_tramite, fecha_inicial, fecha_final);
         }
 
         public int SelectCantidadFormularios()

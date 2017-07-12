@@ -289,9 +289,10 @@ namespace VERPI.PreIngresos.Marcas
             int cs2 = 1;
             int cs3 = 1;
 
+            Session.Add("Etiqueta", false);
+
             foreach (DataRow row in dt.Rows)
-            {/*Recorro los campos del formulario a construir*/
-                
+            {/*Recorro los campos del formulario a construir*/                
                 switch (row["seccion"].ToString())
                 {
                     case "1":
@@ -316,16 +317,51 @@ namespace VERPI.PreIngresos.Marcas
             {
                 //Agrego Primer div
                 if (cont == 1)
-                {                    
-                    pnl_contenedor.Controls.Add(new LiteralControl("<div class='form-group'>"));
+                {
+                    if (row["tipo_control"].ToString() == "6")
+                    {
+                        pnl_contenedor.Controls.Add(new LiteralControl("<h4><span class='label label-info'>" + row["etiqueta"].ToString() + "</span></h4>"));
+                        Session["Etiqueta"] = true;
+                        cont = 0;
+                    }
+                    else
+                    {
+                        pnl_contenedor.Controls.Add(new LiteralControl("<div class='form-group'>"));
+                    }                    
                 }
 
-                //Creo controles
-                ConstruirControles(pnl_contenedor, row, cantidad_controles);                
+                
+                
+                if (!(bool)Session["Etiqueta"])
+                {
+                    //Creo controles                                
+                    ConstruirControles(pnl_contenedor, row, cantidad_controles);
+                }
+                else
+                {
+                    Session["Etiqueta"] = false;
+
+                    if (cont == 1)
+                    {
+                        pnl_contenedor.Controls.Add(new LiteralControl("</div>"));
+                    }
+                    cont = 0;
+                }
+
 
                 if (cont == 2 || cantidad_controles == x)
                 {
-                    pnl_contenedor.Controls.Add(new LiteralControl("</div>"));
+                    
+                    if (row["tipo_control"].ToString() == "6")
+                    {
+                        pnl_contenedor.Controls.Add(new LiteralControl("</div>"));
+                        pnl_contenedor.Controls.Add(new LiteralControl("<h4><span class='label label-info'>" + row["etiqueta"].ToString() + "</span></h4>"));
+                    }
+                    else
+                    {
+                        
+                        pnl_contenedor.Controls.Add(new LiteralControl("</div>"));
+                    }
                     cont = 0;
                 }
 
@@ -354,12 +390,16 @@ namespace VERPI.PreIngresos.Marcas
                 pnl_contenedor.Controls.Add(label);
             }
 
-
-
-
             if (total_campos >= 6)
             {
-                pnl_contenedor.Controls.Add(new LiteralControl("<div class='col-xs-4'>"));
+                if (!(bool)Session["Etiqueta"])
+                {
+                    pnl_contenedor.Controls.Add(new LiteralControl("<div class='col-xs-4'>"));
+                }
+                else
+                {
+                    Session["Etiqueta"] = false;
+                }
             }
             else
             {
@@ -436,9 +476,8 @@ namespace VERPI.PreIngresos.Marcas
                     LlenarCbo(ref MiComboPais, no_control - 10000, 5);
                     pnl_contenedor.Controls.Add(MiComboPais);
                     break;
-                case "6":
-                    pnl_contenedor.Controls.Add(new LiteralControl("<h3><span class='label label-primary'>"+ row["etiqueta"].ToString() + "</span></h3>"));
-                    break;
+                //case "6":
+                //Las etiquetas se agregan de otra manera   
 
             }            
             pnl_contenedor.Controls.Add(new LiteralControl("</div>"));            

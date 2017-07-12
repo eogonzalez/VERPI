@@ -87,23 +87,6 @@ namespace VERPI
                 {//Si usuario esta logeado
                     //Genero menu con permisos                                        
                     LlenarMenu(idUsuario);
-
-                    var Item = new MenuItem();
-                    if (Session["NombresUsuarioLogin"] != null)
-                    {
-                        //lblUsuarioLogin.Text = "Bienvenido al sistema: " + Session["NombresUsuarioLogin"].ToString() + " " + Session["CorreoUsuarioLogin"].ToString();                        
-                        //Item.Value = Convert.ToString(enc["id_opcion"]);
-                        Item.Text = Convert.ToString("Bienvenido: " + Session["NombresUsuarioLogin"].ToString());
-                        //Item.ToolTip = Convert.ToString(enc["descripcion"]);
-                    }
-                    else
-                    {
-                        //lblUsuarioLogin.Text = string.Format("Bienvenido al sistema: {0} ", Thread.CurrentPrincipal.Identity.Name);
-                        Item.Text = Convert.ToString(string.Format("Bienvenido al sistema: {0} ", Thread.CurrentPrincipal.Identity.Name));
-                    }
-
-                    Item.NavigateUrl = Convert.ToString("~/Default");
-                    menuDinamico.Items.Add(Item);
                 }
                 else
                 {// Genero Menu sin permisos
@@ -132,6 +115,7 @@ namespace VERPI
                 {
                     if (Convert.ToString(enc["id_padre"]) == null || Convert.ToString(enc["id_padre"]) == string.Empty)
                     {
+
                         Item.Value = Convert.ToString(enc["id_opcion"]);
                         Item.Text = Convert.ToString(enc["nombre"]);
                         Item.ToolTip = Convert.ToString(enc["descripcion"]);
@@ -151,22 +135,45 @@ namespace VERPI
                     {
                         if (Convert.ToString(enc["id_padre"]) == null || Convert.ToString(enc["id_padre"]) == string.Empty)
                         {
-                            Item.Value = Convert.ToString(enc["id_opcion"]);
-                            Item.Text = Convert.ToString(enc["nombre"]);
-                            Item.ToolTip = Convert.ToString(enc["descripcion"]);
-                            Item.NavigateUrl = Convert.ToString(enc["url"]);
 
                             if (enc["comando"] != null)
                             {
+
+                                Item.Value = Convert.ToString(enc["id_opcion"]);
+                                Item.ToolTip = Convert.ToString(enc["descripcion"]);
+                                Item.NavigateUrl = Convert.ToString(enc["url"]);
+
                                 int len = 0;
                                 len = enc["comando"].ToString().Length;
 
                                 if (len > 0)
                                 {
                                     Item.NavigateUrl += "?cmd=" + Convert.ToString(enc["comando"]);
+
+                                    if (enc["comando"].ToString() == "usr")
+                                    {
+                                        Item.Text = Convert.ToString("Bienvenido: " + Session["NombresUsuarioLogin"].ToString());
+                                    }
+                                    else
+                                    {
+                                        Item.Text = Convert.ToString(enc["nombre"]);
+                                    }
+
+                                }
+                                else
+                                {
+                                    Item.Text = Convert.ToString(enc["nombre"]);
                                 }
 
                             }
+                            else
+                            {
+                                Item.Text = Convert.ToString(enc["nombre"]);
+                                Item.Value = Convert.ToString(enc["id_opcion"]);
+                                Item.ToolTip = Convert.ToString(enc["descripcion"]);
+                                Item.NavigateUrl = Convert.ToString(enc["url"]);
+                            }
+
 
                             menuDinamico.Items.Add(Item);
 
