@@ -9,6 +9,7 @@ using CrystalDecisions.Shared;
 using System.Data;
 using Capa_Negocio.General;
 using Capa_Negocio.Administracion;
+using Capa_Negocio.Reportes;
 
 namespace VERPI.Reportes.Formularios
 {
@@ -16,6 +17,7 @@ namespace VERPI.Reportes.Formularios
     {
         Capa_Negocio.General.CNFormularios objCNFormulario = new Capa_Negocio.General.CNFormularios();
         Capa_Negocio.Administracion.CNFormularios objCNForm = new Capa_Negocio.Administracion.CNFormularios();
+        CNDesplegarFormulario objCNDesplegar = new CNDesplegarFormulario();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -24,26 +26,25 @@ namespace VERPI.Reportes.Formularios
 
                 int no_formulario = 0;
                 if (Request.QueryString["nf"] != null)
-                {
+                {/*Valido no_formulario*/
                     no_formulario = Convert.ToInt32(Request.QueryString["nf"]);
                     Session.Add("no_formulario", no_formulario);
                 }
 
                 int noPreingreso = 0;
                 if (Request.QueryString["np"] != null)
-                {
+                {/*valido no_preingreso o numero electronico*/
                     noPreingreso = Convert.ToInt32(Request.QueryString["np"]);
                     Session.Add("noPreIngreso", noPreingreso);
-
                 }
 
-
-
-                //CrystalReportSource1.Report.FileName = "~/CrystalReport1.rpt";
+                /*Obtengo datos del formulario*/
                 var tbl = new DataTable();
                 tbl = objCNForm.SelectFormulario(no_formulario);
+
                 if (tbl.Rows.Count > 0)
                 {
+                    /*Obtengo ruta del formulario .rpt*/
                     var rowForm = tbl.Rows[0];
 
                     if (rowForm["path_reporte"] != null)
@@ -52,13 +53,14 @@ namespace VERPI.Reportes.Formularios
 
                         string path = Server.MapPath(pathdb);
                         ReportDocument reporte = new ReportDocument();
-
                         reporte.Load(path);
+
                         /*Agrego valores iniciales*/
                         reporte.DataDefinition.FormulaFields["txt_correoelectronico_tramitador"].Text = "'" + Session["CorreoUsuarioLogin"].ToString() + "'";
                         reporte.DataDefinition.FormulaFields["txt_fecha_ingreso"].Text = "'" + DateTime.Now.ToString() + "'";
                         reporte.DataDefinition.FormulaFields["txt_no_electronico"].Text = "'" + noPreingreso.ToString() + "'";
 
+                        /*Selecciono valores a llenar dentro del formulario*/
                         DataTable dt = new DataTable();
                         dt = objCNFormulario.SelectValoresFormulario(noPreingreso);
 
@@ -69,7 +71,35 @@ namespace VERPI.Reportes.Formularios
 
                             try
                             {
-                                reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor + "'";
+                                /*Obtener tipo de campo*/
+                                int tipo_control = objCNDesplegar.SelectTipoCampo((int)row["correlativo_campo"]);
+
+                                switch (tipo_control)
+                                {
+                                    case 1:
+                                        /*Si es textbox*/
+                                        reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor + "'";
+                                        break;
+                                    case 2:
+                                        /*Si es checkbox*/
+                                        if (valor == "True")
+                                        {
+                                            reporte.DataDefinition.FormulaFields[ID_Control].Text = "'x'";
+                                        }
+                                        break;
+                                    case 4:
+                                        /*Si es combo*/
+                                        string valor_combo = objCNDesplegar.SelectValorCombo((int)row["correlativo_campo"], valor);
+                                        reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor_combo + "'";
+                                        break;
+                                    case 5:
+                                        /*Si es combo de pais*/
+                                        string valor_combo_pais = objCNDesplegar.SelectValorComboPais(Convert.ToInt32(valor));
+                                        reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor_combo_pais + "'";
+                                        break;
+                                }
+
+                                
                             }
                             catch (Exception)
                             {

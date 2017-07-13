@@ -8,6 +8,7 @@ using System.Data;
 using Capa_Negocio.Bandeja;
 using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
+using Capa_Negocio.Reportes;
 
 namespace VERPI.Bandeja
 {
@@ -16,6 +17,7 @@ namespace VERPI.Bandeja
         CNBandejaUsuario objCNBandeja = new CNBandejaUsuario();
         Capa_Negocio.General.CNFormularios objCNFormulario = new Capa_Negocio.General.CNFormularios();
         Capa_Negocio.Administracion.CNFormularios objCNForm = new Capa_Negocio.Administracion.CNFormularios();
+        CNDesplegarFormulario objCNDesplegar = new CNDesplegarFormulario();
 
         #region Eventos del Formulario
 
@@ -245,7 +247,35 @@ namespace VERPI.Bandeja
 
                         try
                         {
-                            reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor + "'";
+                            /*Obtener tipo de campo*/
+                            int tipo_control = objCNDesplegar.SelectTipoCampo((int)row["correlativo_campo"]);
+
+                            switch (tipo_control)
+                            {
+                                case 1:
+                                    /*Si es textbox*/
+                                    reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor + "'";
+                                    break;
+                                case 2:
+                                    /*Si es checkbox*/
+                                    if (valor == "True")
+                                    {
+                                        reporte.DataDefinition.FormulaFields[ID_Control].Text = "'x'";
+                                    }
+                                    break;
+                                case 4:
+                                    /*Si es combo*/
+                                    string valor_combo = objCNDesplegar.SelectValorCombo((int)row["correlativo_campo"], valor);
+                                    reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor_combo + "'";
+                                    break;
+                                case 5:
+                                    /*Si es combo de pais*/
+                                    string valor_combo_pais = objCNDesplegar.SelectValorComboPais(Convert.ToInt32(valor));
+                                    reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor_combo_pais + "'";
+                                    break;
+                            }
+
+
                         }
                         catch (Exception)
                         {
