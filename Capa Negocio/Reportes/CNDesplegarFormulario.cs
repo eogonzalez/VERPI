@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Capa_Datos.Reportes;
+using System.Data;
 
 namespace Capa_Negocio.Reportes
 {
@@ -11,6 +12,10 @@ namespace Capa_Negocio.Reportes
     {
         DesplegarFormulario objCDDesplegar = new DesplegarFormulario();
 
+        public DataTable SelectValoresFormularioReporte(int no_preingreso, int no_formulario)
+        {
+            return objCDDesplegar.SelectValoresFormularioReporte(no_preingreso, no_formulario);
+        }
         public int SelectTipoCampo(int correlativo_campo)
         {
             return objCDDesplegar.SelectTipoCampo(correlativo_campo);
@@ -24,6 +29,11 @@ namespace Capa_Negocio.Reportes
         public string SelectValorComboPais(int valor_pais)
         {
             return objCDDesplegar.SelectValorComboPais(valor_pais);
+        }
+
+        public string SelectValorComboNiza(int valor_niza)
+        {
+            return objCDDesplegar.SelectValorComboNiza(valor_niza);
         }
     }
 }

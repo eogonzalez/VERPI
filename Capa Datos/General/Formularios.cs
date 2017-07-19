@@ -190,13 +190,19 @@ namespace Capa_Datos.General
                     " where correlativo_campo = @correlativo_campo " +
                     " order by valor ";
             }
-            else
+            else if(tipo == 5)
             {
                 sql_query = " SELECT[id_pais] as valor " +
                     " ,[nombre] as texto " +
                     " FROM[dbo].[G_Paises] " +
                     " where estado = 'A' " +
                     " order by nombre ";
+            }
+            else
+            {
+                sql_query = " SELECT [niza_id] as valor " +
+                    " ,[niza_descripcion] as texto " +
+                    " FROM[G_Clase_Niza] ";
             }
 
 
@@ -702,6 +708,27 @@ namespace Capa_Datos.General
                 respuesta = (string)command.ExecuteScalar();
 
             }
+
+            return respuesta;
+        }
+
+        public string SelectDescripcionClase(int noClase)
+        {
+            var respuesta = string.Empty;
+            var sql_query = string.Empty;
+
+            sql_query = " select ampara "+
+                " from G_Clase_Niza "+
+                " where niza_id = @noClase ";
+
+            using (var con = objConexion.Conectar())
+            {
+                var command = new SqlCommand(sql_query, con);
+                command.Parameters.AddWithValue("noClase", noClase);
+                con.Open();
+                respuesta = command.ExecuteScalar().ToString(); 
+            }
+
 
             return respuesta;
         }

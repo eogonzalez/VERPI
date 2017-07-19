@@ -10,6 +10,7 @@ using System.Data;
 using System.Web.UI.HtmlControls;
 using System.Text;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace VERPI.PreIngresos.Marcas
 {
@@ -211,6 +212,8 @@ namespace VERPI.PreIngresos.Marcas
 
         protected void ConfiguracionInicial()
         {
+            divAlertClase.Visible = false;
+
             divAlertCorrecto.Visible = false;
             divAlertError.Visible = false;
             btnAdjuntar.Enabled = false;
@@ -478,6 +481,19 @@ namespace VERPI.PreIngresos.Marcas
                     break;
                 //case "6":
                 //Las etiquetas se agregan de otra manera   
+                case "7":
+                    /* Si es clase de niza*/
+                    DropDownList MiComboClase = new DropDownList();
+                    MiComboClase.ID = identificacion;
+                    MiComboClase.CssClass = "form-control";
+                    MiComboClase.ToolTip = row["descripcion"].ToString();
+                    MiComboClase.AutoPostBack = true;
+                    MiComboClase.TextChanged += new System.EventHandler(LlenoTexto);
+                    /*Metodo para llenar el combo*/
+                    LlenarCbo(ref MiComboClase, no_control - 10000, 7);
+                    pnl_contenedor.Controls.Add(MiComboClase);
+
+                    break;
 
             }            
             pnl_contenedor.Controls.Add(new LiteralControl("</div>"));            
@@ -827,6 +843,16 @@ namespace VERPI.PreIngresos.Marcas
                 btnEnviar.Visible = false;
                 btnAdjuntar.Text = "Ir a documentos adjuntos ";
             }
+        }
+
+        void LlenoTexto(object sender, EventArgs e)
+        {
+            DropDownList miCbo = (DropDownList)sender;
+            int valor = Convert.ToInt32(miCbo.SelectedValue.ToString());
+
+            string textClase = objCNFormulario.SelectDescripcionClase(valor);
+            divAlertClase.Visible = true;
+            MensajeClase.Text = "AYUDA (Este texto es para indicar las mercancias, que define Niza para las clases tales como): "+textClase;
         }
 
         #endregion

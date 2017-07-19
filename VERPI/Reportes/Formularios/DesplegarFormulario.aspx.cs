@@ -7,16 +7,14 @@ using System.Web.UI.WebControls;
 using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
 using System.Data;
-using Capa_Negocio.General;
 using Capa_Negocio.Administracion;
 using Capa_Negocio.Reportes;
 
 namespace VERPI.Reportes.Formularios
 {
     public partial class DesplegarFormulario : System.Web.UI.Page
-    {
-        Capa_Negocio.General.CNFormularios objCNFormulario = new Capa_Negocio.General.CNFormularios();
-        Capa_Negocio.Administracion.CNFormularios objCNForm = new Capa_Negocio.Administracion.CNFormularios();
+    {        
+        CNFormularios objCNForm = new CNFormularios();
         CNDesplegarFormulario objCNDesplegar = new CNDesplegarFormulario();
 
         protected void Page_Load(object sender, EventArgs e)
@@ -62,7 +60,7 @@ namespace VERPI.Reportes.Formularios
 
                         /*Selecciono valores a llenar dentro del formulario*/
                         DataTable dt = new DataTable();
-                        dt = objCNFormulario.SelectValoresFormulario(noPreingreso);
+                        dt = objCNDesplegar.SelectValoresFormularioReporte(noPreingreso, no_formulario);
 
                         foreach (DataRow row in dt.Rows)
                         {
@@ -81,21 +79,32 @@ namespace VERPI.Reportes.Formularios
                                         reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor + "'";
                                         break;
                                     case 2:
+                                        /*Si es combo*/
+                                        string valor_combo = objCNDesplegar.SelectValorCombo((int)row["correlativo_campo"], valor);
+                                        reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor_combo + "'";
+                                        break;
+                                    case 3:
+                                        /*Si es adjunto*/
+                                        if (valor == "True")
+                                        {
+                                            reporte.DataDefinition.FormulaFields[ID_Control].Text = "'x'"; 
+                                        }
+                                        break;
+                                    case 4:
                                         /*Si es checkbox*/
                                         if (valor == "True")
                                         {
                                             reporte.DataDefinition.FormulaFields[ID_Control].Text = "'x'";
                                         }
                                         break;
-                                    case 4:
-                                        /*Si es combo*/
-                                        string valor_combo = objCNDesplegar.SelectValorCombo((int)row["correlativo_campo"], valor);
-                                        reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor_combo + "'";
-                                        break;
                                     case 5:
                                         /*Si es combo de pais*/
                                         string valor_combo_pais = objCNDesplegar.SelectValorComboPais(Convert.ToInt32(valor));
                                         reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor_combo_pais + "'";
+                                        break;
+                                    case 7:
+                                        string valor_combo_niza = objCNDesplegar.SelectValorComboNiza(Convert.ToInt32(valor));
+                                        reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor_combo_niza + "'";
                                         break;
                                 }
 

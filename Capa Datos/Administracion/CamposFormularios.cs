@@ -22,12 +22,14 @@ namespace Capa_Datos.Administracion
 
             sql_query = " SELECT [correlativo_campo] "+
                 " ,[no_formulario],[no_orden],[seccion] "+
-                " ,[Etiqueta],[nombre_control], case [tipo_control] when 1 then 'Texto' when 2 then 'Combo' when 3 then 'Adjunto' when 4 then 'Check' when 5 then 'Combo Paises' else 'Etiqueta' end as tipo_control " +
+                " ,[Etiqueta],[nombre_control], "+
+                " case [tipo_control] when 1 then 'Texto' when 2 then 'Combo' when 3 then 'Adjunto' when 4 then 'Check' when 5 then 'Combo Paises' when 6 then 'Etiqueta' else 'Combo de Clase' end as tipo_control " +
                 " ,[descripcion],[modo_texto],[nombre_campo_db] "+
                 " ,[obligatorio],[expresion_regular] "+
                 " FROM[dbo].[M_Campos_Formulario] "+
                 " where estado = 'A' and no_formulario = @no_formulario "+
                 " order by seccion, no_orden; ";
+
             using (var con = objConexion.Conectar())
             {
                 var command = new SqlCommand(sql_query, con);

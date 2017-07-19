@@ -120,6 +120,7 @@
                             <asp:ListItem Value="1">Texto</asp:ListItem>
                             <asp:ListItem Value="2">Combo</asp:ListItem>
                             <asp:ListItem Value="5">Combo de Paises</asp:ListItem>
+                            <asp:ListItem Value="7">Combo de Clases</asp:ListItem>
                             <asp:ListItem Value="3">Adjunto</asp:ListItem>
                             <asp:ListItem Value="4">Check</asp:ListItem>
                             <asp:ListItem Value="6">Etiqueta de Bloque</asp:ListItem>                            

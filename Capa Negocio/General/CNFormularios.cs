@@ -93,5 +93,9 @@ namespace Capa_Negocio.General
             return objCDFormulario.SelectEstadoPreIngreso(no_preingreso);
         }
 
+        public string SelectDescripcionClase(int noClase)
+        {
+            return objCDFormulario.SelectDescripcionClase(noClase);
+        }
     }
 }

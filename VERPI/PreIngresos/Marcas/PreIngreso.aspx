@@ -42,7 +42,7 @@
                     <%-- Tab Documentos Adjuntos --%>
                     <div role="tabpanel" class="tab-pane" id="tbAnexos">
                         <div class="panel-body form-horizontal">
-                            
+
                             <%--Panel de Controles adicionales--%>
                             <asp:Panel ID="pnl_seccion_3" runat="server">
                             </asp:Panel>
@@ -57,6 +57,11 @@
         </div>
 
         <div class="panel-footer">
+            <div id="divAlertClase" runat="server">
+                <p class="alert alert-success">
+                    <asp:Literal runat="server" ID="MensajeClase" />
+                </p>
+            </div>
             <div id="divAlertCorrecto" runat="server">
                 <p class="alert alert-success">
                     <asp:Literal runat="server" ID="MensajeCorrectoPrincipal" />
