@@ -37,5 +37,29 @@ namespace Capa_Negocio.Administracion
             return objCDEstados.DeleleEstado(id_estado);
         }
 
+        public DataTable SelectEstadosTipoTramite(int tipoTramite, int noFormulario)
+        {
+            return objCDEstados.SelectEstadosTipoTramite(tipoTramite, noFormulario);
+        }
+
+        public Boolean ExisteEstado(int tipoTramite, int noFormulario)
+        {
+            return objCDEstados.ExisteEstado(tipoTramite, noFormulario);
+        }
+
+        public int SelectCodigoEstado(int id_estado)
+        {
+            return objCDEstados.SelectCodigoEstado(id_estado);
+        }
+
+        public DataTable SelectFormularios(int tipoTramite)
+        {
+            return objCDEstados.SelectFormularios(tipoTramite);
+        }
+
+        public Boolean ExisteCodigoEstado(int tipoTramite, int noFormulario, int codigoEstado)
+        {
+            return objCDEstados.ExisteCodigoEstado(tipoTramite, noFormulario, codigoEstado);
+        }
     }
 }

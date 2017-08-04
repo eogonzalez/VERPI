@@ -74,6 +74,7 @@ namespace VERPI.Account
                         Session.Add("CorreoUsuarioLogin", row["correo"].ToString());
                         Session.Add("NombresUsuarioLogin", row["nombres"].ToString());
                         Session.Add("ApellidosUsuarioLogin", row["apellidos"].ToString());
+                        Session.Add("PS", strContraseña);
 
 
                         FormsAuthentication.RedirectFromLoginPage(strCorreo, RememberMe.Checked);

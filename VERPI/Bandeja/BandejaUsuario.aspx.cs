@@ -69,9 +69,11 @@ namespace VERPI.Bandeja
                         break;
 
                     case "reporte":
+                        /*Opcion de Vista Previa*/
                         Response.Redirect("~/Reportes/Formularios/DesplegarFormulario.aspx?nf=" + no_formulario.ToString() + "&np=" + no_PreIngreso.ToString());
                         break;
                     case "imprimir":
+                        /*Opcion que genera pdf y lo muestra*/
                         ImprimirReporte(no_formulario, no_PreIngreso);
                         break;
                     case "eliminar":
@@ -235,10 +237,10 @@ namespace VERPI.Bandeja
                     /*Agrego valores iniciales*/
                     reporte.DataDefinition.FormulaFields["txt_correoelectronico_tramitador"].Text = "'" + Session["CorreoUsuarioLogin"].ToString() + "'";
                     reporte.DataDefinition.FormulaFields["txt_fecha_ingreso"].Text = "'" + DateTime.Now.ToString() + "'";
-                    reporte.DataDefinition.FormulaFields["txt_no_electronico"].Text = "'" + noPreingreso.ToString() + "'";
+                    //reporte.DataDefinition.FormulaFields["txt_no_electronico"].Text = "'" + noPreingreso.ToString() + "'";
 
                     DataTable dt = new DataTable();
-                    dt = objCNFormulario.SelectValoresFormulario(noPreingreso);
+                    dt = objCNDesplegar.SelectValoresFormularioReporte(noPreingreso, no_formulario);
 
                     foreach (DataRow row in dt.Rows)
                     {
@@ -257,21 +259,32 @@ namespace VERPI.Bandeja
                                     reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor + "'";
                                     break;
                                 case 2:
-                                    /*Si es checkbox*/
+                                    /*Si es combo*/
+                                    string valor_combo = objCNDesplegar.SelectValorCombo((int)row["correlativo_campo"], valor);
+                                    reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor_combo + "'";
+                                    break;
+                                case 3:
+                                    /*Si es adjunto*/
                                     if (valor == "True")
                                     {
                                         reporte.DataDefinition.FormulaFields[ID_Control].Text = "'x'";
                                     }
                                     break;
                                 case 4:
-                                    /*Si es combo*/
-                                    string valor_combo = objCNDesplegar.SelectValorCombo((int)row["correlativo_campo"], valor);
-                                    reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor_combo + "'";
+                                    /*Si es checkbox*/
+                                    if (valor == "True")
+                                    {
+                                        reporte.DataDefinition.FormulaFields[ID_Control].Text = "'x'";
+                                    }
                                     break;
                                 case 5:
                                     /*Si es combo de pais*/
                                     string valor_combo_pais = objCNDesplegar.SelectValorComboPais(Convert.ToInt32(valor));
                                     reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor_combo_pais + "'";
+                                    break;
+                                case 7:
+                                    string valor_combo_niza = objCNDesplegar.SelectValorComboNiza(Convert.ToInt32(valor));
+                                    reporte.DataDefinition.FormulaFields[ID_Control].Text = "'" + valor_combo_niza + "'";
                                     break;
                             }
 

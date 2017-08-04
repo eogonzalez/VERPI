@@ -22,6 +22,11 @@ namespace VERPI.Administracion
         {
             if (!IsPostBack)
             {
+                cbo_estadoAnterior.Enabled = false;
+                cbo_estadoSiguiente.Enabled = false;
+                cbo_Formulario.Enabled = false;
+
+                divAlertError.Visible = false;
 
                 Llenar_gvEstados();
 
@@ -50,6 +55,10 @@ namespace VERPI.Administracion
                 {
                     case "modificar":
                         MostrarDatos(id_estado);
+                        cbo_tipoSolicitud.Enabled = false;
+                        cbo_estadoAnterior.Enabled = false;
+                        cbo_estadoSiguiente.Enabled = false;
+                        cbo_Formulario.Enabled = false;
                         lkBtn_viewPanel_ModalPopupExtender.Show();
                         break;
                     case "eliminar":
@@ -80,21 +89,83 @@ namespace VERPI.Administracion
                     }
                     else
                     {
+                        divAlertError.Visible = true;
                         lkBtn_viewPanel_ModalPopupExtender.Show();
-                        ErrorMessage.Text = "Ha ocurrido un error al actualizar estado.";
+                        ErrorMessagePrincipal.Text = "Ha ocurrido un error al actualizar estado.";
                     }
 
                     break;
                 case "Guardar":
-                    if (GuardarEstado())
-                    {
-                        LimpiarPanel();
-                        Llenar_gvEstados();
+                    int tipoTramite = Convert.ToInt32(getTipoSolicitud());
+                    int noFormulario = Convert.ToInt32(getNoFormulario());
+
+                    if (objCNEstados.ExisteEstado(tipoTramite, noFormulario))
+                    {//Si ya existe estado
+                        if (Convert.ToInt32(getEstadoAnterior()) > 0)
+                        {//Si selecciono estado anterior
+                            //Verifico si codigo anterior existe
+                            int codigoEstadoAnterior = objCNEstados.SelectCodigoEstado(Convert.ToInt32(getEstadoAnterior()));
+                            int EstadoSiguiente = (Convert.ToInt32(getEstadoSiguiente()));
+
+                            if (EstadoSiguiente == 0)
+                            {
+                                if (!objCNEstados.ExisteCodigoEstado(tipoTramite, noFormulario, codigoEstadoAnterior))
+                                {
+                                    if (GuardarEstado())
+                                    {
+                                        LimpiarPanel();
+                                        Llenar_gvEstados();
+                                    }
+                                    else
+                                    {
+                                        divAlertError.Visible = true;
+                                        lkBtn_viewPanel_ModalPopupExtender.Show();
+                                        ErrorMessagePrincipal.Text = "Ha ocurrido un error al guardar Estado.";
+                                    }
+                                }
+                                else
+                                {
+                                    divAlertError.Visible = true;
+                                    lkBtn_viewPanel_ModalPopupExtender.Show();
+                                    ErrorMessagePrincipal.Text = "Ya existe un estado siguiente para el estado anterior seleccionado.";
+                                }
+                            }
+                            else
+                            {
+                                if (GuardarEstado())
+                                {
+                                    LimpiarPanel();
+                                    Llenar_gvEstados();
+                                }
+                                else
+                                {
+                                    divAlertError.Visible = true;
+                                    lkBtn_viewPanel_ModalPopupExtender.Show();
+                                    ErrorMessagePrincipal.Text = "Ha ocurrido un error al guardar Estado.";
+                                }
+                            }                            
+                        }
+                        else
+                        {
+                            //Se muestra error ya que debe de seleccionar estado anterior
+                            divAlertError.Visible = true;
+                            lkBtn_viewPanel_ModalPopupExtender.Show();
+                            ErrorMessagePrincipal.Text = "Debe seleccionar estado anterior.";
+                        }
                     }
                     else
-                    {
-                        lkBtn_viewPanel_ModalPopupExtender.Show();
-                        ErrorMessage.Text = "Ha ocurrido un error al guardar Estado.";
+                    {//Si es el primer estado
+                        if (GuardarEstado())
+                        {
+                            LimpiarPanel();
+                            Llenar_gvEstados();
+                        }
+                        else
+                        {
+                            divAlertError.Visible = true;
+                            lkBtn_viewPanel_ModalPopupExtender.Show();
+                            ErrorMessagePrincipal.Text = "Ha ocurrido un error al guardar Estado.";
+                        }
                     }
 
                     break;
@@ -106,6 +177,20 @@ namespace VERPI.Administracion
             LimpiarPanel();
             btnGuardar.Text = "Guardar";
             btnGuardar.CommandName = "Guardar";
+        }
+
+        protected void cbo_tipoSolicitud_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //Llenar Combo de Formularios
+            Llenar_cboFormularios(Convert.ToInt32(getTipoSolicitud().ToString()));
+        }
+
+        protected void cbo_Formulario_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //Lleno Combo de Estados
+            int noTipoSolicitud = Convert.ToInt32(getTipoSolicitud().ToString());
+            int noFormulario = Convert.ToInt32(getNoFormulario().ToString());
+            Llenar_cboEstados(noTipoSolicitud, noFormulario);
         }
 
         #endregion
@@ -124,14 +209,23 @@ namespace VERPI.Administracion
         protected void MostrarDatos(int id_estado)
         {
             btnGuardar.Text = "Editar";
-            btnGuardar.CommandName = "Editar";
+            btnGuardar.CommandName = "Editar";            
 
             var tbl = new DataTable();
             tbl = objCNEstados.SelectEstado(id_estado);
             var row = tbl.Rows[0];
 
             cbo_tipoSolicitud.SelectedValue = row["tipo_tramite"].ToString();
-            txtCodigo.Text = row["codigo_estado"].ToString();
+
+            int tipoTramite = Convert.ToInt32(getTipoSolicitud());
+            Llenar_cboFormularios(tipoTramite);
+
+            cbo_Formulario.SelectedValue = row["no_formulario"].ToString();
+
+            Llenar_cboEstados(tipoTramite, Convert.ToInt32(row["no_formulario"].ToString()));
+
+            cbo_estadoAnterior.SelectedValue = row["id_estadoAnterior"].ToString();
+            cbo_estadoSiguiente.SelectedValue = row["id_estadoSiguiente"].ToString();
             txtNombre.Text = row["descripcion"].ToString();
             txtDiasMax.Text = row["dias_max"].ToString();
             txtDiasMin.Text = row["dias_min"].ToString();
@@ -148,9 +242,7 @@ namespace VERPI.Administracion
         {
             var respuesta = false;
 
-            objCEEstados.ID_Estado = id_estado;
-            objCEEstados.TipoTramite = getTipoSolicitud();
-            objCEEstados.Codigo_Estado = getCodigoEstado();
+            objCEEstados.ID_Estado = id_estado;            
             objCEEstados.Descripcion = getNombreEstado();
             objCEEstados.Dias_Max = getDiasMaximos();
             objCEEstados.Dias_Min = getDiasMinimos();
@@ -161,43 +253,178 @@ namespace VERPI.Administracion
 
         protected void LimpiarPanel()
         {
-            txtCodigo.Text = string.Empty;
+            //txtCodigo.Text = string.Empty;
             txtNombre.Text = string.Empty;
             txtDiasMax.Text = string.Empty;
             txtDiasMin.Text = string.Empty;
+
+            cbo_tipoSolicitud.SelectedValue = "0";
+            cbo_Formulario.SelectedValue = "0";
+
+            cbo_estadoAnterior.SelectedValue = "0";
+            cbo_estadoSiguiente.SelectedValue = "0";
+
+            cbo_estadoAnterior.Enabled = false;
+            cbo_estadoSiguiente.Enabled = false;
+            cbo_Formulario.Enabled = false;
+            divAlertError.Visible = false;
         }
 
         protected Boolean GuardarEstado()
         {
             var respuesta = false;
+            int noFormulario = Convert.ToInt32(getNoFormulario());
+            int tipoTramite = Convert.ToInt32(getTipoSolicitud());
 
+            objCEEstados.NoFormulario = noFormulario;
             objCEEstados.TipoTramite = getTipoSolicitud();
-            objCEEstados.Codigo_Estado = getCodigoEstado();
+            //objCEEstados.Codigo_Estado = getCodigoEstado();
+            
             objCEEstados.Descripcion = getNombreEstado();
             objCEEstados.Dias_Max = getDiasMaximos();
             objCEEstados.Dias_Min = getDiasMinimos();
 
+            if (objCNEstados.ExisteEstado(tipoTramite, noFormulario))
+            {//Si existe Estado
+
+                int codigoEstadoAnterior = objCNEstados.SelectCodigoEstado(Convert.ToInt32(getEstadoAnterior()));
+                objCEEstados.ID_EstadoAnterior = Convert.ToInt32(getEstadoAnterior());
+                objCEEstados.EstadoAnterior = codigoEstadoAnterior;
+
+                int codigoEstadoSiguiente = 0;
+
+                if (Convert.ToInt32(getEstadoSiguiente()) > 0)
+                {//Si selecciono estado siguiente
+                    codigoEstadoSiguiente = objCNEstados.SelectCodigoEstado(Convert.ToInt32(getEstadoSiguiente()));
+                    objCEEstados.ID_EstadoSiguiente = Convert.ToInt32(getEstadoSiguiente());                   
+                    objCEEstados.EstadoSiguiente = codigoEstadoSiguiente;
+
+                    if (codigoEstadoAnterior < codigoEstadoSiguiente)
+                    {//Si estado anterior es mayor que estado siguiente
+                        objCEEstados.Codigo_Estado = (codigoEstadoAnterior + codigoEstadoSiguiente) / 2;                                                 
+                    }
+                    else
+                    {
+                        //Error el estado siguiente debe de ser mayor 
+                        divAlertError.Visible = true;
+                        ErrorMessagePrincipal.Text = "El estado Siguiente debe de ser mayor";
+                        lkBtn_viewPanel_ModalPopupExtender.Show();
+                    }
+
+                }
+                else
+                {
+                    objCEEstados.Codigo_Estado = codigoEstadoAnterior + 100;
+                }
+                
+            }
+            else
+            {//Es el primer Estado
+                objCEEstados.Codigo_Estado = 100;
+                //objCEEstados.EstadoAnterior = 0;
+                //objCEEstados.EstadoSiguiente = 0;
+            }
+
             respuesta = objCNEstados.InsertEstado(objCEEstados);
             return respuesta;
+        }
+
+        protected void Llenar_cboEstados(int tipoTramite, int noFormulario)
+        {
+            var tb = new DataTable();
+
+            tb = objCNEstados.SelectEstadosTipoTramite(tipoTramite, noFormulario);
+
+            if (tb.Rows.Count > 0)
+            {
+
+                cbo_estadoAnterior.DataTextField = tb.Columns["descripcion"].ToString();
+                cbo_estadoAnterior.DataValueField = tb.Columns["id_estado"].ToString();
+                cbo_estadoAnterior.DataSource = tb;
+                cbo_estadoAnterior.DataBind();
+
+                cbo_estadoAnterior.Items.Insert(0, new ListItem("Seleccione Estado", "0"));
+
+                cbo_estadoSiguiente.DataTextField = tb.Columns["descripcion"].ToString();
+                cbo_estadoSiguiente.DataValueField = tb.Columns["id_estado"].ToString();
+                cbo_estadoSiguiente.DataSource = tb;
+                cbo_estadoSiguiente.DataBind();
+
+                cbo_estadoSiguiente.Items.Insert(0, new ListItem("Seleccione Estado", "0"));
+
+                cbo_estadoAnterior.Enabled = true;
+                cbo_estadoSiguiente.Enabled = true;
+            }
+            else
+            {
+                cbo_estadoAnterior.Enabled = false;
+                cbo_estadoSiguiente.Enabled = false;
+
+                cbo_estadoAnterior.Items.Insert(0, new ListItem("Seleccione Estado", "0"));
+                cbo_estadoSiguiente.Items.Insert(0, new ListItem("Seleccione Estado", "0"));
+            }
+
+            lkBtn_viewPanel_ModalPopupExtender.Show();
+        }
+
+        protected void Llenar_cboFormularios(int tipoTramite)
+        {
+            var tb = new DataTable();
+
+            tb = objCNEstados.SelectFormularios(tipoTramite);
+
+            if (tb.Rows.Count > 0)
+            {
+
+                cbo_Formulario.DataTextField = tb.Columns["nombre"].ToString();
+                cbo_Formulario.DataValueField = tb.Columns["no_formulario"].ToString();
+                cbo_Formulario.DataSource = tb;
+                cbo_Formulario.DataBind();
+
+                cbo_Formulario.Items.Insert(0, new ListItem("Seleccione Formulario", "0"));
+                cbo_Formulario.Enabled = true;
+            }
+            else
+            {
+                cbo_Formulario.Enabled = false;
+                cbo_Formulario.Items.Insert(0, new ListItem("Seleccione Formulario", "0"));                
+            }
+
+            lkBtn_viewPanel_ModalPopupExtender.Show();
         }
 
         #endregion
 
         #region Obtener datos del formulario
 
-        protected int getCodigoEstado()
+        protected string getNoFormulario()
         {
-            return Convert.ToInt32(txtCodigo.Text);
-        }
-
-        protected string getNombreEstado()
-        {
-            return txtNombre.Text;
+            return cbo_Formulario.SelectedValue.ToString();
         }
 
         protected string getTipoSolicitud()
         {
             return cbo_tipoSolicitud.SelectedValue.ToString();
+        }
+
+        protected string getEstadoAnterior()
+        {
+            return cbo_estadoAnterior.SelectedValue.ToString();
+        }
+
+        protected string getEstadoSiguiente()
+        {
+            return cbo_estadoSiguiente.SelectedValue.ToString();
+        }
+
+        //protected int getCodigoEstado()
+        //{
+        //    return Convert.ToInt32(txtCodigo.Text);
+        //}
+
+        protected string getNombreEstado()
+        {
+            return txtNombre.Text;
         }
 
         protected int getDiasMaximos()
@@ -210,6 +437,8 @@ namespace VERPI.Administracion
             return Convert.ToInt32(txtDiasMin.Text);
         }
 
+
         #endregion
+
     }
 }

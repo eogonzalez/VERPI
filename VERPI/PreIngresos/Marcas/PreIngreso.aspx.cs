@@ -87,6 +87,7 @@ namespace VERPI.PreIngresos.Marcas
             btnAdjuntar.Visible = true;
             btnEnviar.Visible = true;
             btnSalir.Visible = true;
+            divAlertClase.Visible = false;
 
             if (Session["noPreIngreso"] != null)
             {
@@ -135,34 +136,60 @@ namespace VERPI.PreIngresos.Marcas
 
         protected void btnEnviar_Click(object sender, EventArgs e)
         {
-            if (Session["noPreIngreso"] != null)
+            if ((bool)Session["ValidoEnvio"])
+            {//Si Valido envio
+                //Muestro div para ingreso de contraseña
+                btnEnviar.Text = "3) Confirmar y Enviar Solicitud";
+                Session["ValidoEnvio"] = false;
+                divContrasenia.Visible = true;
+            }
+            else
             {
-                //Realiza el envio del formulario
-                /*Valida que los campos cumplan los requisitos de obligatorio*/                
-                if (ValidoCamposObligatorios())
+
+                if (ValidoContraseña())
                 {
-                    var idExpediente = GeneroExpediente((int)Session["noPreIngreso"]);
-
-                    if (idExpediente > 0)
+                    if (Session["noPreIngreso"] != null)
                     {
-                        MensajeCorrectoPrincipal.Text += "Se ha generado expediente correctamente. ";
+                        //Realiza el envio del formulario
+                        /*Valida que los campos cumplan los requisitos de obligatorio*/
+                        if (ValidoCamposObligatorios())
+                        {
+                            var idExpediente = GeneroExpediente((int)Session["noPreIngreso"]);
 
-                        /*BloqueoGeneral*/
+                            if (idExpediente > 0)
+                            {
+                                MensajeCorrectoPrincipal.Text += "Se ha generado expediente correctamente. ";
+
+                                btnEnviar.Text = "3) Enviar Solicitud";
+                                Session["ValidoEnvio"] = true;
+                                divContrasenia.Visible = false;
+
+                                /*BloqueoGeneral*/
+                            }
+                            else
+                            {
+                                ErrorMessagePrincipal.Text += "Ha ocurrido un error al generar ";
+                                divAlertError.Visible = true;
+                            }
+
+                        }
                     }
                     else
                     {
-                        ErrorMessagePrincipal.Text  += "Ha ocurrido un error al generar ";
+                        divAlertCorrecto.Visible = false;
+
+                        ErrorMessagePrincipal.Text = "Debe de guardar primero el formulario para poder enviarlo.";
                         divAlertError.Visible = true;
                     }
 
                 }
-            }
-            else
-            {
-                divAlertCorrecto.Visible = false;
+                else
+                {
+                    divAlertCorrecto.Visible = false;
 
-                ErrorMessagePrincipal.Text = "Debe de guardar primero el formulario para poder enviarlo.";
-                divAlertError.Visible = true;
+                    ErrorMessagePrincipal.Text = "Contraseña Incorrecta, Formulario No Enviado.";
+                    divAlertError.Visible = true;
+                }
             }
         }
 
@@ -206,12 +233,24 @@ namespace VERPI.PreIngresos.Marcas
             }
         }
 
+        protected void btnIrBandeja_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/Bandeja/BandejaUsuario");
+        }
+
         #endregion
 
         #region Funciones
 
         protected void ConfiguracionInicial()
         {
+            //liEncabezado.Disabled = true;
+            //liDatos.Disabled = true;
+            //liAnexos.Disabled = true;
+
+            Session.Add("ValidoEnvio", true);
+            divContrasenia.Visible = false;
+
             divAlertClase.Visible = false;
 
             divAlertCorrecto.Visible = false;
@@ -292,6 +331,20 @@ namespace VERPI.PreIngresos.Marcas
             int cs2 = 1;
             int cs3 = 1;
 
+            /*Si no tiene controles oculto el tab*/
+            if (cantidad_s1 == 0)
+            {
+                liEncabezado.Visible = false;
+            }
+            else if (cantidad_s2 == 0)
+            {
+                liDatos.Visible = false;
+            }
+            else if (cantidad_s3 == 0)
+            {
+                liAnexos.Visible = false;
+            }
+
             Session.Add("Etiqueta", false);
 
             foreach (DataRow row in dt.Rows)
@@ -324,6 +377,12 @@ namespace VERPI.PreIngresos.Marcas
                     if (row["tipo_control"].ToString() == "6")
                     {
                         pnl_contenedor.Controls.Add(new LiteralControl("<h4><span class='label label-info'>" + row["etiqueta"].ToString() + "</span></h4>"));
+                        Session["Etiqueta"] = true;
+                        cont = 0;
+                    }
+                    else if (row["tipo_control"].ToString() == "8")
+                    {
+                        pnl_contenedor.Controls.Add(new LiteralControl("<p class='alert alert-success'>" + "AYUDA: "+ row["etiqueta"].ToString() + "</p>"));
                         Session["Etiqueta"] = true;
                         cont = 0;
                     }
@@ -360,6 +419,11 @@ namespace VERPI.PreIngresos.Marcas
                         pnl_contenedor.Controls.Add(new LiteralControl("</div>"));
                         pnl_contenedor.Controls.Add(new LiteralControl("<h4><span class='label label-info'>" + row["etiqueta"].ToString() + "</span></h4>"));
                     }
+                    else if (row["tipo_control"].ToString() == "8")
+                    {
+                        pnl_contenedor.Controls.Add(new LiteralControl("</div>"));
+                        pnl_contenedor.Controls.Add(new LiteralControl("<p class='alert alert-success'>" + "AYUDA: " + row["etiqueta"].ToString() + "</p>"));
+                    }
                     else
                     {
                         
@@ -383,8 +447,14 @@ namespace VERPI.PreIngresos.Marcas
 
         protected void ConstruirControles(Panel pnl_contenedor, DataRow row, int total_campos)
         {
+            bool agregoEtiqueta = true;
+            if (row["tipo_control"].ToString() == "6" || row["tipo_control"].ToString() == "8")
+            {
+                agregoEtiqueta = false;
+            }
 
-            if (row["tipo_control"].ToString() != "6")
+
+            if (agregoEtiqueta)
             {
                 /*Agrego Label*/
                 var label = new Label();
@@ -406,7 +476,7 @@ namespace VERPI.PreIngresos.Marcas
             }
             else
             {
-                pnl_contenedor.Controls.Add(new LiteralControl("<div class='col-xs-10'>"));
+                pnl_contenedor.Controls.Add(new LiteralControl("<div class='col-xs-9'>"));
             }
 
             int no_control = 0;
@@ -442,8 +512,9 @@ namespace VERPI.PreIngresos.Marcas
                     }
 
                     pnl_contenedor.Controls.Add(MiTexBox);
-                                                            
-                    
+
+                    //pnl_contenedor.Controls.Add(new LiteralControl("<button  id='"+no_control.ToString()+"' type='button' class='btn btn-danger' data-toggle='popover' title='Popover title' data-content='And heres some amazing content. It's very engaging.Right ? '>Click to toggle popover</button>"));
+
                     break;
 
                 case "2":
@@ -479,7 +550,7 @@ namespace VERPI.PreIngresos.Marcas
                     LlenarCbo(ref MiComboPais, no_control - 10000, 5);
                     pnl_contenedor.Controls.Add(MiComboPais);
                     break;
-                //case "6":
+                //case "6" y "8":
                 //Las etiquetas se agregan de otra manera   
                 case "7":
                     /* Si es clase de niza*/
@@ -853,6 +924,18 @@ namespace VERPI.PreIngresos.Marcas
             string textClase = objCNFormulario.SelectDescripcionClase(valor);
             divAlertClase.Visible = true;
             MensajeClase.Text = "AYUDA (Este texto es para indicar las mercancias, que define Niza para las clases tales como): "+textClase;
+        }
+
+        bool ValidoContraseña()
+        {
+            bool respuesta = false;
+
+            if (Session["PS"].ToString() == txt_contraseña.Text)
+            {
+                respuesta = true;
+            }
+
+            return respuesta;
         }
 
         #endregion

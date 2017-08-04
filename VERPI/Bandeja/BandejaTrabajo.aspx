@@ -3,13 +3,15 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="panel panel-primary">
-        <div class="panel-heading"><%: Title %>
-            <asp:Label runat="server" ID="lblCantidadBandeja" CssClass="label label-info" /></div>
+        <div class="panel-heading">
+            <%: Title %>
+            <asp:Label runat="server" ID="lblCantidadBandeja" CssClass="label label-info" />
+        </div>
         <br />
         <div class="panel-body form-horizontal">
 
             <div class="form-group">
-<%--                <asp:Label AssociatedControlID="cbo_estado_Filtro" Text="Estado:" CssClass="control-label col-xs-2" runat="server" />
+                <%--                <asp:Label AssociatedControlID="cbo_estado_Filtro" Text="Estado:" CssClass="control-label col-xs-2" runat="server" />
                 <div class="col-xs-4">
                     <asp:DropDownList runat="server" ID="cbo_estado_Filtro" CssClass="form-control"
                         OnSelectedIndexChanged="cbo_estado_Filtro_SelectedIndexChanged" AutoPostBack="true">
@@ -41,14 +43,14 @@
                     runat="server" Text="Periodo: Fecha Inicial:"></asp:Label>
                 <div class="col-xs-4">
                     <asp:TextBox ID="txtFechaInicial" CssClass="form-control" runat="server" OnTextChanged="txtFechaInicial_TextChanged" AutoPostBack="true"></asp:TextBox>
-                    <cc1:calendarextender id="txtFechaInicial_CalendarExtender" runat="server" behaviorid="txtFechaInicial_CalendarExtender"
-                        targetcontrolid="txtFechaInicial" format="dd/MM/yyyy" />
+                    <cc1:CalendarExtender ID="txtFechaInicial_CalendarExtender" runat="server" BehaviorID="txtFechaInicial_CalendarExtender"
+                        TargetControlID="txtFechaInicial" Format="dd/MM/yyyy" />
                 </div>
                 <asp:Label ID="lblFechaFin" AssociatedControlID="txtFechaFinal" CssClass="control-label col-xs-2" runat="server" Text=" Fecha Final:"></asp:Label>
                 <div class="col-xs-4">
                     <asp:TextBox ID="txtFechaFinal" CssClass="form-control" runat="server" OnTextChanged="txtFechaFinal_TextChanged" AutoPostBack="true"></asp:TextBox>
-                    <cc1:calendarextender id="txtFechaFinal_CalendarExtender" runat="server" behaviorid="txtFechaFinal_CalendarExtender"
-                        targetcontrolid="txtFechaFinal" format="dd/MM/yyyy" />
+                    <cc1:CalendarExtender ID="txtFechaFinal_CalendarExtender" runat="server" BehaviorID="txtFechaFinal_CalendarExtender"
+                        TargetControlID="txtFechaFinal" Format="dd/MM/yyyy" />
                 </div>
             </div>
 
@@ -92,8 +94,8 @@
                         <asp:BoundField DataField="fecha_creacion" HeaderText="Fecha Creacion" />
                         <asp:BoundField DataField="estado_txt" HeaderText="Estado" />
 
-                        <asp:ButtonField ButtonType="Button" Text="Auto Asignar" HeaderText="Asignar" CommandName="Asignar" ControlStyle-CssClass="btn btn-success" />
-                        <asp:ButtonField ButtonType="Button" Text="Asignar Funcionario" HeaderText="AsignarFuncionario" CommandName="AsignarFuncionario" ControlStyle-CssClass="btn btn-info" />
+                        <%--<asp:ButtonField ButtonType="Button" Text="Auto Asignar" HeaderText="Asignar" CommandName="Asignar" ControlStyle-CssClass="btn btn-success" />
+                        <asp:ButtonField ButtonType="Button" Text="Asignar Funcionario" HeaderText="AsignarFuncionario" CommandName="AsignarFuncionario" ControlStyle-CssClass="btn btn-info" />--%>
 
                     </Columns>
 

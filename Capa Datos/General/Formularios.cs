@@ -200,7 +200,7 @@ namespace Capa_Datos.General
             }
             else
             {
-                sql_query = " SELECT [niza_id] as valor " +
+                sql_query = " SELECT ltrim([niza_id]) as valor " +
                     " ,[niza_descripcion] as texto " +
                     " FROM[G_Clase_Niza] ";
             }

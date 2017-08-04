@@ -51,6 +51,8 @@ namespace Capa_Datos.Bandeja
                 sql_query = sql_query + " and pe.fecha_creacion <= @fecha_final ";
             }
 
+            sql_query = sql_query+ " order by pe.no_expediente desc ";
+
             using (var con = objConexion.Conectar())
             {
                 var command = new SqlCommand(sql_query, con);

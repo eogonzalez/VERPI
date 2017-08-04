@@ -117,13 +117,14 @@
                     <asp:Label AssociatedControlID="cbo_tipoControl" CssClass="control-label col-xs-2" runat="server" Text="Tipo Control: "></asp:Label>
                     <div class="col-xs-4">
                         <asp:DropDownList runat="server" ID="cbo_tipoControl" CssClass="form-control">
-                            <asp:ListItem Value="1">Texto</asp:ListItem>
-                            <asp:ListItem Value="2">Combo</asp:ListItem>
-                            <asp:ListItem Value="5">Combo de Paises</asp:ListItem>
-                            <asp:ListItem Value="7">Combo de Clases</asp:ListItem>
-                            <asp:ListItem Value="3">Adjunto</asp:ListItem>
-                            <asp:ListItem Value="4">Check</asp:ListItem>
+                            <asp:ListItem Value="1">Entrada de Texto</asp:ListItem>
+                            <asp:ListItem Value="2">Listado</asp:ListItem>
+                            <asp:ListItem Value="5">Listado de Paises</asp:ListItem>
+                            <asp:ListItem Value="7">Listado de Clases</asp:ListItem>
+                            <asp:ListItem Value="3">Archivo Adjunto</asp:ListItem>
+                            <asp:ListItem Value="4">Chequeo</asp:ListItem>
                             <asp:ListItem Value="6">Etiqueta de Bloque</asp:ListItem>                            
+                            <asp:ListItem Value="8">Etiqueta de Ayuda</asp:ListItem>
                         </asp:DropDownList>
                     </div>
 

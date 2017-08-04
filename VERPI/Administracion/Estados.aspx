@@ -11,14 +11,14 @@
                 <asp:LinkButton runat="server" ID="lkBtn_nuevo" CssClass="btn btn-primary"><i aria-hidden="true" class="glyphicon glyphicon-pencil"></i> Nuevo </asp:LinkButton>
                 <asp:LinkButton runat="server" ID="lkBtn_viewPanel"></asp:LinkButton>
 
-                <cc1:modalpopupextender id="lkBtn_nuevo_ModalPopupExtender" runat="server" backgroundcssclass="modalBackground"
-                    behaviorid="lkBtn_nuevo_ModalPopupExtender" popupcontrolid="pnl_nuevo" targetcontrolid="lkBtn_nuevo" cancelcontrolid="btnHide">
-                </cc1:modalpopupextender>
+                <cc1:ModalPopupExtender ID="lkBtn_nuevo_ModalPopupExtender" runat="server" BackgroundCssClass="modalBackground"
+                    BehaviorID="lkBtn_nuevo_ModalPopupExtender" PopupControlID="pnl_nuevo" TargetControlID="lkBtn_nuevo" CancelControlID="btnHide">
+                </cc1:ModalPopupExtender>
 
 
-                <cc1:modalpopupextender id="lkBtn_viewPanel_ModalPopupExtender" runat="server" backgroundcssclass="modalBackground"
-                    behaviorid="lkBtn_viewPanel_ModalPopupExtender" popupcontrolid="pnl_nuevo" targetcontrolid="lkBtn_viewPanel">
-                </cc1:modalpopupextender>
+                <cc1:ModalPopupExtender ID="lkBtn_viewPanel_ModalPopupExtender" runat="server" BackgroundCssClass="modalBackground"
+                    BehaviorID="lkBtn_viewPanel_ModalPopupExtender" PopupControlID="pnl_nuevo" TargetControlID="lkBtn_viewPanel">
+                </cc1:ModalPopupExtender>
 
             </div>
             <br />
@@ -44,6 +44,7 @@
                     <Columns>
                         <asp:BoundField DataField="id_estado" SortExpression="id_estado" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" />
                         <asp:BoundField DataField="tipo_tramite" HeaderText="Tipo de Tramite" />
+                        <asp:BoundField DataField="nombre" HeaderText="Formulario" />
                         <asp:BoundField DataField="descripcion" HeaderText="Nombre" />
                         <asp:BoundField DataField="codigo_estado" HeaderText="Codigo" />
                         <asp:BoundField DataField="dias_max" HeaderText="Dias Maximos" />
@@ -75,10 +76,35 @@
                 <div class="form-group">
                     <asp:Label runat="server" AssociatedControlID="cbo_tipoSolicitud" CssClass="control-label col-xs-2" Text="Tipo de Tramite"></asp:Label>
                     <div class="col-xs-10">
-                        <asp:DropDownList ID="cbo_tipoSolicitud" runat="server" CssClass="form-control">
-                            <asp:ListItem Value="1" >Marcas</asp:ListItem>
-                            <asp:ListItem Value="2" >Pantentes</asp:ListItem>
-                            <asp:ListItem Value="3" >Derechos de Autor</asp:ListItem>
+                        <asp:DropDownList ID="cbo_tipoSolicitud" runat="server" CssClass="form-control" OnSelectedIndexChanged="cbo_tipoSolicitud_SelectedIndexChanged" AutoPostBack="true">
+                            <asp:ListItem Value="0">Seleccione..</asp:ListItem>
+                            <asp:ListItem Value="1">Marcas</asp:ListItem>
+                            <asp:ListItem Value="2">Pantentes</asp:ListItem>
+                            <asp:ListItem Value="3">Derechos de Autor</asp:ListItem>
+                        </asp:DropDownList>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <asp:Label runat="server" AssociatedControlID="cbo_Formulario" CssClass="control-label col-xs-2" Text="Formulario"></asp:Label>
+                    <div class="col-xs-10">
+                        <asp:DropDownList ID="cbo_Formulario" runat="server" CssClass="form-control" OnSelectedIndexChanged="cbo_Formulario_SelectedIndexChanged" AutoPostBack="true">
+                        </asp:DropDownList>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <asp:Label runat="server" AssociatedControlID="cbo_estadoAnterior" CssClass="control-label col-xs-2" Text="Estado Anterior"></asp:Label>
+                    <div class="col-xs-10">
+                        <asp:DropDownList ID="cbo_estadoAnterior" runat="server" CssClass="form-control">
+                        </asp:DropDownList>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <asp:Label runat="server" AssociatedControlID="cbo_estadoSiguiente" CssClass="control-label col-xs-2" Text="Siguiente Estado"></asp:Label>
+                    <div class="col-xs-10">
+                        <asp:DropDownList ID="cbo_estadoSiguiente" runat="server" CssClass="form-control">
                         </asp:DropDownList>
                     </div>
                 </div>
@@ -92,14 +118,14 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <%--                <div class="form-group">
                     <asp:Label AssociatedControlID="txtCodigo" CssClass="control-label col-xs-2" runat="server" Text="Codigo: "></asp:Label>
                     <div class="col-xs-10">
                         <asp:TextBox ID="txtCodigo" type="text" CssClass="form-control" runat="server" TextMode="Number"></asp:TextBox>
                         <asp:RequiredFieldValidator runat="server" ControlToValidate="txtCodigo"
                             CssClass="text-danger" ErrorMessage="El campo no puede quedar vacio." />
                     </div>
-                </div>
+                </div>--%>
 
                 <div class="form-group">
                     <asp:Label AssociatedControlID="txtDiasMax" CssClass="control-label col-xs-2" runat="server" Text="Dias Maximos: "></asp:Label>
@@ -120,6 +146,13 @@
                 </div>
 
                 <div class="panel-footer">
+
+                    <div id="divAlertError" runat="server">
+                        <p class="alert alert-danger" id="pAlertError" runat="server">
+                            <asp:Literal runat="server" ID="ErrorMessagePrincipal" />
+                        </p>
+                    </div>
+
                     <asp:Button runat="server" ID="btnGuardar" CssClass="btn btn-primary" Text="Guardar" CommandName="Guardar" OnClick="btnGuardar_Click" />
                     <asp:Button runat="server" ID="btnSalir" CssClass="btn btn-default" Text="Salir" CausesValidation="false" OnClick="btnSalir_Click" />
                 </div>

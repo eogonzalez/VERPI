@@ -23,6 +23,8 @@
     </style>
 
     <script type="text/javascript">
+        //$('[data-toggle="tooltip"]').tooltip();
+
         function UncheckOthers(objchkbox) {
             //Get the parent control of checkbox which is the checkbox list
             var objchkList = objchkbox.parentNode.parentNode.parentNode;
@@ -37,11 +39,20 @@
                 }
             }
         }
+
     </script>
 
-<%--    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/0.1.0/css/footable.min.css"
-        rel="stylesheet" type="text/css" />--%>
+    <!-- jQuery -->
+    <%--<script src="~/Scripts/jquery-1.10.2.js" ></script>--%>
+<%--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>--%>
 
+    <%--    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/0.1.0/css/footable.min.css"
+        rel="stylesheet" type="text/css" />--%>
 </head>
 <body>
 
@@ -67,6 +78,8 @@
 
                 <%--Scripts del sitio--%>
             </Scripts>
+
+
 
         </asp:ScriptManager>
 
@@ -124,7 +137,7 @@
             </footer>
         </div>
     </form>
-<%--    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/0.1.0/js/footable.min.js"></script>
+    <%--    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/0.1.0/js/footable.min.js"></script>
     <script type="text/javascript">
         $(function () {
             $('[id*=GridView1]').footable();
