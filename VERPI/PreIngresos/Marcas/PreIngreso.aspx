@@ -88,6 +88,7 @@
             <asp:Button runat="server" ID="btnAdjuntar" CssClass="btn btn-info" Text="2) Adjuntar Documentos" CommandName="Adjuntar" OnClick="btnAdjuntar_Click" />
             <asp:Button runat="server" ID="btnEnviar" CssClass="btn btn-success" Text="3) Enviar Solicitud" CommandName="Enviar" OnClick="btnEnviar_Click" />
             <asp:Button runat="server" ID="btnIrBandeja" CssClass="btn btn-info" Text="Mi Bandeja" CommandName="Bandeja" OnClick="btnIrBandeja_Click" />
+            <asp:Button runat="server" ID="btnListado" CssClass="btn btn-danger" Text="" CommandName="Listado" OnClick="btnListado_Click" />
             <asp:Button runat="server" ID="btnSalir" CssClass="btn btn-default" Text="Salir" CausesValidation="false" OnClick="btnSalir_Click" />
         </div>
     </div>

@@ -97,5 +97,10 @@ namespace Capa_Negocio.General
         {
             return objCDFormulario.SelectDescripcionClase(noClase);
         }
+
+        public int SeleccionaTipoLista(int no_formulario)
+        {
+            return objCDFormulario.SeleccionaTipoLista(no_formulario);
+        }
     }
 }

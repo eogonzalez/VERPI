@@ -220,6 +220,15 @@ namespace VERPI.PreIngresos.Marcas {
         protected global::System.Web.UI.WebControls.Button btnIrBandeja;
         
         /// <summary>
+        /// Control btnListado.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnListado;
+        
+        /// <summary>
         /// Control btnSalir.
         /// </summary>
         /// <remarks>

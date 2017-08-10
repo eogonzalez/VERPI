@@ -32,5 +32,8 @@ namespace Capa_Entidad.Administracion
 
         public string ExpresionRegular { get; set; }
 
+        public int IdTipoVariableFox { get; set; }
+        public string TipoVariableFox { get; set; }
+
     }
 }

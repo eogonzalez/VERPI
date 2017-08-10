@@ -91,7 +91,21 @@
                 <div class="form-group">
                     <asp:Label AssociatedControlID="txtPathReporte" CssClass="control-label col-xs-2" runat="server" Text="Path Reporte:"></asp:Label>
                     <div class="col-xs-10">
-                        <asp:TextBox ID="txtPathReporte" type="text" CssClass="form-control" runat="server" ></asp:TextBox>
+                        <asp:TextBox ID="txtPathReporte" type="text" CssClass="form-control" runat="server"></asp:TextBox>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <asp:Label AssociatedControlID="cbo_tipo_lista" CssClass="control-label col-xs-2" runat="server" Text="Agregar Listado: "></asp:Label>
+                    <div class="col-xs-10">
+
+                        <asp:DropDownList runat="server" ID="cbo_tipo_lista" CssClass="form-control">
+                            <asp:ListItem Value="0">Ninguno</asp:ListItem>
+                            <asp:ListItem Value="1">Inventores</asp:ListItem>
+                            <asp:ListItem Value="2">Autores</asp:ListItem>
+                            <asp:ListItem Value="3">Junta Directiva</asp:ListItem>
+                        </asp:DropDownList>
+
                     </div>
                 </div>
 

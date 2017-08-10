@@ -732,5 +732,27 @@ namespace Capa_Datos.General
 
             return respuesta;
         }
+
+        public int SeleccionaTipoLista(int no_formulario)
+        {
+            int respuesta = 0;
+            var sql_query = string.Empty;
+
+            sql_query = " select tipo_listado " +
+                " from G_Formularios " +
+                " where no_formulario = @no_formulario ";
+
+            using (var con = objConexion.Conectar())
+            {
+                var command = new SqlCommand(sql_query, con);
+                command.Parameters.AddWithValue("no_formulario", no_formulario);
+                
+                con.Open();
+                respuesta = Convert.ToInt32(command.ExecuteScalar());               
+            }
+
+
+            return respuesta;
+        }
     }
 }

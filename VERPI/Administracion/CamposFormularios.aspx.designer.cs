@@ -166,6 +166,15 @@ namespace VERPI.Administracion {
         protected global::System.Web.UI.WebControls.TextBox txt_ExpresionRegular;
         
         /// <summary>
+        /// Control cbo_TipoVariableFox.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList cbo_TipoVariableFox;
+        
+        /// <summary>
         /// Control check_obligatorio.
         /// </summary>
         /// <remarks>

@@ -78,7 +78,7 @@ namespace Capa_Datos.Administracion
                 " ,[Etiqueta],[nombre_control],[tipo_control] "+
                 " ,[descripcion],[modo_texto],[nombre_campo_db] "+
                 " ,[obligatorio],[expresion_regular] "+
-                " ,[fecha_creacion],[fecha_modificacion],[estado]) "+
+                " ,[fecha_creacion],[fecha_modificacion],[estado], [id_tipo_dato_fox], [tipo_dato_fox]) " +
                 " VALUES "+
                 " (@no_formulario, @no_orden, @seccion "+
                 " , @Etiqueta, @nombre_control, @tipo_control "+
@@ -103,6 +103,8 @@ namespace Capa_Datos.Administracion
                 command.Parameters.AddWithValue("fecha_creacion", DateTime.Now);
                 command.Parameters.AddWithValue("fecha_modificacion", DateTime.Now);
                 command.Parameters.AddWithValue("estado", "A");
+                command.Parameters.AddWithValue("id_tipo_dato_fox", objCECampos.IdTipoVariableFox);
+                command.Parameters.AddWithValue("tipo_dato_fox", objCECampos.TipoVariableFox);
 
                 try
                 {
@@ -138,6 +140,8 @@ namespace Capa_Datos.Administracion
                 " ,[obligatorio] = @obligatorio "+
                 " ,[expresion_regular] = @expresion_regular "+
                 " ,[fecha_modificacion] = @fecha_modificacion "+
+                " ,[id_tipo_dato_fox] = @id_tipo_dato_fox "+
+                " ,[tipo_dato_fox] = @tipo_dato_fox" +
                 " WHERE correlativo_campo = @correlativo_campo";
 
             using (var con = objConexion.Conectar())
@@ -156,6 +160,8 @@ namespace Capa_Datos.Administracion
                 command.Parameters.AddWithValue("expresion_regular", objCECampos.ExpresionRegular);
                 command.Parameters.AddWithValue("fecha_modificacion", DateTime.Now);
                 command.Parameters.AddWithValue("correlativo_campo", objCECampos.No_Correlativo_Campo);
+                command.Parameters.AddWithValue("id_tipo_dato_fox", objCECampos.IdTipoVariableFox);
+                command.Parameters.AddWithValue("tipo_dato_fox", objCECampos.TipoVariableFox);
 
                 try
                 {
@@ -182,7 +188,7 @@ namespace Capa_Datos.Administracion
                 " [no_formulario],[no_orden],[seccion] " +
                 " ,[Etiqueta],[nombre_control], [tipo_control] " +
                 " ,[descripcion],[modo_texto],[nombre_campo_db] " +
-                " ,[obligatorio],[expresion_regular] " +
+                " ,[obligatorio],[expresion_regular], [id_tipo_dato_fox] " +
                 " FROM[dbo].[M_Campos_Formulario] " +
                 " where correlativo_campo = @correlativo_campo ";
 

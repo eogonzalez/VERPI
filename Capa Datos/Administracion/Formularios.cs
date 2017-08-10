@@ -45,11 +45,11 @@ namespace Capa_Datos.Administracion
             sql_query = " INSERT INTO [dbo].[G_Formularios] "+
                 " ([tipo_tramite],[nombre] "+
                 " ,[descripcion_formulario],[fecha_creacion] "+
-                ",[fecha_modificacion],[estado], [path_reporte]) "+
+                ",[fecha_modificacion],[estado], [path_reporte], [tipo_listado]) "+
                 " VALUES "+
                 " (@tipo_tramite, @nombre "+
                 " , @descripcion_formulario , @fecha_creacion "+
-                " , @fecha_modificacion, @estado, @path_reporte)";
+                " , @fecha_modificacion, @estado, @path_reporte, @tipo_listado)";
 
             using (var con = objConexion.Conectar())
             {
@@ -60,6 +60,7 @@ namespace Capa_Datos.Administracion
                 command.Parameters.AddWithValue("fecha_creacion", DateTime.Now);
                 command.Parameters.AddWithValue("fecha_modificacion", DateTime.Now);
                 command.Parameters.AddWithValue("path_reporte", objCEFormulario.Path_Reporte);
+                command.Parameters.AddWithValue("tipo_listado", objCEFormulario.TipoLista);
                 command.Parameters.AddWithValue("estado", "A");
 
                 try
@@ -84,7 +85,7 @@ namespace Capa_Datos.Administracion
             var dt_respuesta = new DataTable();
             var sql_query = string.Empty;
 
-            sql_query = "select tipo_tramite, nombre, descripcion_formulario, path_reporte " +
+            sql_query = "select tipo_tramite, nombre, descripcion_formulario, path_reporte, tipo_listado " +
                 " from G_Formularios " +
                 " where no_formulario = @no_formulario;";
 
@@ -138,7 +139,8 @@ namespace Capa_Datos.Administracion
                 " [tipo_tramite] = @tipo_tramite, "+
                 " [nombre] = @nombre, "+                
                 " [descripcion_formulario] = @descripcion_formulario,"+
-                " [path_reporte] = @path_reporte," +
+                " [path_reporte] = @path_reporte, " +
+                " [tipo_listado] = @tipo_listado, " +
                 " [fecha_modificacion] = @fecha_modificacion " +                
                 " WHERE no_formulario =  @no_formulario ";
 
@@ -149,6 +151,7 @@ namespace Capa_Datos.Administracion
                 command.Parameters.AddWithValue("nombre", objCEFormulario.NombreFormulario);
                 command.Parameters.AddWithValue("descripcion_formulario", objCEFormulario.Descripcion);
                 command.Parameters.AddWithValue("path_reporte", objCEFormulario.Path_Reporte);
+                command.Parameters.AddWithValue("tipo_listado", objCEFormulario.TipoLista);
                 command.Parameters.AddWithValue("fecha_modificacion", DateTime.Now);                
                 command.Parameters.AddWithValue("no_formulario", objCEFormulario.No_Formulario);
                 con.Open();

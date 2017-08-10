@@ -30,7 +30,7 @@
 
                     <Columns>
                         <asp:BoundField DataField="correlativo_campo" SortExpression="no_formulario" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" />
-                        <asp:BoundField DataField="seccion" HeaderText="Seccion" />         
+                        <asp:BoundField DataField="seccion" HeaderText="Seccion" />
                         <asp:BoundField DataField="no_orden" HeaderText="Orden" />
                         <asp:BoundField DataField="Etiqueta" HeaderText="Etiqueta" />
                         <asp:BoundField DataField="nombre_control" HeaderText="Control" />
@@ -123,7 +123,7 @@
                             <asp:ListItem Value="7">Listado de Clases</asp:ListItem>
                             <asp:ListItem Value="3">Archivo Adjunto</asp:ListItem>
                             <asp:ListItem Value="4">Chequeo</asp:ListItem>
-                            <asp:ListItem Value="6">Etiqueta de Bloque</asp:ListItem>                            
+                            <asp:ListItem Value="6">Etiqueta de Bloque</asp:ListItem>
                             <asp:ListItem Value="8">Etiqueta de Ayuda</asp:ListItem>
                         </asp:DropDownList>
                     </div>
@@ -153,12 +153,27 @@
                     <asp:Label AssociatedControlID="txt_ExpresionRegular" CssClass="control-label col-xs-2" runat="server" Text="Expresion Regular: "></asp:Label>
                     <div class="col-xs-4">
                         <asp:TextBox ID="txt_ExpresionRegular" TextMode="SingleLine" CssClass="form-control" runat="server"></asp:TextBox>
-<%--                        <asp:RequiredFieldValidator runat="server" ControlToValidate="txt_ExpresionRegular"
+                        <%--                        <asp:RequiredFieldValidator runat="server" ControlToValidate="txt_ExpresionRegular"
                             CssClass="text-danger" ErrorMessage="El campo no puede quedar vacio." />--%>
                     </div>
                 </div>
 
                 <div class="form-group">
+
+                    <asp:Label AssociatedControlID="cbo_TipoVariableFox" CssClass="control-label col-xs-2" runat="server" Text="Tipo Variable Fox: "></asp:Label>
+                    <div class="col-xs-4">
+
+                        <asp:DropDownList runat="server" ID="cbo_TipoVariableFox" CssClass="form-control">
+                            <asp:ListItem Value="0">Ninguno</asp:ListItem>
+                            <asp:ListItem Value="1">Character</asp:ListItem>
+                            <asp:ListItem Value="2">Numeric</asp:ListItem>
+                            <asp:ListItem Value="3">Logical</asp:ListItem>
+                            <asp:ListItem Value="4">DateTime</asp:ListItem>
+                            <asp:ListItem Value="5">Date</asp:ListItem>
+                        </asp:DropDownList>
+
+                    </div>
+
                     <asp:Label AssociatedControlID="check_obligatorio" CssClass="control-label col-xs-2" runat="server" Text="Obligatorio: "></asp:Label>
                     <div class="col-xs-4">
                         <asp:CheckBox ID="check_obligatorio" runat="server" />

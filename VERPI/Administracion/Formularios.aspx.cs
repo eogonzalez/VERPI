@@ -127,6 +127,7 @@ namespace VERPI.Administracion
             objCEFormulario.NombreFormulario = getNombreFormulario();
             objCEFormulario.Descripcion = getDescripcion();
             objCEFormulario.Path_Reporte = getPathReporte();
+            objCEFormulario.TipoLista = getTipoLista();
 
             respuesta = objCNFormularios.InsertFormulario(objCEFormulario);
 
@@ -141,6 +142,7 @@ namespace VERPI.Administracion
             objCEFormulario.NombreFormulario = getNombreFormulario();
             objCEFormulario.Descripcion = getDescripcion();
             objCEFormulario.Path_Reporte = getPathReporte();
+            objCEFormulario.TipoLista = getTipoLista();
 
             respuesta = objCNFormularios.UpdateFormulario(objCEFormulario);
             return respuesta;
@@ -159,6 +161,7 @@ namespace VERPI.Administracion
             txtNombre.Text = row["nombre"].ToString();
             txtDescripcion.Text = row["descripcion_formulario"].ToString();
             txtPathReporte.Text = row["path_reporte"].ToString();
+            cbo_tipo_lista.SelectedValue = row["tipo_listado"].ToString();
 
         }
 
@@ -189,6 +192,11 @@ namespace VERPI.Administracion
         protected string getPathReporte()
         {
             return txtPathReporte.Text;
+        }
+
+        protected int getTipoLista()
+        {
+            return Convert.ToInt32(cbo_tipo_lista.SelectedValue);
         }
 
         #endregion

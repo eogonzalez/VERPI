@@ -112,6 +112,15 @@ namespace VERPI.Administracion {
         protected global::System.Web.UI.WebControls.TextBox txtPathReporte;
         
         /// <summary>
+        /// Control cbo_tipo_lista.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList cbo_tipo_lista;
+        
+        /// <summary>
         /// Control btnGuardar.
         /// </summary>
         /// <remarks>

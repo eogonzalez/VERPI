@@ -186,7 +186,6 @@ namespace VERPI.Bandeja
 
         #region Funciones
 
-
         protected void Llenar_gvBorradores(int id_usuario)
         {
             var dt = new DataTable();
@@ -310,8 +309,6 @@ namespace VERPI.Bandeja
         }
 
         #endregion
-
-
 
     }
 }

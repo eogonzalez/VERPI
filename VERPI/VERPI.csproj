@@ -200,6 +200,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Account\Web.config" />
     <Content Include="Mantenimientos\Paises.aspx" />
+    <Content Include="PreIngresos\Marcas\Listado.aspx" />
     <Content Include="Reportes\Formularios\DesplegarFormulario.aspx" />
     <Content Include="Scripts\Funciones.js" />
     <None Include="Properties\PublishProfiles\localverpi.pubxml" />
@@ -505,6 +506,13 @@
     </Compile>
     <Compile Include="PreIngresos\Marcas\Documentos.aspx.designer.cs">
       <DependentUpon>Documentos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PreIngresos\Marcas\Listado.aspx.cs">
+      <DependentUpon>Listado.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PreIngresos\Marcas\Listado.aspx.designer.cs">
+      <DependentUpon>Listado.aspx</DependentUpon>
     </Compile>
     <Compile Include="PreIngresos\Marcas\PreIngreso.aspx.cs">
       <DependentUpon>PreIngreso.aspx</DependentUpon>

@@ -194,6 +194,8 @@ namespace VERPI.Administracion
             objCECampos.CampoBaseDatosRPI = getCampoBaseDatosRPI();
             objCECampos.Obligatorio = getObligatorio();
             objCECampos.ExpresionRegular = getExpresionRegular();
+            objCECampos.IdTipoVariableFox = getId_TipoVariableFox();
+            objCECampos.TipoVariableFox = getTipoVariableFox();
 
             respuesta = objCNCampos.InsertCamposFormulario(objCECampos);
 
@@ -216,6 +218,8 @@ namespace VERPI.Administracion
             objCECampos.CampoBaseDatosRPI = getCampoBaseDatosRPI();
             objCECampos.Obligatorio = getObligatorio();
             objCECampos.ExpresionRegular = getExpresionRegular();
+            objCECampos.IdTipoVariableFox = getId_TipoVariableFox();
+            objCECampos.TipoVariableFox = getTipoVariableFox();
 
             respuesta = objCNCampos.UpdateCampoFormulario(objCECampos);
             
@@ -242,6 +246,7 @@ namespace VERPI.Administracion
             txt_nombre_campo_db.Text = row["nombre_campo_db"].ToString();
             check_obligatorio.Checked = (bool)row["obligatorio"];
             txt_ExpresionRegular.Text = row["expresion_regular"].ToString();
+            cbo_TipoVariableFox.SelectedValue = row["id_tipo_dato_fox"].ToString();
             
         }
 
@@ -253,6 +258,16 @@ namespace VERPI.Administracion
         #endregion
 
         #region Valores del formulario
+
+        protected int getId_TipoVariableFox()
+        {
+            return Convert.ToInt32(cbo_TipoVariableFox.SelectedValue);
+        }
+
+        protected string getTipoVariableFox()
+        {
+            return cbo_TipoVariableFox.SelectedItem.ToString();
+        }
 
         protected int getNoFormulario()
         {

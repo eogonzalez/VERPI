@@ -60,6 +60,8 @@ namespace VERPI.PreIngresos.Marcas
                     btnAdjuntar.Enabled = true;
                     btnEnviar.Enabled = true;
 
+
+
                     cbo_tramite.Enabled = false;
                     //Llenar_cbo_tramite(tipo_tramite);
                     cbo_tramite.SelectedValue = no_formulario.ToString();
@@ -72,6 +74,11 @@ namespace VERPI.PreIngresos.Marcas
                     pnlFormulario.Visible = true;
                     LlenarValoresFormulario(noPreingreso);
                     ConfiguracionEstado();
+
+                    if ((int)Session["TipoLista"] > 0)
+                    {
+                        btnListado.Enabled = true;
+                    }
                 }
 
                                
@@ -88,6 +95,9 @@ namespace VERPI.PreIngresos.Marcas
             btnEnviar.Visible = true;
             btnSalir.Visible = true;
             divAlertClase.Visible = false;
+
+            btnListado.Visible = false;
+            btnListado.Enabled = false;
 
             if (Session["noPreIngreso"] != null)
             {
@@ -238,15 +248,32 @@ namespace VERPI.PreIngresos.Marcas
             Response.Redirect("~/Bandeja/BandejaUsuario");
         }
 
+        protected void btnListado_Click(object sender, EventArgs e)
+        {
+            //switch (btnListado.CommandName)
+            //{
+            //    case "Inventores":
+            //        Response.Redirect("~/PreIngresos/Marcas/Listado.aspx?np=" + Session["noPreIngreso"].ToString() + "&tl=" + Session["TipoLista"].ToString());
+            //        break;
+            //    case "Autores":
+
+            //        break;
+            //    case "Junta":
+
+            //        break;
+            //}
+
+            Response.Redirect("~/PreIngresos/Marcas/Listado.aspx?np=" + Session["noPreIngreso"].ToString() + "&tl=" + Session["TipoLista"].ToString());
+        }
+
         #endregion
 
         #region Funciones
 
         protected void ConfiguracionInicial()
-        {
-            //liEncabezado.Disabled = true;
-            //liDatos.Disabled = true;
-            //liAnexos.Disabled = true;
+        {            
+            btnListado.Visible = false;
+            btnListado.Enabled = false;
 
             Session.Add("ValidoEnvio", true);
             divContrasenia.Visible = false;
@@ -288,7 +315,32 @@ namespace VERPI.PreIngresos.Marcas
         {
             objCEFormulario.Nombre_Tabla = "M_Campos_Formulario";            
             objCEFormulario.No_Formulario = no_formulario;
-          
+
+            /*Valido Lista a Mostrar para Adjuntar*/
+            int tipo_lista = 0;
+            tipo_lista = objCNFormulario.SeleccionaTipoLista(no_formulario);
+            Session.Add("TipoLista", tipo_lista);
+
+            if (tipo_lista > 0)
+            {
+                btnListado.Visible = true;                
+                switch (tipo_lista)
+                {
+                    case 1:
+                        btnListado.Text = "Listado de Inventores";
+                        btnListado.CommandName = "Inventores";
+                        break;
+                    case 2:
+                        btnListado.Text = "Listado de Autores";
+                        btnListado.CommandName = "Autores";
+                        break;
+                    case 3:
+                        btnListado.Text = "Listado de Junta Directiva";
+                        btnListado.CommandName = "Junta";
+                        break;
+                }
+            }
+
             var dt_total_campos = new DataTable();
             var cantidad_s1 = 0;
             var cantidad_s2 = 0;
@@ -676,6 +728,11 @@ namespace VERPI.PreIngresos.Marcas
 
                 btnAdjuntar.Enabled = true;
                 btnEnviar.Enabled = true;
+
+                if ((int)Session["TipoLista"] > 0)
+                {
+                    btnListado.Enabled = true;
+                }
             }
             else
             {
@@ -939,5 +996,7 @@ namespace VERPI.PreIngresos.Marcas
         }
 
         #endregion
+
+
     }
 }

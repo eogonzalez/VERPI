@@ -102,6 +102,12 @@ namespace VERPI.Mantenimientos
             }
         }
 
+        protected void gvPaises_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvPaises.PageIndex = e.NewPageIndex;
+            Llenar_gvPaises();
+        }
+
         #endregion
 
         #region Funciones
@@ -195,10 +201,5 @@ namespace VERPI.Mantenimientos
 
         #endregion
 
-        protected void gvPaises_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-            gvPaises.PageIndex = e.NewPageIndex;
-            Llenar_gvPaises();
-        }
     }
 }
