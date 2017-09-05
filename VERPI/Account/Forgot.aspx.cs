@@ -9,6 +9,7 @@ using Capa_Negocio.General;
 //using WebMatrix.WebData;
 using System.Net.Mail;
 using System.Net.Mime;
+using System.IO;
 
 namespace VERPI.Account
 {
@@ -38,10 +39,14 @@ namespace VERPI.Account
                     string code = Convert.ToString(rnd.Next(DateTime.Now.Day, DateTime.Now.Month + 100));
                     if (objCNLogin.InsertCodigoRecuperacion(Email.Text, code))
                     {
-                        string callbackUrl = IdentityHelper.GetResetPasswordRedirectUrl(code, Request);
-                        EnvioMensaje("Restablecer contraseña", "Para restablecer la contraseña, haga clic <a href=\"" + callbackUrl + "\">aquí</a>.", Email.Text);
+                        //string callbackUrl = IdentityHelper.GetResetPasswordRedirectUrl(code, Request);
+                        string absoluteDir = IdentityHelper.GetResetPasswordRedirectUrl(code, Request);
+                        string relativePath = absoluteDir.Replace("/Account", "/verpi/Account");
+                        string callbackUrl = relativePath;
 
-                        //manager.SendEmail(user.Id, "Restablecer contraseña", "Para restablecer la contraseña, haga clic <a href=\"" + callbackUrl + "\">aquí</a>.");
+
+                        EnvioMensaje("Restablecer contraseña", "Para restablecer la contraseña, haga clic <a href=\"" + callbackUrl + "\">aquí</a>.", Email.Text);
+                        
                         loginForm.Visible = false;
                         DisplayEmail.Visible = true;
                     }

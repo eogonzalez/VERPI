@@ -74,6 +74,16 @@ namespace VERPI
         {
             if (!IsPostBack)
             {
+
+                if (Page.Title != "Inicio")
+                {
+                    divLogo.Visible = true;
+                }
+                else
+                {
+                    divLogo.Visible = false;
+                }
+
                 MinecoHyperLink.NavigateUrl = "https://www.rpi.gob.gt";
                 CompactHyperLink.NavigateUrl = "http://www.compactdeveloper.com/";
                 if (Session["UsuarioID"] == null)
@@ -120,6 +130,8 @@ namespace VERPI
                         Item.Text = Convert.ToString(enc["nombre"]);
                         Item.ToolTip = Convert.ToString(enc["descripcion"]);
                         Item.NavigateUrl = Convert.ToString(enc["url"]);
+                        //Item.Target = "_blank";
+                        //https://msdn.microsoft.com/en-us/library/system.web.ui.webcontrols.menuitem.target(v=vs.110).aspx
 
                         menuDinamico.Items.Add(Item);
 

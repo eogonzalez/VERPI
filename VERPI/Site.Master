@@ -44,7 +44,7 @@
 
     <!-- jQuery -->
     <%--<script src="~/Scripts/jquery-1.10.2.js" ></script>--%>
-<%--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <%--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
             $('[data-toggle="popover"]').popover();
@@ -93,7 +93,11 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <a class="navbar-brand" runat="server" href="~/Default">e-Consultas & Servicios</a>
+                            <%--<a class="navbar-brand" runat="server" href="~/Default">
+                                <img src="/Imagenes/Logo_Verpi_5.png" alt="VERPI" style="height: 22px; width: 89px" />
+                                VERPI
+                            </a>--%>
+                            <%--<a href="~/Default"><img src="/Imagenes/Logo_Verpi_5.png" alt="VERPI"/></a>--%>
                         </div>
                         <div class="collapse navbar-collapse">
 
@@ -118,6 +122,10 @@
         <div class="container body-content">
             <asp:UpdatePanel runat="server" ID="UPMainContent">
                 <ContentTemplate>
+                    <div id="divLogo" runat="server">
+                        <a href="~/Default"><img   src="/verpi/Imagenes/Logo_Verpi_5.png" alt="VERPI"/></a>
+                    </div>
+                    
 
                     <asp:ContentPlaceHolder ID="MainContent" runat="server">
                     </asp:ContentPlaceHolder>
@@ -127,7 +135,7 @@
 
             <hr />
             <footer>
-                <p>&copy; <%: DateTime.Now.Year %> - VERPI - Registro de la Propiedad Intelectual - Ministerio de Economia</p>
+                <p>&copy; <%: DateTime.Now.Year %> - VERPI - Registro de la Propiedad Intelectual - Ministerio de Economía</p>
                 <p>
                     Todos los derechos reservados
                     <asp:HyperLink runat="server" ID="MinecoHyperLink" ViewStateMode="Disabled">www.rpi.gob.gt</asp:HyperLink>

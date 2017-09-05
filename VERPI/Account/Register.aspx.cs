@@ -50,7 +50,11 @@ namespace VERPI.Account
 
                         if (objCNLogin.InsertCodigoRecuperacion(Email.Text, code))
                         {
-                            string callbackUrl = IdentityHelper.GetUserConfirmationRedirectUrl(code, Email.Text, Request);
+                            //string callbackUrl = IdentityHelper.GetUserConfirmationRedirectUrl(code, Email.Text, Request);                            
+                            string absoluteDir = IdentityHelper.GetUserConfirmationRedirectUrl(code, Email.Text, Request);
+                            string relativePath = absoluteDir.Replace("/Account", "/verpi/Account");
+                            string callbackUrl = relativePath;
+
                             string mensaje = "Apreciable usuario " + objCEUsuario.CE_Nombres + " " + objCEUsuario.CE_Apellidos + " Bienvenido al Sistema de Ventanilla Electrónica del Registro de la Propiedad Intelectual -VERPI- </br> " +
                                 "Hemos recibido su solicitud de registro al sistema.</br> " +
                                 "Puede acceder al Sistema con los datos registrados.</br>" +

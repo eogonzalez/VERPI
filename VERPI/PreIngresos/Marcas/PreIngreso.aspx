@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="Pre Ingreso de Marcas" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PreIngreso.aspx.cs" Inherits="VERPI.PreIngresos.Marcas.PreIngreso" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-
+    
     <div class="panel panel-primary" runat="server" id="pnlMarcas">
         <div class="panel-heading"><%:Title %></div>
 
@@ -18,7 +18,7 @@
 
             <div class="thumbnail" id="pnlFormulario" runat="server">
                 <ul class="nav nav-tabs nav-justified">
-                    <li id="liEncabezado"  runat="server" role="presentation" class="active"><a href="#tbEncabezado" aria-controls="tbEncabezado" data-toggle="tab">Encabezado</a></li>
+                    <li id="liEncabezado" runat="server" role="presentation" class="active"><a href="#tbEncabezado" aria-controls="tbEncabezado" data-toggle="tab">Encabezado</a></li>
                     <li id="liDatos" runat="server" role="presentation"><a href="#tbDatos" aria-controls="tbDatos" data-toggle="tab">Datos del Pre Ingreso</a></li>
                     <li id="liAnexos" runat="server" role="presentation"><a href="#tbAnexos" aria-controls="tbAnexos" data-toggle="tab">Otros Datos</a></li>
                 </ul>
@@ -75,11 +75,12 @@
             </div>
 
             <div id="divContrasenia" runat="server">
-                <div class="row">
-                    <asp:Label Text="Ingrese Contraseña para Validar Envio" runat="server" CssClass="col-xs-4" />
-                    <div class="col-xs-8">
+                <div class="row alert alert-info">
+                    <asp:Label Text="Ingrese Contraseña para Validar Envio y presione el boton 3. Confirmar y enviar Solicitud " runat="server" CssClass="col-xs-8" />
+                    <div class="col-xs-4">
                         <asp:TextBox runat="server" ID="txt_contraseña" CssClass="form-control" TextMode="Password" />
                     </div>
+
                 </div>
             </div>
             <br />

@@ -199,6 +199,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Account\Web.config" />
+    <Content Include="Imagenes\Logo_Verpi_1.png" />
+    <Content Include="Imagenes\Logo_Verpi_5.png" />
     <Content Include="Mantenimientos\Paises.aspx" />
     <Content Include="PreIngresos\Marcas\Listado.aspx" />
     <Content Include="Reportes\Formularios\DesplegarFormulario.aspx" />
@@ -207,6 +209,17 @@
     <None Include="Properties\PublishProfiles\prbest - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\verpi - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\verpiazure.pubxml" />
+    <Content Include="Reportes\DataTableVerpi\DSVERPI.xsc">
+      <DependentUpon>DSVERPI.xsd</DependentUpon>
+    </Content>
+    <None Include="Reportes\DataTableVerpi\DSVERPI.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DSVERPI.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reportes\DataTableVerpi\DSVERPI.xss">
+      <DependentUpon>DSVERPI.xsd</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Administracion\Formularios.aspx" />
     <Content Include="Mantenimientos\TipoPagos.aspx" />
@@ -522,6 +535,11 @@
       <DependentUpon>PreIngreso.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reportes\DataTableVerpi\DSVERPI.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DSVERPI.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Reportes\Derechos\rptDerechosAutor_14.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -649,6 +667,12 @@
       <DependentUpon>rptPatentes_23.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reportes\rptLista.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptLista.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -762,6 +786,10 @@
     <EmbeddedResource Include="Reportes\Patentes\rptPatentes_23.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rptPatentes_23.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reportes\rptLista.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptLista.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

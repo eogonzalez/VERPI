@@ -754,5 +754,31 @@ namespace Capa_Datos.General
 
             return respuesta;
         }
+
+        public bool TieneEstadoWFInicial(int no_formulario)
+        {
+            var respuesta = false;
+            var sql_query = string.Empty;
+
+            sql_query = " select coalesce(count(1),0) as existe "+
+                " from g_estados "+
+                " where codigo_estado = 100 and estado = 'A' and no_formulario = @no_formulario; ";
+
+            using (var con = objConexion.Conectar())
+            {
+                var command = new SqlCommand(sql_query, con);                
+                command.Parameters.AddWithValue("no_formulario", no_formulario);
+                con.Open();
+                int valor = Convert.ToInt32(command.ExecuteScalar());
+
+                if (valor > 0)
+                {
+                    respuesta = true;
+                }
+
+            }
+
+            return respuesta;
+        }
     }
 }

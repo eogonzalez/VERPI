@@ -25,6 +25,9 @@ namespace VERPI.PreIngresos.Marcas
 
                 divAlertCorrecto.Visible = false;
                 divAlertError.Visible = false;
+                Session.Add("ValidoEnvio", true);
+                divContrasenia.Visible = false;
+
 
                 var cmd = 0;
                 if (Request.QueryString["cmd"] != null)
@@ -111,33 +114,68 @@ namespace VERPI.PreIngresos.Marcas
 
         protected void btnEnviar_Click(object sender, EventArgs e)
         {
-            if (Session["noPreIngreso"] != null)
-            {
-                //Realiza el envio del formulario
-                /*Valida que los campos cumplan los requisitos de obligatorio*/
-                if (ValidoCamposObligatorios())
+            if (objCNFormulario.TieneEstadoWFInicial((int)Session["no_formulario"]))
+            {//Valida que el formulario tenga un estado inicial
+                if ((bool)Session["ValidoEnvio"])
+                {//Si Valido envio
+                    //Muestro div para ingreso de contraseña
+                    btnEnviar.Text = "3) Confirmar y Enviar Solicitud";
+                    Session["ValidoEnvio"] = false;
+                    divContrasenia.Visible = true;
+                }
+                else
                 {
-                    var idExpediente = GeneroExpediente((int)Session["noPreIngreso"]);
 
-                    if (idExpediente > 0)
+                    if (ValidoContraseña())
                     {
-                        MensajeCorrectoPrincipal.Text += "Se ha generado expediente correctamente. ";
+                        if (Session["noPreIngreso"] != null)
+                        {
+                            //Realiza el envio del formulario
+                            /*Valida que los campos cumplan los requisitos de obligatorio*/
+                            if (ValidoCamposObligatorios())
+                            {
+                                var idExpediente = GeneroExpediente((int)Session["noPreIngreso"]);
 
-                        /*BloqueoGeneral*/
+                                if (idExpediente > 0)
+                                {
+                                    MensajeCorrectoPrincipal.Text += "Se ha generado expediente correctamente. ";
+
+                                    btnEnviar.Text = "3) Enviar Solicitud";
+                                    Session["ValidoEnvio"] = true;
+                                    divContrasenia.Visible = false;
+
+                                    /*BloqueoGeneral*/
+                                }
+                                else
+                                {
+                                    ErrorMessagePrincipal.Text += "Ha ocurrido un error al generar ";
+                                    divAlertError.Visible = true;
+                                }
+
+                            }
+                        }
+                        else
+                        {
+                            divAlertCorrecto.Visible = false;
+
+                            ErrorMessagePrincipal.Text = "Debe de guardar primero el formulario para poder enviarlo.";
+                            divAlertError.Visible = true;
+                        }
+
                     }
                     else
                     {
-                        ErrorMessagePrincipal.Text += "Ha ocurrido un error al generar ";
+                        divAlertCorrecto.Visible = false;
+
+                        ErrorMessagePrincipal.Text = "Contraseña Incorrecta, Formulario No Enviado.";
                         divAlertError.Visible = true;
                     }
-
                 }
             }
             else
             {
                 divAlertCorrecto.Visible = false;
-
-                ErrorMessagePrincipal.Text = "Debe de guardar primero el formulario para poder enviarlo.";
+                ErrorMessagePrincipal.Text = "Formulario No tiene definido estado inicial. Formulario no enviado.";
                 divAlertError.Visible = true;
             }
         }
@@ -276,6 +314,7 @@ namespace VERPI.PreIngresos.Marcas
                     FileUpload MiFileUpload = new FileUpload();
                     MiFileUpload.ID = identificacion;
                     MiFileUpload.ToolTip = row["descripcion"].ToString();
+                    
                     MiFileUpload.EnableViewState = true;
                     //MiFileUpload.ViewStateMode = ViewStateMode.Enabled;
 
@@ -303,20 +342,28 @@ namespace VERPI.PreIngresos.Marcas
 
         protected void GuardoDocumentos(Panel pnl_contenedor, int no_preingreso)
         {
+            divAlertCorrecto.Visible = false;
+            divAlertError.Visible = false;
 
             int correlativo_campo = 0;
             string nombre_control = string.Empty;
             int numero_control = 0;
             string valor = string.Empty;
 
+            bool existeMensajeError = false;
+            bool existeMensajeCorrecto = false;
+            string mensajeCorrecto = string.Empty;
+            string mensajeError = string.Empty;
+
             foreach (Control c in pnl_contenedor.Controls)
-            {
+            {//Recorro cada control del panel de documentos
 
                 if (c is FileUpload)
-                {
+                {//Si es carga de archivos
+
                     FileUpload flup;
                     flup = (FileUpload)c;
-
+                    
                     if (flup.HasFile)
                     {
                         //string archivo = string.Empty;
@@ -329,66 +376,131 @@ namespace VERPI.PreIngresos.Marcas
                         numero_control = Convert.ToInt32(flup.ID.Substring(flup.ID.Length - 5, 5));
                         correlativo_campo = numero_control - 10000;
 
+                        /*Validacion de tipo de archivo*/
                         string extension = Path.GetExtension(flup.PostedFile.FileName);
 
-                        switch (extension.ToLower())
-                        {
-                            case ".pdf":
-                                break;
-                            default:
-                                ErrorMessagePrincipal.Text = "Extension no valida";
-                                break;
+                        string[] tiposArchivosAceptados = new string[4];
+                        tiposArchivosAceptados[0] = ".pdf";
+                        tiposArchivosAceptados[1] = ".jpeg";
+                        tiposArchivosAceptados[2] = ".jpg";
+                        tiposArchivosAceptados[3] = ".png";
+
+                        bool archivoAceptado = false;
+
+                        string archivo = Path.GetFileName(flup.PostedFile.FileName);
+
+                        for (int i = 0; i <= 3; i++)
+                        {//Recorro los tipos de archivos aceptados
+                            if (extension.ToLower() == tiposArchivosAceptados[i])
+                            {
+                                //Si extension es valida
+                                archivoAceptado = true;
+                            }
                         }
 
-                        try
-                        {
-                            string archivo = Path.GetFileName(flup.PostedFile.FileName);
-
-                            string carpeta_final = Path.Combine(carpeta, prefijo + ".pdf");
-
-                            flup.PostedFile.SaveAs(carpeta_final);
-
-                            objCEFormulario.No_PreIngreso = (int)Session["noPreingreso"];
-                            objCEFormulario.Correlativo_Campo = correlativo_campo;
-                            objCEFormulario.Nombre_Documento = archivo;
-                            objCEFormulario.TipoDocto = extension;
-
-                            if (!objCNFormulario.ExisteArchivo((int)Session["noPreingreso"], correlativo_campo))
-                            {                               
-                                objCEFormulario.PathDocto = carpeta_final;
-
-                                //guarda ficha archivo
-                                objCNFormulario.InsertDoctoAnexoFormulario(objCEFormulario);
+                        if (!archivoAceptado)
+                        {//Si archivo no es aceptado
+                            if (!existeMensajeError)
+                            {
+                                mensajeError += " El archivo:'" + archivo + "' no es de tipo 'pdf', 'jpg' o 'png'. Extension no valida. ";
                             }
                             else
                             {
-                                //Actualiza ficha archivo
-                                objCNFormulario.UpdateDoctoAnexoFormulario(objCEFormulario);
+                                mensajeError += "; El archivo:'" + archivo + "' no es de tipo 'pdf', 'jpg' o 'png'. Extension no valida. ";
+                                
                             }
-                            
 
+
+                            existeMensajeError = true;
                         }
-                        catch (Exception ex)
+
+                        int tamañoArchivo = flup.PostedFile.ContentLength / 1000; //En kilobites
+
+                        if (tamañoArchivo > (2*1000))
                         {
-                            ErrorMessagePrincipal.Text = "Error: " + ex.Message;
-                            divAlertError.Visible = true;
-                            throw;
+                            archivoAceptado = false;
+                            existeMensajeError = true;
+
+                            if (!existeMensajeError)
+                            {
+                                mensajeError += " Archivo excede tamaño maximo soportado (2MB). ";
+                            }
+                            else
+                            {
+                                mensajeError += "; Archivo '"+archivo+ "' excede tamaño maximo soportado (2MB). ";
+                            }                            
+                            
                         }
-                    
-                        //DataRow row = dt_controles.NewRow();
-                        //row["correlativo_campo"] = correlativo_campo;
-                        //row["nombre_documento"] = archivo;
-                        //row["tipo"]
-                        //row["path"]
-                        
-                        
-                    }
 
-                }
+                        if (archivoAceptado)
+                        {//Si archivo es aceptado lo cargo
+                            try
+                            {
 
+
+                                string carpeta_final = Path.Combine(carpeta, prefijo + extension);
+
+                                flup.PostedFile.SaveAs(carpeta_final);
+
+                                objCEFormulario.No_PreIngreso = (int)Session["noPreingreso"];
+                                objCEFormulario.Correlativo_Campo = correlativo_campo;
+                                objCEFormulario.Nombre_Documento = archivo;
+                                objCEFormulario.TipoDocto = extension;
+
+                                if (!objCNFormulario.ExisteArchivo((int)Session["noPreingreso"], correlativo_campo))
+                                {
+                                    objCEFormulario.PathDocto = carpeta_final;
+
+                                    //guarda ficha archivo
+                                    objCNFormulario.InsertDoctoAnexoFormulario(objCEFormulario);
+                                }
+                                else
+                                {
+                                    //Actualiza ficha archivo
+                                    objCNFormulario.UpdateDoctoAnexoFormulario(objCEFormulario);
+                                }
+
+                                if (!existeMensajeCorrecto)
+                                {
+                                    mensajeCorrecto += "El Archivo '" + archivo + "' ha sido cargado. ";
+                                }
+                                else
+                                {
+                                    mensajeCorrecto += ";El Archivo '" + archivo + "' ha sido cargado. ";
+                                }
+
+                                existeMensajeCorrecto = true;
+                            }
+                            catch (Exception ex)
+                            {
+                                mensajeError += " Error: " + ex.Message;
+
+                                //throw;
+                            }
+                        }//if !archivoAceptado   
+                        else
+                        {
+                            mensajeError += " [Archivo No Cargado].";
+                            existeMensajeError = true;
+                        }
+
+                    }// if (flup.HasFile)
+
+                }//if (c is FileUpload)
+
+            }//foreach (Control c in pnl_contenedor.Controls)
+            
+            if (existeMensajeCorrecto)
+            {
+                divAlertCorrecto.Visible = true;
+                MensajeCorrectoPrincipal.Text = mensajeCorrecto;
             }
 
-            //return dt_controles;
+            if (existeMensajeError)
+            {
+                divAlertError.Visible = true;
+                ErrorMessagePrincipal.Text = mensajeError;
+            }
         }
 
         protected void Llenar_gvAnexos(int no_preingreso)
@@ -541,6 +653,18 @@ namespace VERPI.PreIngresos.Marcas
                 }
             }
             
+        }
+
+        bool ValidoContraseña()
+        {
+            bool respuesta = false;
+
+            if (Session["PS"].ToString() == txt_contraseña.Text)
+            {
+                respuesta = true;
+            }
+
+            return respuesta;
         }
 
         #endregion

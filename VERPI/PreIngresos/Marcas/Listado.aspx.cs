@@ -7,6 +7,8 @@ using System.Web.UI.WebControls;
 using System.Data;
 using Capa_Negocio.PreIngresos;
 using Capa_Entidad.PreIngresos;
+using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
 
 namespace VERPI.PreIngresos.Marcas
 {
@@ -131,7 +133,38 @@ namespace VERPI.PreIngresos.Marcas
 
         protected void btnImprimir_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/PreIngresos/Marcas/PreIngreso.aspx?cmd=" + Session["cmd"].ToString() + "&nf=" + Session["no_formulario"].ToString() + "&np=" + Session["noPreIngreso"].ToString());
+            var tbl = new DataTable();
+            tbl = objCNListadoG.SelectListadoGridView((int)Session["TipoLista"], (int)Session["noPreIngreso"]);
+
+            string path = Server.MapPath("~/Reportes/rptLista.rpt");
+            ReportDocument reporte = new ReportDocument();
+
+            reporte.Load(path);
+
+            var dsp = new DataSet();
+
+            dsp.Tables.Add(tbl);
+            dsp.Tables[0].TableName = "DTLista";
+
+            reporte.SetDataSource(dsp);
+
+            
+
+            int no_preingreso = 0;
+            if (Session["noPreIngreso"] != null)
+            {
+                no_preingreso = (int)Session["noPreIngreso"];
+            }
+
+            string saveFilePath = Server.MapPath("~/doctos");
+            string nombreArchivo = no_preingreso.ToString() + "_formulariolistado.pdf";
+            string nombreDocto = saveFilePath + "\\" + nombreArchivo;
+
+            reporte.ExportToDisk(ExportFormatType.PortableDocFormat, nombreDocto);
+            Response.Redirect("~/doctos/" + nombreArchivo);
+                
+
+            
         }
 
         #endregion

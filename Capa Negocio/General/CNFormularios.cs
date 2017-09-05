@@ -102,5 +102,11 @@ namespace Capa_Negocio.General
         {
             return objCDFormulario.SeleccionaTipoLista(no_formulario);
         }
+
+        public bool TieneEstadoWFInicial(int no_formulario)
+        {
+            return objCDFormulario.TieneEstadoWFInicial(no_formulario);
+        }
+
     }
 }

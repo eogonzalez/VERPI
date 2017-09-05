@@ -125,18 +125,7 @@ namespace VERPI.PreIngresos.Marcas
 
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (Session["noPreIngreso"] != null)
-            {
-                if ((int)Session["noPreIngreso"] > 0)
-                {
-                    ActualizarFormulario((int)Session["noPreIngreso"]);
-                }                
-            }
-            else
-            {
-                GuardarFormulario();
-            }
-
+            GuardarYActualizarFormulario();
         }
 
         protected void btnSalir_Click(object sender, EventArgs e)
@@ -146,60 +135,84 @@ namespace VERPI.PreIngresos.Marcas
 
         protected void btnEnviar_Click(object sender, EventArgs e)
         {
+            /*  */
             if ((bool)Session["ValidoEnvio"])
-            {//Si Valido envio
-                //Muestro div para ingreso de contraseña
-                btnEnviar.Text = "3) Confirmar y Enviar Solicitud";
-                Session["ValidoEnvio"] = false;
-                divContrasenia.Visible = true;
+            {//No Si Valido envio
+                GuardarYActualizarFormulario();
             }
-            else
-            {
-
-                if (ValidoContraseña())
+            
+            if (objCNFormulario.TieneEstadoWFInicial((int)Session["no_formulario"]))
+            {//Valida que el formulario tenga un estado inicial
+                if (Session["noPreIngreso"] != null)
                 {
-                    if (Session["noPreIngreso"] != null)
+                    //Realiza el envio del formulario
+                    /*Valida que los campos cumplan los requisitos de obligatorio*/
+                    if (ValidoCamposObligatorios())
                     {
-                        //Realiza el envio del formulario
-                        /*Valida que los campos cumplan los requisitos de obligatorio*/
-                        if (ValidoCamposObligatorios())
-                        {
-                            var idExpediente = GeneroExpediente((int)Session["noPreIngreso"]);
-
-                            if (idExpediente > 0)
+                        if ((bool)Session["ValidoEnvio"])
+                        {//Si Valido envio
+                            //Muestro div para ingreso de contraseña
+                            btnEnviar.Text = "3) Confirmar y Enviar Solicitud";
+                            Session["ValidoEnvio"] = false;
+                            divContrasenia.Visible = true;
+                        }
+                        else
+                        {                            
+                            if (ValidoContraseña())
                             {
-                                MensajeCorrectoPrincipal.Text += "Se ha generado expediente correctamente. ";
+                                var idExpediente = GeneroExpediente((int)Session["noPreIngreso"]);
 
-                                btnEnviar.Text = "3) Enviar Solicitud";
-                                Session["ValidoEnvio"] = true;
-                                divContrasenia.Visible = false;
+                                if (idExpediente > 0)
+                                {
+                                    MensajeCorrectoPrincipal.Text += "Se ha generado expediente correctamente. ";
 
-                                /*BloqueoGeneral*/
+                                    btnEnviar.Text = "3) Enviar Solicitud";
+                                    Session["ValidoEnvio"] = true;
+                                    divContrasenia.Visible = false;
+
+                                    divAlertClase.Visible = false;
+                                    divAlertError.Visible = false;
+
+
+                                    /*BloqueoGeneral*/
+
+                                    btnGuardar.Enabled = false;
+                                    btnAdjuntar.Enabled = false;
+                                    btnEnviar.Enabled = false;
+                                }
+                                else
+                                {
+                                    ErrorMessagePrincipal.Text += "Ha ocurrido un error al generar ";
+                                    divAlertError.Visible = true;
+                                }
                             }
                             else
                             {
-                                ErrorMessagePrincipal.Text += "Ha ocurrido un error al generar ";
+                                divAlertCorrecto.Visible = false;
+
+                                ErrorMessagePrincipal.Text = "Contraseña Incorrecta, Formulario No Enviado.";
                                 divAlertError.Visible = true;
                             }
-
                         }
-                    }
-                    else
-                    {
-                        divAlertCorrecto.Visible = false;
 
-                        ErrorMessagePrincipal.Text = "Debe de guardar primero el formulario para poder enviarlo.";
-                        divAlertError.Visible = true;
                     }
-
                 }
                 else
                 {
                     divAlertCorrecto.Visible = false;
 
-                    ErrorMessagePrincipal.Text = "Contraseña Incorrecta, Formulario No Enviado.";
+                    ErrorMessagePrincipal.Text = "Debe de guardar primero el formulario para poder enviarlo.";
                     divAlertError.Visible = true;
                 }
+                
+
+
+            }
+            else
+            {
+                divAlertCorrecto.Visible = false;
+                ErrorMessagePrincipal.Text = "Formulario No tiene definido estado inicial. Formulario no enviado.";
+                divAlertError.Visible = true;
             }
         }
 
@@ -250,25 +263,27 @@ namespace VERPI.PreIngresos.Marcas
 
         protected void btnListado_Click(object sender, EventArgs e)
         {
-            //switch (btnListado.CommandName)
-            //{
-            //    case "Inventores":
-            //        Response.Redirect("~/PreIngresos/Marcas/Listado.aspx?np=" + Session["noPreIngreso"].ToString() + "&tl=" + Session["TipoLista"].ToString());
-            //        break;
-            //    case "Autores":
-
-            //        break;
-            //    case "Junta":
-
-            //        break;
-            //}
-
             Response.Redirect("~/PreIngresos/Marcas/Listado.aspx?np=" + Session["noPreIngreso"].ToString() + "&tl=" + Session["TipoLista"].ToString());
         }
 
         #endregion
 
         #region Funciones
+
+        protected void GuardarYActualizarFormulario()
+        {
+            if (Session["noPreIngreso"] != null)
+            {
+                if ((int)Session["noPreIngreso"] > 0)
+                {
+                    ActualizarFormulario((int)Session["noPreIngreso"]);
+                }
+            }
+            else
+            {
+                GuardarFormulario();
+            }
+        }
 
         protected void ConfiguracionInicial()
         {            
@@ -546,7 +561,7 @@ namespace VERPI.PreIngresos.Marcas
                     MiTexBox.CssClass = "form-control";
                     MiTexBox.ToolTip = row["descripcion"].ToString();
                     MiTexBox.ViewStateMode = ViewStateMode.Disabled;
-                    
+
                     switch (row["modo_texto"].ToString())
                     {
                         case "Number":
@@ -564,13 +579,11 @@ namespace VERPI.PreIngresos.Marcas
                     }
 
                     pnl_contenedor.Controls.Add(MiTexBox);
-
-                    //pnl_contenedor.Controls.Add(new LiteralControl("<button  id='"+no_control.ToString()+"' type='button' class='btn btn-danger' data-toggle='popover' title='Popover title' data-content='And heres some amazing content. It's very engaging.Right ? '>Click to toggle popover</button>"));
+                    //pnl_contenedor.Controls.Add(new LiteralControl("<input type='date' class='col-xs-9'>"));
 
                     break;
 
-                case "2":
-                    
+                case "2":                    
                     //Si es dropdowlist
                     DropDownList MiCombo = new DropDownList();
                     MiCombo.ID = identificacion;
@@ -703,6 +716,7 @@ namespace VERPI.PreIngresos.Marcas
         {
             divAlertCorrecto.Visible = false;
             divAlertError.Visible = false;
+            divAlertClase.Visible = false;
 
             /*Construyo datatable*/
             DataTable dt_controles = new DataTable();
@@ -745,6 +759,7 @@ namespace VERPI.PreIngresos.Marcas
         {
             divAlertCorrecto.Visible = false;
             divAlertError.Visible = false;
+            divAlertClase.Visible = false;
 
             /*Construyo datatable*/
             DataTable dt_controles = new DataTable();
@@ -944,6 +959,12 @@ namespace VERPI.PreIngresos.Marcas
             {
                 divAlertError.Visible = true;
                 ErrorMessagePrincipal.Text = "Los siguientes campos son obligatorios, favor verifique: "+nombre_campo;
+
+                divContrasenia.Visible = false;
+                divAlertClase.Visible = false;
+                btnEnviar.Text = "3) Enviar Solicitud";
+                Session["ValidoEnvio"] = true;
+
             }
             else
             {

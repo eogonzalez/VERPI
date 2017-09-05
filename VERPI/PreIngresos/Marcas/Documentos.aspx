@@ -14,7 +14,7 @@
                 </Triggers>
             </asp:UpdatePanel>
 
-            <asp:UpdatePanel runat="server" >
+            <asp:UpdatePanel runat="server">
                 <ContentTemplate>
                     <asp:GridView runat="server" ID="gvAnexos"
                         CssClass="table table-hover table-striped"
@@ -43,11 +43,22 @@
                     <asp:Literal runat="server" ID="MensajeCorrectoPrincipal" />
                 </p>
             </div>
+
             <div id="divAlertError" runat="server">
                 <p class="alert alert-danger" id="pAlertError" runat="server">
                     <asp:Literal runat="server" ID="ErrorMessagePrincipal" />
                 </p>
             </div>
+
+            <div id="divContrasenia" runat="server">
+                <div class="row">
+                    <asp:Label Text="Ingrese Contraseña para Validar Envio" runat="server" CssClass="col-xs-4" />
+                    <div class="col-xs-8">
+                        <asp:TextBox runat="server" ID="txt_contraseña" CssClass="form-control" TextMode="Password" />
+                    </div>
+                </div>
+            </div>
+            <br />
 
             <asp:Button runat="server" ID="btnRegresar" CssClass="btn btn-info" Text="<< Regresar" CommandName="Regresar" OnClick="btnRegresar_Click" />
             <asp:Button runat="server" ID="btnGuardar" CssClass="btn btn-primary" Text="Subir Documento" CommandName="Guardar" OnClick="btnGuardar_Click" />

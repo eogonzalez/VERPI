@@ -2,41 +2,42 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
-    <div class="jumbotron">
-        <h1>Ventanilla Electronica</h1>
-        <p class="lead">Registro de la propiedad intelectual.</p>
-        <%--<p><a href="http://www.asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>--%>
+    <div class="container">
+        
+        <img src="Imagenes/Logo_Verpi_1.png" class="img-responsive" alt="Ventanilla Electrónica del Registro de la propiedad intelectual">
     </div>
 
-<%--    <div class="row">
-        <div class="col-md-4">
-            <h2>Getting started</h2>
-            <p>
-                ASP.NET Web Forms lets you build dynamic websites using a familiar drag-and-drop, event-driven model.
-            A design surface and hundreds of controls and components let you rapidly build sophisticated, powerful UI-driven sites with data access.
-            </p>
-            <p>
-                <a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301948">Learn more &raquo;</a>
-            </p>
-        </div>
-        <div class="col-md-4">
-            <h2>Get more libraries</h2>
-            <p>
-                NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.
-            </p>
-            <p>
-                <a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301949">Learn more &raquo;</a>
-            </p>
-        </div>
-        <div class="col-md-4">
-            <h2>Web Hosting</h2>
-            <p>
-                You can easily find a web hosting company that offers the right mix of features and price for your applications.
-            </p>
-            <p>
-                <a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301950">Learn more &raquo;</a>
-            </p>
-        </div>
-    </div>--%>
+    <section>
+        <hr class="primary">
 
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 text-center">
+                    <div class="service-box">
+                        <h1 class="glyphicon glyphicon-registration-mark"></h1>
+                        <h3>Registro de Marcas</h3>
+                        <p align="justify" class="text-muted">Estos formularios tienen como objetivo el trámite de las solicitudes de adquisición, modificación y mantenimiento de derechos sobre los distintos signos distintivos (marcas, nombres comerciales).</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 text-center">
+                    <div class="service-box">
+                        <h1 class="glyphicon glyphicon-duplicate"></h1>
+                        <h3>Registro de patentes</h3>
+                        <p align="justify" class="text-muted">Estos formularios tienen como objetibo el tramite de las solicitudes para proteger legalmente los inventos y modelos de utilidad a travez de un titulo o certificado de patentes.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 text-center">
+                    <div class="service-box">
+                        <h1 class="glyphicon glyphicon-cd"></h1>
+                        <h3>Registro de derechos de autor</h3>
+                        <p align="justify" class="text-muted">Estos formularios tienen como objetibo el tramite de las solicitudes para garantizar la seguridad jurídica a los autores, titulares de los derechos conexos y derechos patrimoniales y sus causahabientes; así como dar la adecuada publicidad a las obras, actos y documentos.</p>
+                    </div>
+                </div>
+
+                <section id="services">
+                    <hr class="primary">
+                </section>
+            </div>
+        </div>
+    </section>
 </asp:Content>

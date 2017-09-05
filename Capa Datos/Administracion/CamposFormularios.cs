@@ -84,7 +84,7 @@ namespace Capa_Datos.Administracion
                 " , @Etiqueta, @nombre_control, @tipo_control "+
                 " , @descripcion, @modo_texto, @nombre_campo_db "+
                 " , @obligatorio, @expresion_regular "+
-                " , @fecha_creacion, @fecha_modificacion, @estado);";
+                " , @fecha_creacion, @fecha_modificacion, @estado, @id_tipo_dato_fox, @tipo_dato_fox);";
 
             using (var con = objConexion.Conectar())
             {

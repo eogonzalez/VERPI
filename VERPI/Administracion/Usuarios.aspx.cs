@@ -82,6 +82,10 @@ namespace VERPI.Administracion
                         }
 
                     }
+                    else
+                    {
+                        lkBtn_viewPanel_ModalPopupExtender.Show();
+                    }
 
                     break;
                 case "Editar":
@@ -100,6 +104,7 @@ namespace VERPI.Administracion
                     else
                     {
                         ErrorMessagePanel.Text = "Ha ocurrido un error al actualizar datos.";
+                        lkBtn_viewPanel_ModalPopupExtender.Show();
                     }
                     break;
                 default:

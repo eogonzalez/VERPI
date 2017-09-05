@@ -103,6 +103,24 @@ namespace VERPI.PreIngresos.Marcas {
         protected global::System.Web.UI.WebControls.Literal ErrorMessagePrincipal;
         
         /// <summary>
+        /// Control divContrasenia.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divContrasenia;
+        
+        /// <summary>
+        /// Control txt_contraseña.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txt_contraseña;
+        
+        /// <summary>
         /// Control btnRegresar.
         /// </summary>
         /// <remarks>

@@ -105,45 +105,22 @@ namespace VERPI.Administracion
                         {//Si selecciono estado anterior
                             //Verifico si codigo anterior existe
                             int codigoEstadoAnterior = objCNEstados.SelectCodigoEstado(Convert.ToInt32(getEstadoAnterior()));
-                            int EstadoSiguiente = (Convert.ToInt32(getEstadoSiguiente()));
 
-                            if (EstadoSiguiente == 0)
+                            if (GuardarEstado())
                             {
-                                if (!objCNEstados.ExisteCodigoEstado(tipoTramite, noFormulario, codigoEstadoAnterior))
-                                {
-                                    if (GuardarEstado())
-                                    {
-                                        LimpiarPanel();
-                                        Llenar_gvEstados();
-                                    }
-                                    else
-                                    {
-                                        divAlertError.Visible = true;
-                                        lkBtn_viewPanel_ModalPopupExtender.Show();
-                                        ErrorMessagePrincipal.Text = "Ha ocurrido un error al guardar Estado.";
-                                    }
-                                }
-                                else
-                                {
-                                    divAlertError.Visible = true;
-                                    lkBtn_viewPanel_ModalPopupExtender.Show();
-                                    ErrorMessagePrincipal.Text = "Ya existe un estado siguiente para el estado anterior seleccionado.";
-                                }
+                                LimpiarPanel();
+                                Llenar_gvEstados();
                             }
                             else
                             {
-                                if (GuardarEstado())
+                                divAlertError.Visible = true;
+                                lkBtn_viewPanel_ModalPopupExtender.Show();
+                                if (Session["MsgError"] != null)
                                 {
-                                    LimpiarPanel();
-                                    Llenar_gvEstados();
+                                    ErrorMessagePrincipal.Text = Session["MsgError"].ToString();
                                 }
-                                else
-                                {
-                                    divAlertError.Visible = true;
-                                    lkBtn_viewPanel_ModalPopupExtender.Show();
-                                    ErrorMessagePrincipal.Text = "Ha ocurrido un error al guardar Estado.";
-                                }
-                            }                            
+                                
+                            }                         
                         }
                         else
                         {
@@ -268,6 +245,7 @@ namespace VERPI.Administracion
             cbo_estadoSiguiente.Enabled = false;
             cbo_Formulario.Enabled = false;
             divAlertError.Visible = false;
+            cbo_tipoSolicitud.Enabled = true;
         }
 
         protected Boolean GuardarEstado()
@@ -306,9 +284,9 @@ namespace VERPI.Administracion
                     else
                     {
                         //Error el estado siguiente debe de ser mayor 
-                        divAlertError.Visible = true;
-                        ErrorMessagePrincipal.Text = "El estado Siguiente debe de ser mayor";
-                        lkBtn_viewPanel_ModalPopupExtender.Show();
+                        //divAlertError.Visible = true;
+                        Session.Add("MsgError"," El estado Siguiente debe de ser mayor. ");
+                        //lkBtn_viewPanel_ModalPopupExtender.Show();
                     }
 
                 }
@@ -325,7 +303,28 @@ namespace VERPI.Administracion
                 //objCEEstados.EstadoSiguiente = 0;
             }
 
-            respuesta = objCNEstados.InsertEstado(objCEEstados);
+
+            if (!objCNEstados.ExisteCodigoEstado(tipoTramite, noFormulario, objCEEstados.Codigo_Estado))
+            {
+                respuesta = objCNEstados.InsertEstado(objCEEstados);
+            }
+            else
+            {
+                //divAlertError.Visible = true;
+                //lkBtn_viewPanel_ModalPopupExtender.Show();
+                //ErrorMessagePrincipal.Text = "Ya existe un estado siguiente para el estado anterior seleccionado.";
+                if (Session["MsgError"] != null)
+                {
+                    Session["MsgError"] += "Ya existe un estado siguiente para el estado anterior seleccionado.";
+                }
+                else
+                {
+                    Session.Add("MsgError", "Ya existe un estado siguiente para el estado anterior seleccionado.");
+                }
+                
+            }
+
+
             return respuesta;
         }
 
